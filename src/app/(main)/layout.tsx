@@ -10,6 +10,7 @@ export default function MainLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
+      {/* render header to disappear */}
       <MobileGuard />
       <main className="grow">{children}</main>
       <Footer />

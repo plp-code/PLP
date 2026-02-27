@@ -32,7 +32,7 @@ export default function Hero() {
             <div className="flex flex-wrap items-center gap-y-3 gap-x-6">
               {SUB_LABELS.map((word, index) => (
                 <div key={word} className="flex items-center gap-6">
-                  <Label className="text-[10px] md:text-sm tracking-[0.3em] opacity-80 italic">
+                  <Label className=" md:text-lg tracking-[0.2em] opacity-80">
                     {word}
                   </Label>
                   {index < SUB_LABELS.length - 1 && (
