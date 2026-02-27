@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Label, Display } from "@/components/common/Typography";
 import { ArrowLeft } from "lucide-react";
 
+//fix
+
 export default function NotFound() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-plp-parchment p-6 text-center">
