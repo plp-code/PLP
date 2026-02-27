@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Alice&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Prata&display=swap");
+@import "tailwindcss";
+
+@font-face {
+  font-family: "seventies";
+  src: url("../assets/fonts/seventies.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PLP";
+  src: url("../assets/fonts/PLP.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-plp: "PLP", sans-serif;
+  --font-seventies: "seventies", serif;
+  --font-text: "IBM Plex Sans", sans-serif;
+  --font-text-serif: "Prata", serif;
+  --font-Bodoni: "Bodoni Moda", serif;
+
+  --color-plp-parchment: #f4f0e8;
+  --color-plp-maroon: #3d0b19;
+  --color-plp-navy: #17263f;
+  --color-plp-lime: #bed26e;
+  --color-plp-olive: #313e1b;
+  --color-plp-clay: #624045;
+  --color-plp-slate: #a0a0a0;
+
+  --border-width-thicker: 2px;
+
+  --animate-marquee: marquee 30s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
