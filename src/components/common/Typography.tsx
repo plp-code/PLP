@@ -7,20 +7,20 @@ interface TextProps {
 }
 
 export const Display = ({ children, className = "" }: TextProps) => (
-  <h1
+  <p
     className={twMerge(
       "font-seventies text-6xl md:text-9xl capitalize tracking-tight leading-none",
       className,
     )}
   >
     {children}
-  </h1>
+  </p>
 );
 
 export const Manifesto = ({ children, className = "" }: TextProps) => (
   <p
     className={twMerge(
-      "font-Bodoni lg:text-4xl md:text-2xl leading-tight",
+      "font-bodoni lg:text-4xl md:text-2xl leading-tight",
       className,
     )}
   >
@@ -31,7 +31,7 @@ export const Manifesto = ({ children, className = "" }: TextProps) => (
 export const Label = ({ children, className = "" }: TextProps) => (
   <span
     className={twMerge(
-      "text-sm font-text-serif font-bold uppercase tracking-widest",
+      "text-sm font-prata font-bold uppercase tracking-widest",
       className,
     )}
   >
