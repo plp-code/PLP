@@ -31,22 +31,22 @@ export default function FeatureFloatingGrid() {
 
   return (
     <section className="bg-plp-parchment" id="philosophy">
-      <Container className="pb-12 pt-16" borderBottom={true}>
-        <div className="mb-20 border-l-4 border-plp-maroon pl-8">
-          <Display className="text-4xl lg:text-7xl capitalize mb-4 leading-none">
+      <Container className="pb-24 pt-16" borderBottom={true}>
+        <div className="mb-20 border-l-4 border-plp-maroon pl-8 max-w-4xl">
+          <Display className="text-5xl lg:text-7xl capitalize mb-6 leading-[0.85]">
             How We Serve
           </Display>
-          <p className="font-prata text-[10px] md:text-2xl text-plp-maroon/60 tracking-widest font-bold max-w-6xl leading-relaxed">
+          <p className="font-bodoni text-xl md:text-2xl text-plp-maroon/80 leading-relaxed italic">
             The Preloved Professional supports growth through community and
             culture.
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-6 justify-center pb-16">
+        <div className="flex flex-col lg:flex-row gap-8 justify-center items-stretch">
           {FEATURES.map((feature, index) => {
             const isDark = feature.theme === "dark";
             const isHovered = hoveredIndex === index;
-            // later need to change for mobile (on click, not hover) and accessibility (focus state)
+
             return (
               <Link
                 key={feature.label}
@@ -54,46 +54,53 @@ export default function FeatureFloatingGrid() {
                 onMouseLeave={() => setHoveredIndex(-1)}
                 href="/signup"
                 className={`
-                group relative flex-1 p-8 rounded-xl
-                min-h-100 max-w-md w-full
-                transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
-                border-2 border-plp-maroon
-                flex flex-col justify-between overflow-hidden
-                ${isHovered ? "z-20 scale-105 shadow-2xl" : "z-10 scale-100 opacity-90 lg:opacity-100"}
-                ${isDark ? "bg-plp-maroon text-plp-parchment" : "bg-white text-plp-maroon hover:bg-plp-lime"}
-              `}
+                  group relative flex-1 p-10 rounded-2xl
+                  min-h-100 w-full
+                  transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
+                  border-2 border-plp-maroon
+                  flex flex-col
+                  ${isHovered ? "z-20 -translate-y-4 shadow-[20px_20px_0px_0px_rgba(61,11,25,0.1)]" : "z-10 translate-y-0 shadow-none"}
+                  ${isDark ? "bg-plp-maroon text-plp-parchment" : "bg-white text-plp-maroon hover:bg-plp-lime"}
+                `}
               >
-                <Label className="text-[14px] mb-4 opacity-60">
-                  {feature.label}
-                </Label>
+                <div className="flex justify-between items-start mb-12">
+                  <Label className="text-sm font-bold tracking-widest opacity-60">
+                    [{feature.label}]
+                  </Label>
+                  <div
+                    className={`h-2 w-2 rounded-full animate-pulse ${isDark ? "bg-plp-lime" : "bg-plp-maroon"}`}
+                  />
+                </div>
 
-                <div className="relative h-full flex flex-col justify-center">
+                <div className="relative grow flex flex-col justify-end">
                   <h3
                     className={`
-                  absolute inset-0 flex items-center
-                  font-prata text-5xl font-normal uppercase leading-[0.9] tracking-tighter
-                  transition-all duration-500
-                  ${isHovered ? "opacity-0 -translate-y-4 pointer-events-none" : "opacity-100 translate-y-0"}
-                `}
+                      absolute bottom-0 left-0 w-full
+                      font-prata text-5xl lg:text-4xl uppercase leading-[0.9] tracking-tighter
+                      transition-all duration-500
+                      ${isHovered ? "opacity-0 translate-y-4 pointer-events-none" : "opacity-100 translate-y-0"}
+                    `}
                   >
                     {feature.title}
                   </h3>
 
                   <div
                     className={`
-                  transition-all duration-500 space-y-6
-                  ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"}
-                `}
+                      transition-all duration-500 space-y-8
+                      ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 pointer-events-none"}
+                    `}
                   >
-                    <p className="font-prata text-[22px] leading-snug font-bold">
+                    <p className="font-bodoni text-2xl leading-tight font-medium">
                       {feature.desc}
                     </p>
 
-                    <div className="pt-4 border-t border-current w-fit">
-                      <Label className="text-[10px] tracking-widest flex items-center gap-2">
-                        REQUEST ARCHIVE ACCESS{" "}
-                        <span className="text-lg">→</span>
+                    <div className="pt-6 border-t border-current flex items-center justify-between">
+                      <Label className="text-[10px] tracking-[0.2em] font-black uppercase">
+                        Request Access
                       </Label>
+                      <span className="text-2xl transition-transform group-hover:translate-x-2">
+                        →
+                      </span>
                     </div>
                   </div>
                 </div>
