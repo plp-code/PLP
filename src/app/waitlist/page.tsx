@@ -4,10 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { Container } from "@/components/common/Container";
-import { Display, Label, Manifesto } from "@/components/common/Typography";
+import { Display, Label, Subtitle } from "@/components/common/Typography";
 import Footer from "@/components/layout/Footer";
 
-export default function SignupPage() {
+export default function WaitlistPage() {
   const [email, setEmail] = useState("");
   const currentYear = new Date().getFullYear();
   const archiveCode = `Archive Series: ${currentYear.toString().slice(-2)}-2`;
@@ -26,7 +26,6 @@ export default function SignupPage() {
 
       <Container
         bg="bg-transparent"
-        borderBottom={false}
         className="flex-1 flex flex-col justify-center py-12 md:py-24"
       >
         <div className="max-w-5xl mx-auto w-full">
@@ -38,11 +37,11 @@ export default function SignupPage() {
               <Display className="text-7xl md:text-9xl leading-[0.8] lowercase">
                 request for <br /> archive access
               </Display>
-              <Manifesto className="text-lg md:text-xl opacity-80 max-w-sm">
+              <Subtitle className="text-lg md:text-xl opacity-80 max-w-sm">
                 Participation is by invitation or request. Please submit your
                 primary electronic mail address to begin the verification
                 process.
-              </Manifesto>
+              </Subtitle>
             </div>
 
             <form className="space-y-8 pb-4">

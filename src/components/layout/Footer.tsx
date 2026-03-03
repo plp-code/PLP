@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { SiInstagram, SiTiktok, SiPinterest } from "react-icons/si";
+import { Label } from "../common/Typography";
 
 const SOCIAL_LINKS = [
   {
@@ -31,11 +32,18 @@ export default function Footer() {
 
         <div className="flex flex-wrap justify-center gap-x-12 gap-y-8">
           {SOCIAL_LINKS.map((social) => (
-            <div key={social.name} className="flex flex-row items-center gap-3">
-              <social.icon key={social.name} size={24} className="mx-auto" />
+            <div
+              key={social.name}
+              className="flex flex-row items-center gap-3 group"
+            >
+              <social.icon
+                key={social.name}
+                size={24}
+                className="mx-auto group-hover:text-plp-lime transition-colors cursor-pointer"
+              />
               <a
                 href={social.href}
-                className="group flex items-center gap-2 text-xs font-bold uppercase tracking-[0.3em] hover:text-plp-lime transition-colors"
+                className="group flex items-center gap-2 text-xs font-bold uppercase tracking-[0.3em] group-hover:text-plp-lime transition-colors"
               >
                 {social.name}
                 <ArrowUpRight
@@ -48,13 +56,10 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 p-8 text-[10px] uppercase tracking-[0.3em] opacity-60 font-black">
-        <div className="text-center md:text-left mb-4 md:mb-0">
+      <div className="flex justify-end p-8 text-[10px] uppercase tracking-[0.3em] opacity-60 font-black">
+        <Label className="text-center md:text-right mb-4 md:mb-0">
           © {currentYear} THE PRELOVED PROFESSIONAL
-        </div>
-        <div className="text-center md:text-right italic font-serif">
-          Professionalism had a uniform. That era is over.
-        </div>
+        </Label>
       </div>
     </footer>
   );

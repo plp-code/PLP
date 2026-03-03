@@ -20,11 +20,11 @@ interface HeaderProps {
 
 export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
   const navItems = [
-    { name: "Home", icon: <Globe size={20} />, to: "/" },
+    { name: "Home", icon: <Globe size={20} />, to: "/#home" },
     { name: "Manifesto", icon: <Scroll size={20} />, to: "/#manifesto" },
     { name: "Philosophy", icon: <BookOpen size={20} />, to: "/#philosophy" },
     { name: "About Us", icon: <User size={20} />, to: "/#about" },
-    { name: "Membership", icon: <LogIn size={20} />, to: "/signup" },
+    { name: "Membership", icon: <LogIn size={20} />, to: "/waitlist" },
   ];
 
   return (
@@ -54,7 +54,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
 
         <div className="hidden h-full md:flex">
           <Link
-            href="/signup"
+            href="/waitlist"
             className="flex items-center gap-2 px-8 h-full border-l-2 border-plp-maroon bg-plp-lime text-plp-maroon hover:bg-plp-maroon hover:text-plp-parchment transition-colors uppercase text-[10px] font-black tracking-[0.2em] font-text"
           >
             Access Request <ArrowUpRight size={14} />

@@ -17,7 +17,7 @@ export const Display = ({ children, className = "" }: TextProps) => (
   </p>
 );
 
-export const Manifesto = ({ children, className = "" }: TextProps) => (
+export const Subtitle = ({ children, className = "" }: TextProps) => (
   <p
     className={twMerge(
       "font-bodoni lg:text-4xl md:text-2xl leading-tight",

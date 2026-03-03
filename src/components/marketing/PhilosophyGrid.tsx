@@ -31,7 +31,7 @@ export default function FeatureFloatingGrid() {
 
   return (
     <section className="bg-plp-parchment" id="philosophy">
-      <Container className="pb-24 pt-16" borderBottom={true}>
+      <Container className="pb-24 pt-16">
         <div className="mb-20 border-l-4 border-plp-maroon pl-8 max-w-4xl">
           <Display className="text-5xl lg:text-7xl capitalize mb-6 leading-[0.85]">
             How We Serve
@@ -52,7 +52,7 @@ export default function FeatureFloatingGrid() {
                 key={feature.label}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(-1)}
-                href="/signup"
+                href="/waitlist"
                 className={`
                   group relative flex-1 p-10 rounded-2xl
                   min-h-100 w-full

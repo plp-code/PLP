@@ -3,8 +3,6 @@ import type { ReactNode } from "react";
 interface ContainerProps {
   children: ReactNode;
   className?: string;
-  /** Whether to include the signature PLP bottom border */
-  borderBottom?: boolean;
   /** Whether to remove horizontal padding for full-bleed sections */
   fullBleed?: boolean;
   /** Background color override */
@@ -14,7 +12,6 @@ interface ContainerProps {
 export const Container = ({
   children,
   className = "",
-  borderBottom = true,
   fullBleed = false,
   bg = "bg-plp-cream",
 }: ContainerProps) => {
@@ -23,7 +20,6 @@ export const Container = ({
       className={`
         w-full 
         ${bg} 
-        ${borderBottom ? "border-b-2 border-plp-maroon" : ""} 
         ${className}
       `}
     >

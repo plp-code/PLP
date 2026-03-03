@@ -1,5 +1,5 @@
 import { Monitor } from "lucide-react";
-import { Display, Manifesto, Label } from "../common/Typography";
+import { Display, Subtitle, Label } from "../common/Typography";
 
 export default function MobileGuard() {
   return (
@@ -10,10 +10,10 @@ export default function MobileGuard() {
         The PLP is <br /> for desktops.
       </Display>
 
-      <Manifesto className="max-w-xs text-md opacity-80">
+      <Subtitle className="max-w-xs text-md opacity-80">
         We&apos;re in the process of designing a mobile experience, but for now,
         please visit us on a desktop or laptop to explore the full site.
-      </Manifesto>
+      </Subtitle>
 
       <div className="mt-12 h-px w-24 bg-plp-lime opacity-30" />
 

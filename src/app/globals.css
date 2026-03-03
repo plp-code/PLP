@@ -32,7 +32,7 @@
   --color-plp-clay: #624045;
   --color-plp-slate: #a0a0a0;
 
-  --animate-marquee: marquee 30s linear infinite;
+  --animate-marquee: marquee 15s linear infinite;
 
   @keyframes marquee {
     from {
