@@ -1,110 +1,107 @@
-import { Briefcase, Globe, Command } from "lucide-react";
+"use client";
+
 import Link from "next/link";
 import { Container } from "../common/Container";
 import { Label, Display } from "../common/Typography";
+import { useState } from "react";
 
 const FEATURES = [
   {
     label: "01",
     title: "Professional Identity",
-    desc: "We treat preloved fashion as a professional strategy, not a compromise. Members use secondhand clothing to build presence, signal discernment, and move beyond status driven by constant consumption.",
-    icon: Briefcase,
+    desc: "We treat preloved fashion as a professional strategy, not a compromise. Members build presence and signal discernment.",
     theme: "light",
   },
   {
     label: "02",
     title: "Access & Opportunity",
-    desc: "We create access to people, places, information, and opportunities that aren't visible through traditional career channels.",
-    icon: Globe,
+    desc: "We create access to people, places, and opportunities not visible through traditional career channels.",
     theme: "dark",
   },
   {
     label: "03",
     title: "Community Led",
-    desc: "We move ideas off the screen — through city-based resources, events, coworking activations, and shared physical experiences.",
-    icon: Command,
+    desc: "Moving ideas off-screen through city-based resources, events, and shared physical experiences.",
     theme: "light",
   },
 ];
 
 export default function FeatureFloatingGrid() {
+  const [hoveredIndex, setHoveredIndex] = useState(-1);
+
   return (
-    <Container className="pb-12 pt-16" borderBottom={true}>
-      <div className="mb-20 border-l-4 border-plp-maroon pl-8">
-        <Display className="text-4xl lg:text-7xl capitalize mb-4 leading-none">
-          How We Serve
-        </Display>
-        <p className="text-[10px] md:text-xs text-plp-maroon/60 uppercase tracking-[0.2em] font-bold max-w-2xl leading-relaxed">
-          The Preloved Professional supports career growth and professional
-          presence through community, culture, and preloved practice.
-        </p>
-      </div>
+    <section className="bg-plp-parchment" id="philosophy">
+      <Container className="pb-12 pt-16" borderBottom={true}>
+        <div className="mb-20 border-l-4 border-plp-maroon pl-8">
+          <Display className="text-4xl lg:text-7xl capitalize mb-4 leading-none">
+            How We Serve
+          </Display>
+          <p className="font-prata text-[10px] md:text-2xl text-plp-maroon/60 tracking-widest font-bold max-w-6xl leading-relaxed">
+            The Preloved Professional supports growth through community and
+            culture.
+          </p>
+        </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 items-stretch justify-center pb-16">
-        {FEATURES.map((feature) => {
-          const Icon = feature.icon;
-          const isDark = feature.theme === "dark";
-
-          return (
-            <Link
-              key={feature.label}
-              href="/signup"
-              className={`
-                group relative flex-1 p-8 
-                transition-all duration-500 ease-in-out
-                hover:flex-[1.4] 
-                border-2 border-plp-maroon 
-                shadow-[6px_6px_0px_0px_rgba(110,38,38,0.1)]
-                hover:shadow-[12px_12px_0px_0px_rgba(110,38,38,0.15)]
-                hover:-translate-y-3
-                flex flex-col justify-between
+        <div className="flex flex-col lg:flex-row gap-6 justify-center pb-16">
+          {FEATURES.map((feature, index) => {
+            const isDark = feature.theme === "dark";
+            const isHovered = hoveredIndex === index;
+            // later need to change for mobile (on click, not hover) and accessibility (focus state)
+            return (
+              <Link
+                key={feature.label}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(-1)}
+                href="/signup"
+                className={`
+                group relative flex-1 p-8 rounded-xl
+                min-h-100 max-w-md w-full
+                transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
+                border-2 border-plp-maroon
+                flex flex-col justify-between overflow-hidden
+                ${isHovered ? "z-20 scale-105 shadow-2xl" : "z-10 scale-100 opacity-90 lg:opacity-100"}
                 ${isDark ? "bg-plp-maroon text-plp-parchment" : "bg-white text-plp-maroon hover:bg-plp-lime"}
               `}
-            >
-              <div className="flex justify-between items-start mb-16">
-                <div
-                  className={`
-                    w-12 h-12 flex items-center justify-center border-2 transition-all duration-500
-                    group-hover:rotate-12
-                    ${isDark ? "border-plp-lime text-plp-lime" : "border-plp-maroon"}
-                  `}
-                >
-                  <Icon className="w-5 h-5" />
-                </div>
-                <Label
-                  className={`text-xs ${isDark ? "text-plp-lime" : "text-plp-maroon/30"}`}
-                >
+              >
+                <Label className="text-[14px] mb-4 opacity-60">
                   {feature.label}
                 </Label>
-              </div>
 
-              <div className="space-y-4">
-                <h3 className="text-3xl font-black uppercase italic leading-[0.9] tracking-tighter">
-                  {feature.title}
-                </h3>
-
-                <div className="relative overflow-hidden transition-all duration-700 max-h-12 group-hover:max-h-48">
-                  <p className="text-[11px] uppercase tracking-[0.12em] leading-relaxed font-bold opacity-90">
-                    {feature.desc}
-                  </p>
+                <div className="relative h-full flex flex-col justify-center">
+                  <h3
+                    className={`
+                  absolute inset-0 flex items-center
+                  font-prata text-5xl font-normal uppercase leading-[0.9] tracking-tighter
+                  transition-all duration-500
+                  ${isHovered ? "opacity-0 -translate-y-4 pointer-events-none" : "opacity-100 translate-y-0"}
+                `}
+                  >
+                    {feature.title}
+                  </h3>
 
                   <div
-                    className={`absolute inset-0 bg-linear-to-t pointer-events-none transition-opacity duration-500 group-hover:opacity-0
-                    ${isDark ? "from-plp-maroon via-plp-maroon/80 to-transparent" : "from-white via-white/80 to-transparent"} 
-                  `}
-                  />
-                </div>
+                    className={`
+                  transition-all duration-500 space-y-6
+                  ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"}
+                `}
+                  >
+                    <p className="font-prata text-[22px] leading-snug font-bold">
+                      {feature.desc}
+                    </p>
 
-                <div className="pt-4 border-t border-current opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500 ease-out">
-                  <Label className="text-[9px] tracking-widest">
-                    Request Archive Access —&gt;
-                  </Label>
+                    <div className="pt-4 border-t border-current w-fit">
+                      <Label className="text-[10px] tracking-widest flex items-center gap-2">
+                        REQUEST ARCHIVE ACCESS{" "}
+                        <span className="text-lg">→</span>
+                      </Label>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
-    </Container>
+              </Link>
+            );
+          })}
+        </div>
+      </Container>
+    </section>
   );
 }

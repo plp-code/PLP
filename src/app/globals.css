@@ -21,8 +21,8 @@
   --font-plp: "PLP", sans-serif;
   --font-seventies: "seventies", serif;
   --font-text: "IBM Plex Sans", sans-serif;
-  --font-text-serif: "Prata", serif;
-  --font-Bodoni: "Bodoni Moda", serif;
+  --font-prata: "Prata", serif;
+  --font-bodoni: "Bodoni Moda", serif;
 
   --color-plp-parchment: #f4f0e8;
   --color-plp-maroon: #3d0b19;
@@ -31,8 +31,6 @@
   --color-plp-olive: #313e1b;
   --color-plp-clay: #624045;
   --color-plp-slate: #a0a0a0;
-
-  --border-width-thicker: 2px;
 
   --animate-marquee: marquee 30s linear infinite;
 
@@ -43,5 +41,77 @@
     to {
       transform: translateX(-50%);
     }
+  }
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before {
+    border-color: var(--color-plp-maroon);
+    border-width: 0;
+    border-style: solid;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-plp-parchment);
+    color: var(--color-plp-maroon);
+
+    font-family: var(--font-bodoni);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-seventies);
+    font-weight: 400;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  p {
+    font-family: var(--font-bodoni);
+    line-height: 1.6;
+  }
+
+  .subtitle,
+  caption,
+  .label-text {
+    font-family: var(--font-prata);
+    letter-spacing: 0.05em;
+  }
+
+  ::selection {
+    background-color: var(--color-plp-lime);
+    color: var(--color-plp-maroon);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-plp-parchment);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-plp-maroon);
+    border-radius: 10px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .transition-plp {
+    transition: all 500ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 }
