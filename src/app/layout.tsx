@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased bg-plp-parchment text-plp-navy">
+      <body className="antialiased">
         {children}
         <Analytics />
         <SpeedInsights />

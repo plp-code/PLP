@@ -1,6 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Alice&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Prata&display=swap");
+/* 1. GOOGLE FONTS (Split for better Next.js performance) */
+@import url("https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100..900&family=Almendra:wght@400;700&family=Josefin+Slab:wght@100..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Alike+Angular&family=Architects+Daughter&family=Rock+Salt&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Prata&display=swap");
+
+/* 2. TAILWIND CORE */
 @import "tailwindcss";
 
+/* 3. CUSTOM ASSETS */
 @font-face {
   font-family: "seventies";
   src: url("../assets/fonts/seventies.ttf") format("truetype");
@@ -17,13 +23,23 @@
   font-display: swap;
 }
 
+/* 4. THEME CONFIGURATION */
 @theme {
+  /* Fonts */
   --font-plp: "PLP", sans-serif;
   --font-seventies: "seventies", serif;
   --font-text: "IBM Plex Sans", sans-serif;
   --font-prata: "Prata", serif;
   --font-bodoni: "Bodoni Moda", serif;
 
+  --font-abc: "Rock Salt", cursive;
+  --font-almendra: "Almendra", serif;
+  --font-advent: "Advent Pro", sans-serif;
+  --font-alike: "Alike Angular", serif;
+  --font-architect: "Architects Daughter", cursive;
+  --font-josefin: "Josefin Slab", serif;
+
+  /* Colors */
   --color-plp-parchment: #f4f0e8;
   --color-plp-maroon: #3d0b19;
   --color-plp-navy: #17263f;
@@ -32,7 +48,32 @@
   --color-plp-clay: #624045;
   --color-plp-slate: #a0a0a0;
 
-  --animate-marquee: marquee 15s linear infinite;
+  /* Animations */
+  --animation-carousel: carousel 12s infinite;
+  --animate-marquee: marquee 80s linear infinite;
+  --animate-marquee-reverse: marquee 80s linear infinite reverse;
+
+  @keyframes carousel {
+    0%,
+    20% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    25%,
+    45% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    50%,
+    70% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    75%,
+    100% {
+      opacity: 0;
+    }
+  }
 
   @keyframes marquee {
     from {
@@ -44,6 +85,7 @@
   }
 }
 
+/* 5. BASE STYLES */
 @layer base {
   *,
   ::after,
@@ -60,9 +102,7 @@
   body {
     background-color: var(--color-plp-parchment);
     color: var(--color-plp-maroon);
-
     font-family: var(--font-bodoni);
-    font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -73,13 +113,10 @@
   h5,
   h6 {
     font-family: var(--font-seventies);
-    font-weight: 400;
-    line-height: 1;
     text-transform: uppercase;
   }
 
   p {
-    font-family: var(--font-bodoni);
     line-height: 1.6;
   }
 
@@ -107,11 +144,22 @@
   }
 }
 
+/* 6. UTILITIES */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+
   .transition-plp {
     transition: all 500ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .vintage-edge {
+    mask-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+    clip-path: polygon(0% 2%, 100% 0%, 98% 100%, 1% 98%);
+  }
+
+  .ink-bleed {
+    filter: contrast(1.2) brightness(0.9) sepia(0.2);
   }
 }

@@ -36,7 +36,7 @@ export default function FeatureFloatingGrid() {
           <Display className="text-5xl lg:text-7xl capitalize mb-6 leading-[0.85]">
             How We Serve
           </Display>
-          <p className="font-bodoni text-xl md:text-2xl text-plp-maroon/80 leading-relaxed italic">
+          <p className="font-prata text-xl md:text-2xl text-plp-maroon/80 leading-relaxed">
             The Preloved Professional supports growth through community and
             culture.
           </p>
@@ -58,7 +58,7 @@ export default function FeatureFloatingGrid() {
                   min-h-100 w-full
                   transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
                   border-2 border-plp-maroon
-                  flex flex-col
+                  flex flex-col 
                   ${isHovered ? "z-20 -translate-y-4 shadow-[20px_20px_0px_0px_rgba(61,11,25,0.1)]" : "z-10 translate-y-0 shadow-none"}
                   ${isDark ? "bg-plp-maroon text-plp-parchment" : "bg-white text-plp-maroon hover:bg-plp-lime"}
                 `}

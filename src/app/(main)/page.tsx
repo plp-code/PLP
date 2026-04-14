@@ -1,8 +1,7 @@
 import Hero from "@/components/marketing/Hero";
-import Marquee from "@/components/marketing/Marquee";
+import QuoteCarousel from "@/components/marketing/QuoteCarousel";
 import PhilosophyGrid from "@/components/marketing/PhilosophyGrid";
 import Manifesto from "@/components/marketing/Manifesto";
-import AboutUs from "@/components/marketing/AboutUs";
 import EmailCapture from "@/components/marketing/EmailCapture";
 
 export default function LandingPage() {
@@ -11,9 +10,8 @@ export default function LandingPage() {
       <Hero />
       <EmailCapture />
       <Manifesto />
-      <Marquee />
+      <QuoteCarousel />
       <PhilosophyGrid />
-      <AboutUs />
     </main>
   );
 }
