@@ -80,8 +80,8 @@ export default function QuoteCarousel({
                   “{quote}”
                 </blockquote>
 
-                <cite className="not-italic">
-                  <span className="font-alike uppercase tracking-[0.05em] text-base md:text-2xl opacity-80">
+                <cite className="flex not-italic flex-col flex-wrap gap-4 justify-center">
+                  <span className="font-architect capitalize tracking-[0.05em] text-base md:text-4xl opacity-80">
                     — {author}
                   </span>
                 </cite>

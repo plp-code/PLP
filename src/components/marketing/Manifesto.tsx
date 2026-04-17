@@ -7,48 +7,76 @@ export default function Manifesto() {
   return (
     <section
       id="manifesto"
-      className="relative w-full bg-[#b8ae9c] py-24 md:py-32 min-h-[130vh] overflow-hidden px-4 md:px-8"
+      className="relative w-full py-24 md:py-32 min-h-[140vh] overflow-hidden px-4 md:px-8"
     >
+      {/* SVG ROUGH EDGE FILTER */}
+      <svg className="hidden">
+        <filter id="torn-edge">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.05"
+            numOctaves="5"
+            result="noise"
+          />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" />
+        </filter>
+      </svg>
+
       <div className="max-w-7xl mx-auto mb-20 relative z-20">
         <Display className="text-6xl md:text-8xl lg:text-9xl text-plp-maroon tracking-tighter leading-none -rotate-1">
-          [Something]
+          asdf{" "}
         </Display>
         <div className="h-1 w-32 bg-plp-maroon/20 mt-4" />
       </div>
 
-      <div className="absolute top-[30%] left-[-15%] w-[140%] h-24 bg-plp-lime/30 rotate-[10deg] z-0 pointer-events-none flex items-center overflow-hidden">
-        <div className="flex w-max flex-nowrap animate-marquee">
-          {[...Array(20)].map((_, i) => (
-            <span
-              key={i}
-              className="font-seventies text-plp-maroon/20 text-3xl mx-8 uppercase tracking-[0.2em] whitespace-nowrap"
-            >
-              asdfsaf{" "}
-            </span>
-          ))}
-        </div>
-      </div>
+      {/* STREAKS */}
 
-      <div className="absolute top-[38%] left-[-10%] w-[140%] h-20 bg-plp-lime/20 -rotate-[8deg] z-0 pointer-events-none flex items-center overflow-hidden">
-        <div className="flex w-max flex-nowrap animate-marquee-reverse">
-          {[...Array(20)].map((_, i) => (
-            <span
-              key={i}
-              className="font-text font-black text-plp-maroon/10 text-xl mx-12 uppercase tracking-[0.5em] whitespace-nowrap"
-            >
-              asdfads{" "}
-            </span>
-          ))}
-        </div>
-      </div>
+      <div
+        className="absolute top-[8%] left-[-10%] w-[150%] h-24 bg-plp-lime/40 rotate-14 z-0 pointer-events-none mix-blend-multiply"
+        style={{ filter: "url(#tear-subtle)" }}
+      />
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-24 relative z-10">
-        <div className="relative min-h-225">
-          <div className="absolute inset-0 bg-white/30 rotate-3 translate-x-6 translate-y-4 shadow-sm rounded-sm z-0" />
-          <div className="absolute inset-0 bg-white/50 -rotate-2 translate-x-4 translate-y-3 shadow-md rounded-sm z-10" />
+      <div
+        className="absolute top-[25%] right-[-20%] w-[160%] h-24 bg-plp-lime/25 -rotate-12 z-0 pointer-events-none mix-blend-multiply"
+        style={{ filter: "url(#tear-rough)" }}
+      />
 
-          <div className="relative z-30 bg-[#fafafa] shadow-2xl rounded-sm min-h-full flex flex-col -rotate-1">
-            <div className="absolute inset-0 opacity-[0.2] pointer-events-none mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
+      <div
+        className="absolute top-[48%] left-[-5%] w-[140%] h-24 bg-plp-lime/15 rotate-3 z-0 pointer-events-none mix-blend-multiply opacity-60"
+        style={{ filter: "url(#tear-subtle)" }}
+      />
+
+      <div
+        className="absolute top-[20%] left-[10%] w-[40%] h-[150%] bg-plp-lime/10 rotate-78 z-0 pointer-events-none mix-blend-multiply"
+        style={{ filter: "url(#tear-jagged)" }}
+      />
+
+      <div
+        className="absolute top-[65%] right-[-15%] w-[150%] h-24 bg-plp-lime/35 -rotate-195 z-0 pointer-events-none mix-blend-multiply"
+        style={{ filter: "url(#tear-rough)" }}
+      />
+
+      <div
+        className="absolute top-[85%] left-[-25%] w-[160%] h-24 bg-plp-lime/50 rotate-6 z-0 pointer-events-none mix-blend-multiply"
+        style={{ filter: "url(#tear-subtle)" }}
+      />
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-24 relative z-20">
+        {/* LEFT SIDE: THE A4 STACK */}
+        <div className="relative min-h-[900px]">
+          <div className="absolute inset-0 bg-white/30 rotate-8 translate-x-16 translate-y-10 shadow-lg rounded-sm mix-blend-multiply opacity-90" />
+          <div className="absolute inset-0 bg-white/50 -rotate-2 translate-x-4 translate-y-3 shadow-md rounded-sm" />
+
+          <div
+            className="relative z-30 bg-[#fafafa] shadow-2xl min-h-full flex flex-col -rotate-1"
+            style={{
+              backgroundImage:
+                "url('https://www.transparenttextures.com/patterns/felt.png')]",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundBlendMode: "multiply",
+            }}
+          >
+            <div className="absolute inset-0 opacity-[0.6] pointer-events-none mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')]" />
 
             <div className="relative z-50 p-12 md:p-20 lg:p-24 md:pl-28">
               <header className="mb-16">
@@ -82,67 +110,87 @@ export default function Manifesto() {
           </div>
         </div>
 
-        {/* RIGHT SIDE: ANNOTATIONS */}
-        <div className="relative lg:pt-48 flex flex-col space-y-40">
-          <div className="relative pl-12">
-            <div className="absolute -left-2 top-0 bottom-0 flex items-center">
-              <span className="font-serif text-[12rem] leading-none text-blue-900/10 select-none">
-                {"{"}
-              </span>
+        {/* RIGHT SIDE: THE ANNOTATION WALL (Composed of Ripped Scraps) */}
+        <div className="relative lg:pt-32 flex flex-col space-y-24 items-end">
+          <div className="relative w-full max-w-sm rotate-2">
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-24 h-8 bg-white/30 backdrop-blur-sm rotate-[-2deg] z-20 border-x border-white/20 shadow-sm" />
+
+            <div
+              className="relative bg-white p-4 shadow-2xl"
+              style={{ filter: "url(#torn-edge)" }}
+            >
+              <div className="pt-4 pb-2">
+                <p className="font-handwriting text-xl text-plp-maroon/40 text-center italic">
+                  fig. 01 — sourcing details
+                </p>
+              </div>
+              <div className="absolute inset-0 opacity-[0.2] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
             </div>
-            <div className="relative">
-              <h3 className="font-alike uppercase tracking-[0.2em] text-plp-maroon font-bold text-xl mb-4">
-                [Mock]
-              </h3>
-              <p className="font-text text-lg text-plp-maroon/70 max-w-sm leading-relaxed mb-6">
-                [Mock]
-              </p>
-              <div className="absolute -left-24 top-1/2 -translate-y-1/2 text-blue-900/20 rotate-[15deg]">
-                <ArrowLeft className="w-16 h-16 stroke-[0.5px]" />
+          </div>
+
+          <div className="relative w-full max-w-md -rotate-1 translate-x-4">
+            <div className="absolute -top-2 -right-4 w-16 h-8 bg-plp-parchment/20 backdrop-blur-[2px] rotate-[35deg] z-20 shadow-sm" />
+
+            <div
+              className="relative bg-[#e6e1d5] p-10 pr-12 shadow-xl"
+              style={{
+                filter: "url(#torn-edge)",
+                backgroundImage:
+                  "url('https://www.transparenttextures.com/patterns/linen.png')",
+              }}
+            >
+              <div className="relative pl-12 mix-blend-multiply">
+                <div className="absolute -left-6 top-0 bottom-0 flex items-center">
+                  <span className="font-serif text-[10rem] leading-none text-blue-900/10 select-none">
+                    {"{"}
+                  </span>
+                </div>
+                <div className="relative">
+                  <h3 className="font-alike uppercase tracking-[0.2em] text-plp-maroon font-bold text-xl mb-3">
+                    [Mock]
+                  </h3>
+                  <p className="font-text text-base text-plp-maroon/70 leading-relaxed">
+                    [Mock description text indicating importance. This is now on
+                    its own ripped scrap.]
+                  </p>
+                  <div className="absolute -left-20 top-1/2 -translate-y-1/2 text-blue-900/20 rotate-[15deg]">
+                    <ArrowLeft className="w-12 h-12 stroke-[0.5px]" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="relative pl-12 group">
-            <div className="absolute -left-20 top-0 text-red-900/20 -rotate-[20deg]">
-              <ArrowLeft className="w-14 h-14 stroke-[1px]" />
-            </div>
-            <div className="relative">
-              <div className="inline-block bg-plp-lime/10 px-2 py-1 mb-4 -rotate-1">
-                <h3 className="font-alike uppercase tracking-[0.2em] text-plp-maroon font-bold text-xl">
-                  [Mock]
-                </h3>
-              </div>
-              <p className="font-text text-lg text-plp-maroon/70 max-w-sm leading-relaxed">
-                [Mock]
-              </p>
-            </div>
-          </div>
+          <div className="relative w-full max-w-sm rotate-1 -translate-x-8">
+            <div className="absolute -top-3 left-10 w-12 h-6 bg-white/10 backdrop-blur-sm -rotate-12 z-20" />
+            <div className="absolute -bottom-2 right-10 w-12 h-6 bg-white/10 backdrop-blur-sm rotate-6 z-20" />
 
-          <div className="relative pl-12">
-            <div className="absolute -left-4 top-0 bottom-0 w-4 border-l-2 border-t-2 border-b-2 border-red-900/10 rounded-l-3xl" />
-            <div className="relative py-2">
-              <h3 className="font-alike uppercase tracking-[0.2em] text-plp-maroon font-bold text-xl mb-4">
-                [Mock]
-              </h3>
-              <p className="font-text text-lg text-plp-maroon/70 max-w-sm leading-relaxed italic">
-                [Mock]
-              </p>
-              <div className="mt-4 font-handwriting text-3xl text-red-900/30">
-                (Pointer)
-              </div>
-              <div className="absolute -left-28 bottom-4 text-red-900/20 rotate-[45deg]">
-                <ArrowLeft className="w-10 h-10 stroke-[1px]" />
+            <div
+              className="relative bg-[#fafafa] p-8 shadow-lg"
+              style={{
+                filter: "url(#torn-edge)",
+                backgroundImage:
+                  "url('https://www.transparenttextures.com/patterns/handmade-paper.png')",
+              }}
+            >
+              <div className="relative group mix-blend-multiply">
+                <div className="absolute -left-16 top-0 text-red-900/20 -rotate-[20deg]">
+                  <ArrowLeft className="w-12 h-12 stroke-[1px]" />
+                </div>
+                <div className="relative">
+                  <div className="inline-block bg-plp-lime/20 px-3 py-1 mb-3 -rotate-1 mix-blend-multiply border-l-2 border-plp-lime">
+                    <h3 className="font-alike uppercase tracking-[0.2em] text-plp-maroon font-bold text-lg">
+                      [Mock]
+                    </h3>
+                  </div>
+                  <p className="font-text text-base text-plp-maroon/70 leading-relaxed">
+                    [Mock text on a smaller torn fragment.]
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="absolute bottom-20 left-10 w-40 h-40 border-4 border-double border-red-900/10 rounded-full flex items-center justify-center rotate-[-12deg] pointer-events-none">
-        <span className="font-seventies text-[8px] tracking-[0.4em] text-red-900/20 font-black uppercase">
-          Archive Verified
-        </span>
       </div>
     </section>
   );
