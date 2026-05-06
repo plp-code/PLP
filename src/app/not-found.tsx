@@ -1,32 +1,38 @@
+"use client";
+
 import Link from "next/link";
 import { Label, Display } from "@/components/common/Typography";
 import { ArrowLeft } from "lucide-react";
 
-//fix
-
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-plp-parchment p-6 text-center">
-      <Label className="mb-4 opacity-50 uppercase tracking-widest">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-plp-parchment p-8 text-center overflow-hidden">
+      <Label className="mb-6 opacity-40 uppercase tracking-[0.6em] text-sm md:text-base">
         Error 404
       </Label>
 
-      <Display className="mb-8 text-6xl md:text-8xl lowercase">
+      <Display className="mb-10 text-[15vw] md:text-[12vw] lg:text-[10vw] lowercase leading-[0.8] tracking-tighter text-plp-maroon">
         path not found
       </Display>
 
-      <p className="mb-12 max-w-md text-sm uppercase tracking-tight opacity-70 italic">
-        The requested resource does not exist within the current archive
-        parameters. It may have been moved, deleted, or never existed.
+      <p className="mb-16 max-w-2xl text-lg md:text-2xl uppercase tracking-tight opacity-80 italic leading-tight text-plp-maroon">
+        The requested resource does not exist. It may have been moved, deleted,
+        or never existed.
       </p>
 
       <Link
         href="/"
-        className="group flex items-center gap-2 border-b-2 border-plp-maroon pb-1 hover:border-plp-lime transition-colors"
+        className="group flex items-center gap-4 border-b-2 border-plp-maroon/20 pb-2 hover:border-plp-lime transition-all duration-500"
       >
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        <Label className="text-xs">Return Back Home</Label>
+        <ArrowLeft className="w-6 h-6 group-hover:-translate-x-2 transition-transform text-plp-maroon" />
+        <Label className="text-sm md:text-base font-bold tracking-[0.3em] text-plp-maroon">
+          Return Back Home
+        </Label>
       </Link>
-    </div>
+
+      <div className="absolute bottom-10 right-10 opacity-[0.03] font-plp text-[20vw] pointer-events-none select-none">
+        PLP
+      </div>
+    </main>
   );
 }

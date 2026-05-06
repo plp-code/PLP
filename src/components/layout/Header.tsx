@@ -6,7 +6,6 @@ import {
   BookOpen,
   User,
   LogIn,
-  Menu,
   X,
   Scroll,
   Globe,
@@ -29,81 +28,98 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
 
   return (
     <>
-      <header
-        className={`
-          relative z-100 flex h-16 items-center border-b-2 border-plp-maroon bg-plp-parchment/90 
-          transition-all duration-500
-          ${isMenuOpen ? "backdrop-blur-none bg-plp-parchment" : "backdrop-blur-md"}
-        `}
-      >
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          className="flex h-full items-center px-6 transition-colors border-r-2 border-plp-maroon hover:bg-plp-maroon hover:text-plp-parchment focus:outline-none"
-        >
-          <Menu size={20} />
-        </button>
-
-        <div className="flex-1 px-6">
-          <Link
-            href="/"
-            className="text-xl md:text-2xl capitalize font-seventies tracking-tight text-plp-maroon"
+      <header className="fixed top-0 left-0 w-full z-100 flex flex-col bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] border-b border-black">
+        <div className="flex items-center justify-between h-20 bg-plp-maroon p-4 mx-1 mt-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="cursor-pointer flex items-center justify-center w-12 h-12 bg-[#c0c0c0] shadow-[inset_2px_2px_#fff,inset_-2px_-2px_#808080] active:shadow-[inset_-2px_-2px_#fff,inset_2px_2px_#808080] group"
           >
-            the preloved professional
-          </Link>
+            <div className="w-5 h-1.5 bg-black shadow-[0_3px_0_#808080]" />
+          </button>
+
+          <div className="flex-1 text-center">
+            <Link
+              href="/"
+              className="font-seventies text-white text-xl tracking-tight uppercase px-4"
+            >
+              The Preloved Professional
+            </Link>
+          </div>
+
+          <div className="flex items-center h-full gap-1">
+            <Link
+              href="/waitlist"
+              className="cursor-pointer flex items-center h-full px-3 bg-plp-lime text-plp-maroon font-bold text-[16px] uppercase tracking-tighter shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] hover:brightness-110 active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080]"
+            >
+              Access Request <ArrowUpRight size={12} className="ml-1" />
+            </Link>
+          </div>
         </div>
 
-        <div className="hidden h-full md:flex">
-          <Link
-            href="/waitlist"
-            className="flex items-center gap-2 px-8 h-full border-l-2 border-plp-maroon bg-plp-lime text-plp-maroon hover:bg-plp-maroon hover:text-plp-parchment transition-colors uppercase text-[10px] font-black tracking-[0.2em] font-text"
-          >
-            Access Request <ArrowUpRight size={14} />
-          </Link>
+        {/* something to add with more functionalities? */}
+        <div className="flex items-center gap-10 px-6 py-2 text-sm font-bold text-black border-b border-[#808080] bg-[#c0c0c0]">
+          <button className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-4 decoration-1">
+            Coming Soon
+          </button>
+          <button className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-4 decoration-1">
+            Add
+          </button>
         </div>
       </header>
 
       <aside
-        className={`fixed top-0 left-0 h-screen w-full md:w-112.5 bg-plp-maroon text-plp-parchment z-110 transform transition-transform duration-700 ease-[cubic-bezier(0.85,0,0.15,1)] flex flex-col shadow-2xl ${
+        className={`fixed top-0 left-0 h-screen w-full md:w-112.5 bg-[#c0c0c0] z-110 transform transition-transform duration-500 ease-in-out border-r-2 border-black shadow-[4px_0_15px_rgba(0,0,0,0.3)] flex flex-col ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between p-8 border-b border-plp-parchment/10">
-          <Label className="text-plp-parchment/40 uppercase tracking-widest text-[10px]">
-            Navigation Index
-          </Label>
+        {/* Sidebar Title Bar */}
+        <div className="flex items-center justify-between h-10 bg-plp-maroon p-1 m-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
+          <span className="text-white font-bold text-sm uppercase px-4"></span>
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="p-2 transition-transform duration-300 hover:rotate-90 hover:text-plp-lime"
+            className="cursor-pointer flex items-center justify-center w-8 h-8 bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080]"
           >
-            <X size={28} />
+            <X size={18} />
           </button>
         </div>
 
-        <nav className="flex flex-col justify-center flex-1 p-10 space-y-10">
+        <nav
+          className="flex-1 flex flex-col p-8 gap-8 bg-white m-1 mt-0 shadow-[inset_2px_2px_#808080]"
+          style={{
+            backgroundImage:
+              "url('https://www.transparenttextures.com/patterns/notebook.png')",
+          }}
+        >
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.to}
               onClick={() => setIsMenuOpen(false)}
-              className="group flex items-center justify-between text-3xl md:text-5xl font-seventies uppercase tracking-tight transition-all leading-none"
+              className="group flex items-center gap-6 text-3xl md:text-5xl font-seventies uppercase tracking-tight text-plp-maroon hover:text-blue-700 transition-colors"
             >
-              <span className="relative">
-                {item.name}
-                <span className="absolute left-0 -bottom-1 w-0 h-1 bg-plp-lime transition-all duration-500 group-hover:w-full" />
-              </span>
-              <div className="transition-all duration-300 -translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 text-plp-lime">
+              <div className="flex items-center justify-center w-12 h-12 bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] group-hover:bg-plp-lime">
                 {item.icon}
               </div>
+              <span className="border-b-2 border-transparent group-hover:border-blue-700">
+                {item.name}
+              </span>
             </Link>
           ))}
         </nav>
 
-        <div className="p-8 border-t border-plp-parchment/10">
-          <Label className="text-[9px] opacity-40 uppercase tracking-[0.2em]">
-            Est. 2026 / NYC — LAX
-          </Label>
+        <div className="p-4 bg-[#c0c0c0] border-t border-[#808080] flex justify-between items-center mx-1 mb-1">
+          <div className="w-24 h-6 bg-white shadow-[inset_1px_1px_#808080] flex items-center px-2 text-[9px] font-mono">
+            STATUS: OK
+          </div>
         </div>
       </aside>
+
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-[1px] z-105"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
     </>
   );
 }
