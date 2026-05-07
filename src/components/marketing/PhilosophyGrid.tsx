@@ -1,112 +1,102 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { Container } from "../common/Container";
 import { Label, Display } from "../common/Typography";
-import { useState } from "react";
+import { ChevronRight } from "lucide-react";
 
 const FEATURES = [
   {
     label: "01",
     title: "Professional Identity",
-    desc: "We treat preloved fashion as a professional strategy, not a compromise. Members build presence and signal discernment.",
-    theme: "light",
+    desc: "We treat preloved fashion as a professional strategy, not a compromise. Members build presence and signal discernment through curated style.",
   },
   {
     label: "02",
     title: "Access & Opportunity",
-    desc: "We create access to people, places, and opportunities not visible through traditional career channels.",
-    theme: "dark",
+    desc: "We create access to people, places, and opportunities not visible through traditional career channels. Exclusive entry to the unlisted.",
   },
   {
     label: "03",
     title: "Community Led",
-    desc: "Moving ideas off-screen through city-based resources, events, and shared physical experiences.",
-    theme: "light",
+    desc: "Moving ideas off-screen through city-based resources, events, and shared physical experiences. The archive is alive and in-person.",
   },
 ];
 
-export default function FeatureFloatingGrid() {
-  const [hoveredIndex, setHoveredIndex] = useState(-1);
+export default function FeatureDossierStack() {
+  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="bg-plp-parchment" id="philosophy">
-      <Container className="pb-24 pt-16">
-        <div className="mb-20 border-l-4 border-plp-maroon pl-8 max-w-4xl">
-          <Display className="text-5xl lg:text-7xl capitalize mb-6 leading-[0.85]">
+    <section className="bg-plp-parchment py-12 md:py-20" id="philosophy">
+      <Container>
+        <div className="mb-16 border-l-2 border-plp-maroon pl-6 max-w-2xl">
+          <Display className="text-4xl md:text-5xl capitalize mb-3 leading-none text-plp-maroon">
             How We Serve
           </Display>
-          <p className="font-prata text-xl md:text-2xl text-plp-maroon/80 leading-relaxed">
-            The Preloved Professional supports growth through community and
-            culture.
+          <p className="font-prata not-italic text-sm md:text-base text-plp-maroon/70 tracking-wide uppercase">
+            Supporting growth through community and culture.
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 justify-center items-stretch">
-          {FEATURES.map((feature, index) => {
-            const isDark = feature.theme === "dark";
-            const isHovered = hoveredIndex === index;
-
-            return (
-              <Link
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 items-start">
+          <div className="flex flex-col border-t border-plp-maroon/20">
+            {FEATURES.map((feature, index) => (
+              <button
                 key={feature.label}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(-1)}
-                href="/waitlist"
+                onClick={() => setActiveIndex(index)}
                 className={`
-                  group relative flex-1 p-10 rounded-2xl
-                  min-h-100 w-full
-                  transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
-                  border-2 border-plp-maroon
-                  flex flex-col 
-                  ${isHovered ? "z-20 -translate-y-4 shadow-[20px_20px_0px_0px_rgba(61,11,25,0.1)]" : "z-10 translate-y-0 shadow-none"}
-                  ${isDark ? "bg-plp-maroon text-plp-parchment" : "bg-white text-plp-maroon hover:bg-plp-lime"}
+                  group flex items-center justify-between py-6 border-b border-plp-maroon/20 transition-all text-left
+                  ${activeIndex === index ? "pl-4" : "pl-0 opacity-40 hover:opacity-100"}
                 `}
               >
-                <div className="flex justify-between items-start mb-12">
-                  <Label className="text-sm font-bold tracking-widest opacity-60">
-                    [{feature.label}]
+                <div className="flex items-center gap-4">
+                  <Label className="text-[10px] text-plp-maroon">
+                    {feature.label}
                   </Label>
-                  <div
-                    className={`h-2 w-2 rounded-full animate-pulse ${isDark ? "bg-plp-lime" : "bg-plp-maroon"}`}
-                  />
-                </div>
-
-                <div className="relative grow flex flex-col justify-end">
-                  <h3
-                    className={`
-                      absolute bottom-0 left-0 w-full
-                      font-prata text-5xl lg:text-4xl uppercase leading-[0.9] tracking-tighter
-                      transition-all duration-500
-                      ${isHovered ? "opacity-0 translate-y-4 pointer-events-none" : "opacity-100 translate-y-0"}
-                    `}
-                  >
+                  <h3 className="font-prata not-italic text-xl uppercase tracking-tight text-plp-maroon">
                     {feature.title}
                   </h3>
+                </div>
+                <ChevronRight
+                  size={18}
+                  className={`transition-transform duration-500 ${activeIndex === index ? "rotate-0 text-plp-maroon" : "-rotate-90 text-plp-maroon/20"}`}
+                />
+              </button>
+            ))}
+          </div>
 
-                  <div
-                    className={`
-                      transition-all duration-500 space-y-8
-                      ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 pointer-events-none"}
-                    `}
-                  >
-                    <p className="font-bodoni text-2xl leading-tight font-medium">
+          {/* ACTIVE FILE PAGE */}
+          <div className="relative min-h-100">
+            {FEATURES.map((feature, index) => (
+              <div
+                key={feature.label}
+                className={`
+                  absolute inset-0 bg-white border border-plp-maroon p-8 md:p-12 shadow-xl transition-all duration-700 ease-in-out
+                  ${
+                    activeIndex === index
+                      ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
+                      : "opacity-0 translate-y-8 scale-95 pointer-events-none"
+                  }
+                `}
+              >
+                <div className="flex flex-col h-full justify-between">
+                  <div className="space-y-8">
+                    <h4 className="font-prata not-italic text-3xl md:text-5xl text-plp-maroon leading-[0.9] uppercase tracking-tighter">
+                      {feature.title}
+                    </h4>
+
+                    <p className="font-text text-base md:text-lg text-plp-maroon/80 leading-relaxed max-w-lg">
                       {feature.desc}
                     </p>
+                  </div>
 
-                    <div className="pt-6 border-t border-current flex items-center justify-between">
-                      <Label className="text-[10px] tracking-[0.2em] font-black uppercase">
-                        Request Access
-                      </Label>
-                      <span className="text-2xl transition-transform group-hover:translate-x-2">
-                        →
-                      </span>
-                    </div>
+                  <div className="pt-8 mt-12 border-t border-plp-maroon/10 flex items-center justify-between">
+                    <div className="h-2 w-2 rounded-full bg-plp-lime animate-pulse" />
                   </div>
                 </div>
-              </Link>
-            );
-          })}
+              </div>
+            ))}
+          </div>
         </div>
       </Container>
     </section>
