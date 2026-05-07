@@ -8,18 +8,26 @@ import { ChevronRight } from "lucide-react";
 const FEATURES = [
   {
     label: "01",
+
     title: "Professional Identity",
-    desc: "We treat preloved fashion as a professional strategy, not a compromise. Members build presence and signal discernment through curated style.",
+
+    desc: "We treat preloved fashion as a professional strategy, not a compromise. Members build presence and signal discernment.",
   },
+
   {
     label: "02",
+
     title: "Access & Opportunity",
-    desc: "We create access to people, places, and opportunities not visible through traditional career channels. Exclusive entry to the unlisted.",
+
+    desc: "We create access to people, places, and opportunities not visible through traditional career channels.",
   },
+
   {
     label: "03",
+
     title: "Community Led",
-    desc: "Moving ideas off-screen through city-based resources, events, and shared physical experiences. The archive is alive and in-person.",
+
+    desc: "Moving ideas off-screen through city-based resources, events, and shared physical experiences.",
   },
 ];
 
