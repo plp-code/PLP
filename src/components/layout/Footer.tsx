@@ -39,7 +39,7 @@ export default function Footer() {
 
         <div className="flex flex-col items-center gap-8 md:gap-10">
           <Link
-            href="/signup"
+            href="/waitlist"
             className="inline-flex items-center gap-3 px-8 py-3 border border-plp-parchment/20 rounded-full hover:bg-plp-lime hover:text-plp-maroon hover:border-plp-lime transition-all duration-500 group"
           >
             <span className="font-text font-bold uppercase tracking-[0.3em] text-[10px] md:text-xs">
