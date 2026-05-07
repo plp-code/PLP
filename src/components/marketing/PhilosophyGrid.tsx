@@ -1,38 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Container } from "../common/Container";
 import { Label, Display } from "../common/Typography";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
 
 const FEATURES = [
   {
     label: "01",
-
     title: "Professional Identity",
-
-    desc: "We treat preloved fashion as a professional strategy, not a compromise. Members build presence and signal discernment.",
+    desc: "We treat preloved fashion as a professional strategy, not a compromise. Members build presence and signal discernment through curated style.",
+    secret: "IDENTITY_SECURE",
   },
-
   {
     label: "02",
-
     title: "Access & Opportunity",
-
-    desc: "We create access to people, places, and opportunities not visible through traditional career channels.",
+    desc: "We create access to people, places, and opportunities not visible through traditional career channels. Exclusive entry to the unlisted.",
+    secret: "NETWORK_OPEN",
   },
-
   {
     label: "03",
-
     title: "Community Led",
-
-    desc: "Moving ideas off-screen through city-based resources, events, and shared physical experiences.",
+    desc: "Moving ideas off-screen through city-based resources, events, and shared physical experiences. The archive is alive and in-person.",
+    secret: "LOCAL_NODE_ACTIVE",
   },
 ];
 
 export default function FeatureDossierStack() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  const nextFeature = useCallback(() => {
+    setActiveIndex((prev) => (prev + 1) % FEATURES.length);
+  }, []);
+
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    const timer = setInterval(nextFeature, 4000);
+    return () => clearInterval(timer);
+  }, [isAutoPlaying, nextFeature]);
 
   return (
     <section className="bg-plp-parchment py-12 md:py-20" id="philosophy">
@@ -47,11 +53,18 @@ export default function FeatureDossierStack() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 items-start">
-          <div className="flex flex-col border-t border-plp-maroon/20">
+          <div
+            onMouseEnter={() => setIsAutoPlaying(false)}
+            onMouseLeave={() => setIsAutoPlaying(true)}
+            className="flex flex-col border-t border-plp-maroon/20"
+          >
             {FEATURES.map((feature, index) => (
               <button
                 key={feature.label}
-                onClick={() => setActiveIndex(index)}
+                onClick={() => {
+                  setActiveIndex(index);
+                  setIsAutoPlaying(false);
+                }}
                 className={`
                   group flex items-center justify-between py-6 border-b border-plp-maroon/20 transition-all text-left
                   ${activeIndex === index ? "pl-4" : "pl-0 opacity-40 hover:opacity-100"}
@@ -73,13 +86,16 @@ export default function FeatureDossierStack() {
             ))}
           </div>
 
-          {/* ACTIVE FILE PAGE */}
-          <div className="relative min-h-100">
+          <div
+            className="relative min-h-100"
+            onMouseEnter={() => setIsAutoPlaying(false)}
+            onMouseLeave={() => setIsAutoPlaying(true)}
+          >
             {FEATURES.map((feature, index) => (
               <div
                 key={feature.label}
                 className={`
-                  absolute inset-0 bg-white border border-plp-maroon p-8 md:p-12 shadow-xl transition-all duration-700 ease-in-out
+                  absolute inset-0 bg-white border border-plp-maroon p-8 md:p-12 shadow-xl transition-all duration-700 ease-in-out group/page
                   ${
                     activeIndex === index
                       ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
@@ -89,6 +105,13 @@ export default function FeatureDossierStack() {
               >
                 <div className="flex flex-col h-full justify-between">
                   <div className="space-y-8">
+                    <div className="flex items-center gap-2 text-plp-maroon/40">
+                      <Plus size={14} />
+                      <Label className="text-[9px] uppercase tracking-[0.3em]">
+                        Archive Entry {feature.label}
+                      </Label>
+                    </div>
+
                     <h4 className="font-prata not-italic text-3xl md:text-5xl text-plp-maroon leading-[0.9] uppercase tracking-tighter">
                       {feature.title}
                     </h4>
@@ -99,7 +122,9 @@ export default function FeatureDossierStack() {
                   </div>
 
                   <div className="pt-8 mt-12 border-t border-plp-maroon/10 flex items-center justify-between">
-                    <div className="h-2 w-2 rounded-full bg-plp-lime animate-pulse" />
+                    <div
+                      className={`h-2 w-2 rounded-full bg-plp-lime ${isAutoPlaying ? "animate-pulse" : "opacity-50"}`}
+                    />
                   </div>
                 </div>
               </div>
