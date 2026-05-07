@@ -105,13 +105,6 @@ export default function FeatureDossierStack() {
               >
                 <div className="flex flex-col h-full justify-between">
                   <div className="space-y-8">
-                    <div className="flex items-center gap-2 text-plp-maroon/40">
-                      <Plus size={14} />
-                      <Label className="text-[9px] uppercase tracking-[0.3em]">
-                        Archive Entry {feature.label}
-                      </Label>
-                    </div>
-
                     <h4 className="font-prata not-italic text-3xl md:text-5xl text-plp-maroon leading-[0.9] uppercase tracking-tighter">
                       {feature.title}
                     </h4>
