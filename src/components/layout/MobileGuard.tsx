@@ -18,7 +18,7 @@ export default function MobileGuard() {
       <div className="mt-12 h-px w-24 bg-plp-lime opacity-30" />
 
       <Label className="mt-4 text-[10px] opacity-40 uppercase tracking-widest">
-        Est. 2026 / New York / London
+        Est. 2026 / New York / LOS ANGELES
       </Label>
     </div>
   );
