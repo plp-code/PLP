@@ -1,15 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  ArrowUpRight,
-  BookOpen,
-  User,
-  LogIn,
-  X,
-  Scroll,
-  Globe,
-} from "lucide-react";
+import { ArrowUpRight, BookOpen, LogIn, X, Scroll, Globe } from "lucide-react";
 import { Label } from "../common/Typography";
 
 interface HeaderProps {
@@ -22,8 +14,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
     { name: "Home", icon: <Globe size={18} />, to: "/#home" },
     { name: "Manifesto", icon: <Scroll size={18} />, to: "/#manifesto" },
     { name: "Philosophy", icon: <BookOpen size={18} />, to: "/#philosophy" },
-    { name: "About Us", icon: <User size={18} />, to: "/#about" },
-    { name: "Membership", icon: <LogIn size={18} />, to: "/waitlist" },
+    { name: "Join", icon: <LogIn size={18} />, to: "/waitlist" },
   ];
 
   return (
