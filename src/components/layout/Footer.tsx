@@ -75,13 +75,11 @@ export default function Footer() {
 
       <div className="relative z-10 flex flex-col md:flex-row justify-between items-center px-6 py-4 border-t border-plp-parchment/10">
         <div className="flex flex-col md:flex-row gap-3 md:gap-8 opacity-25 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-black">
-          <Label>© {currentYear} THE PRELOVED PROFESSIONAL</Label>
+          <Label>text if we want</Label>
         </div>
 
         <div className="mt-4 md:mt-0 opacity-50">
-          <span className="font-plp text-3xl tracking-tighter">
-            PLP<span className="text-[8px] align-top ml-0.5">™</span>
-          </span>
+          <span className="font-plp text-3xl tracking-normal">PLP</span>
         </div>
       </div>
     </footer>

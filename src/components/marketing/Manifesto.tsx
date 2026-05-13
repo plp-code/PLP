@@ -6,144 +6,152 @@ export default function Manifesto() {
   return (
     <section
       id="manifesto"
-      className="relative w-full h-screen min-h-200 bg-[#f2ede4] overflow-hidden px-6 md:px-12 flex items-center justify-center"
+      className="relative w-full min-h-screen overflow-hidden bg-plp-parchment px-6 py-16 md:px-12"
     >
-      <svg className="absolute h-0 w-0" aria-hidden="true">
-        <defs>
-          <filter id="tear-mild">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.04"
-              numOctaves="4"
-              seed="5"
-            />
-            <feDisplacementMap in="SourceGraphic" scale="3" />
-          </filter>
-          <filter id="tear-high">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.07"
-              numOctaves="5"
-              seed="12"
-            />
-            <feDisplacementMap in="SourceGraphic" scale="12" />
-          </filter>
-          <filter id="tear-extreme">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.1"
-              numOctaves="3"
-              seed="88"
-            />
-            <feDisplacementMap in="SourceGraphic" scale="18" />
-          </filter>
-        </defs>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.08))] pointer-events-none z-0" />
+
+      <div
+        className="absolute inset-0 opacity-[0.05] mix-blend-multiply pointer-events-none"
+        style={{
+          backgroundImage:
+            "url('https://www.transparenttextures.com/patterns/paper-fibers.png')",
+        }}
+      />
+
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.06] pointer-events-none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M100 120 Q300 200 500 130"
+          stroke="#17263f"
+          strokeWidth="2"
+          fill="none"
+        />
+        <path
+          d="M820 620 Q720 560 650 710"
+          stroke="#17263f"
+          strokeWidth="2"
+          fill="none"
+        />
       </svg>
 
-      <div className="absolute inset-0 pointer-events-none z-0 opacity-40">
-        <div
-          className="absolute top-[15%] left-[-5%] w-[120%] h-16 bg-plp-lime/40 rotate-12 mix-blend-multiply"
-          style={{ filter: "url(#tear-mild)" }}
-        />
-        <div
-          className="absolute bottom-[20%] right-[-10%] w-[110%] h-16 bg-plp-lime/30 -rotate-[5deg] mix-blend-multiply"
-          style={{ filter: "url(#tear-mild)" }}
-        />
-        <div
-          className="absolute top-[48%] right-[-15%] w-[120%] h-16 bg-plp-lime/30 -rotate-11 mix-blend-multiply"
-          style={{ filter: "url(#tear-mild)" }}
-        />
-        <div
-          className="absolute top-[10%] left-[45%] w-[12%] h-[120%] bg-plp-lime/15 rotate-82 mix-blend-multiply"
-          style={{ filter: "url(#tear-high)" }}
-        />
-      </div>
-
-      <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-12 relative z-20 items-center">
-        <div className="absolute inset-0 pointer-events-none z-40 hidden lg:block">
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 1000 800"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g
-              stroke="#17263f"
-              strokeWidth="2"
-              strokeLinecap="round"
-              opacity="0.4"
-            >
-              <line x1="510" y1="200" x2="650" y2="185" strokeDasharray="4 4" />
-              <path d="M 640,178 L 652,185 L 638,195" fill="none" />
-              <line x1="530" y1="450" x2="680" y2="500" />
-              <path d="M 668,505 L 682,502 L 675,488" fill="none" />
-              <line x1="510" y1="700" x2="630" y2="685" strokeDasharray="2 6" />
-              <path d="M 620,678 L 632,685 L 618,695" fill="none" />
-            </g>
-          </svg>
-        </div>
-
-        <div className="relative h-[80vh] max-h-175 w-full max-w-2xl">
+      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-16 items-center">
+        <div className="relative w-full max-w-2xl xl:max-w-3xl mx-auto h-180">
           <div
-            className="absolute inset-0 bg-[#d1d1d1] -rotate-[4deg] -translate-x-1.5 translate-y-6 shadow-sm"
-            style={{
-              filter: "url(#tear-mild)",
-              backgroundImage:
-                "url('https://www.transparenttextures.com/patterns/pinstripe.png')",
-            }}
-          />
-          <div
-            className="absolute inset-0 bg-[#e6e1d5] rotate-3 translate-x-6 -translate-y-3 shadow-md"
-            style={{
-              filter: "url(#tear-mild)",
-              backgroundImage:
-                "url('https://www.transparenttextures.com/patterns/linen.png')",
-            }}
-          />
-          <div
-            className="absolute inset-0 bg-[#f9f9f9] -rotate-2 translate-x-3 translate-y-3 shadow-lg"
-            style={{
-              filter: "url(#tear-mild)",
-              backgroundImage:
-                "linear-gradient(#e5e7eb 1px, transparent 1px), linear-gradient(90deg, #e5e7eb 1px, transparent 1px)",
-              backgroundSize: "16px 16px",
-            }}
+            className="
+              absolute inset-0
+              translate-y-4.5
+              translate-x-3.5
+              bg-[#bfc2c7]
+              border border-black/5
+              shadow-[0_18px_40px_rgba(0,0,0,0.10)]
+            "
           />
 
           <div
-            className="relative z-30 bg-[#fafafa] shadow-2xl h-full flex flex-col rotate-0 overflow-hidden"
+            className="
+              absolute inset-0
+              translate-y-3
+              translate-x-2.25
+              bg-[#d6d1c7]
+              border border-black/5
+              shadow-[0_14px_32px_rgba(0,0,0,0.08)]
+            "
+          />
+
+          <div
+            className="
+              absolute inset-0
+              translate-y-1.5
+              translate-x-1
+              bg-[#e5dfd3]
+              border border-black/4
+              shadow-[0_10px_24px_rgba(0,0,0,0.06)]
+            "
+          />
+
+          <div
+            className="
+              relative h-full
+              bg-plp-parchment
+              border border-black/6
+              overflow-hidden
+              shadow-[0_35px_80px_rgba(0,0,0,0.18)]
+            "
             style={{
-              filter: "url(#tear-mild)",
-              backgroundImage:
-                "repeating-linear-gradient(transparent, transparent 27px, #94a3b8 27px, #94a3b8 28px)",
-              backgroundSize: "100% 28px",
+              backgroundImage: `
+                radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.35), rgba(0,0,0,0.03))
+              `,
+              backgroundSize: "4px 4px, 100% 100%",
             }}
           >
-            <div className="absolute left-12 top-0 bottom-0 w-px bg-red-400/30" />
-            <div className="absolute left-4 top-0 bottom-0 flex flex-col items-center py-10 gap-8 opacity-25">
-              {[...Array(12)].map((_, i) => (
+            <div className="absolute left-0 top-0 h-full w-2 bg-black/2.5" />
+            <div className="absolute bottom-0 left-0 w-full h-2.5 bg-black/2" />
+
+            <div className="absolute left-5 top-24 flex flex-col gap-40 z-30">
+              {[...Array(3)].map((_, i) => (
                 <div
                   key={i}
-                  className="w-3 h-3 rounded-full bg-[#f2ede4] shadow-inner"
+                  className="
+                    w-5 h-5 rounded-full
+                    bg-[#d8d3ca]
+                    border border-black/10
+                    shadow-inner
+                  "
                 />
               ))}
             </div>
 
-            <div className="relative z-50 p-10 lg:pl-28 lg:pt-14">
-              <Display className="text-5xl md:text-7xl text-plp-maroon tracking-tighter mb-6 lowercase leading-none">
-                title
-              </Display>
-              <article className="space-y-6">
-                <Subtitle className="text-2xl md:text-3xl text-plp-maroon font-serif leading-tight italic">
-                  something
-                </Subtitle>
-                <p className="font-text text-base leading-relaxed text-plp-maroon/90 max-w-md">
-                  text text text text text text text
+            <div className="absolute top-0 right-0 w-40 h-40 opacity-10">
+              <div
+                className="absolute top-0 right-0 w-full h-full bg-linear-to-bl from-black/20 to-transparent"
+                style={{
+                  clipPath: "polygon(100% 0, 0 0, 100% 100%)",
+                }}
+              />
+            </div>
+
+            <div className="relative z-40 pl-24 pr-14 pt-16 pb-14">
+              <div className="mb-8">
+                <p className="font-mono uppercase tracking-[0.3em] text-xs text-plp-navy/45 mb-4">
+                  asdfasdf
                 </p>
-                <div className="pt-6 border-t border-plp-maroon/10">
-                  <p className="font-handwriting text-2xl md:text-4xl text-blue-800/40 leading-tight">
-                    TESTING
+
+                <Display className="text-5xl md:text-7xl lowercase text-plp-burgundy tracking-tight leading-none">
+                  some title
+                </Display>
+              </div>
+
+              <article className="space-y-7 max-w-xl">
+                <Subtitle className="font-serif italic text-2xl md:text-3xl text-plp-burgundy/90 leading-snug">
+                  asdfasdfasdf
+                </Subtitle>
+
+                <div className="space-y-5">
+                  <p className="text-plp-burgundy/80 leading-relaxed text-lg font-light">
+                    asdfasdfsadf
+                  </p>
+
+                  <p className="text-plp-burgundy/80 leading-relaxed text-lg font-light">
+                    asdfasdfasdfas
+                  </p>
+
+                  <p className="text-plp-burgundy/80 leading-relaxed text-lg font-light">
+                    asdfasdfdasf
+                  </p>
+                </div>
+
+                <div className="w-full h-px bg-plp-burgundy/10 my-8" />
+
+                <div className="space-y-2">
+                  <p className="font-mono uppercase text-xs tracking-[0.25em] text-plp-navy/35">
+                    asdfasdfasdf
+                  </p>
+
+                  <p className="font-[cursive] text-4xl md:text-5xl text-plp-navy/55 -rotate-2">
+                    asdfasdfas
                   </p>
                 </div>
               </article>
@@ -151,39 +159,116 @@ export default function Manifesto() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center lg:items-end space-y-8">
-          <div className="relative w-72 min-h-45 rotate-2 translate-x-4">
+        <div className="relative flex flex-col items-center lg:items-start gap-8 pl-24">
+          <svg
+            className="
+              absolute
+              -left-90
+              top-0
+              w-190
+              h-full
+              pointer-events-none
+              hidden lg:block
+              z-30
+            "
+            viewBox="0 0 760 1000"
+            fill="none"
+          >
+            <g
+              stroke="#17263f"
+              strokeWidth="2"
+              strokeLinecap="round"
+              opacity="0.32"
+            >
+              <path d="M 120 180 Q 320 120 470 145" />
+              <path d="M 456 136 L 472 145 L 458 154" />
+
+              <path d="M 80 470 Q 260 430 430 500" strokeDasharray="7 10" />
+              <path d="M 416 490 L 432 500 L 418 510" />
+
+              <path d="M 140 760 Q 300 720 480 700" />
+              <path d="M 466 690 L 482 700 L 468 710" />
+            </g>
+          </svg>
+
+          <div className="relative w-80 rotate-3">
             <div
-              className="absolute inset-0 bg-[#fdf9c4] shadow-xl"
-              style={{ filter: "url(#tear-high)" }}
+              className="
+                absolute -top-3 left-1/2 -translate-x-1/2
+                w-24 h-7
+                bg-white/50
+                rotate-[-4deg]
+                backdrop-blur-sm
+                shadow-sm
+                z-20
+              "
             />
-            <div className="relative z-10 p-8">
-              <p className="font-handwriting text-xl md:text-2xl text-blue-900/70 leading-snug">
-                something cool
+
+            <div
+              className="
+                relative
+                bg-plp-lime
+                min-h-55
+                px-8 py-10
+                shadow-[0_20px_40px_rgba(0,0,0,0.14)]
+              "
+            >
+              <p className="font-[cursive] text-3xl text-plp-navy/80 leading-snug">
+                asdfasdf
               </p>
             </div>
           </div>
 
-          <div className="relative w-72 min-h-45 -rotate-4 -translate-x-8 translate-y-2">
+          <div className="relative w-72 -rotate-[5deg] -translate-x-10">
             <div
-              className="absolute inset-0 bg-[#ffb7b2] shadow-xl"
-              style={{ filter: "url(#tear-extreme)" }}
+              className="
+                absolute -top-3 left-1/2 -translate-x-1/2
+                w-20 h-6
+                bg-white/50
+                rotate-[7deg]
+                shadow-sm
+                z-20
+              "
             />
-            <div className="relative z-10 p-8">
-              <p className="font-handwriting text-xl md:text-2xl text-maroon-900/60 leading-tight">
-                asdfasdf asdf asdfasdf asdf
+
+            <div
+              className="
+                relative
+                bg-[#f4b6c2]
+                min-h-55
+                px-8 py-10
+                shadow-[0_20px_40px_rgba(0,0,0,0.16)]
+              "
+            >
+              <p className="font-[cursive] text-2xl text-[#5a2d36]/85 leading-tight">
+                asdfasdf
               </p>
             </div>
           </div>
 
-          <div className="relative w-72 min-h-37.5 rotate-2 translate-x-6 -translate-y-2">
+          <div className="relative w-80 rotate-1 translate-x-5">
             <div
-              className="absolute inset-0 bg-[#b2f2bb] shadow-xl"
-              style={{ filter: "url(#tear-high)" }}
+              className="
+                absolute -top-2 left-1/2 -translate-x-1/2
+                w-20 h-6
+                bg-white/50
+                -rotate-3
+                shadow-sm
+                z-20
+              "
             />
-            <div className="relative z-10 p-8">
-              <p className="font-handwriting text-xl md:text-2xl text-green-900/60">
-                asdfasdfasdfa asdasdf
+
+            <div
+              className="
+                relative
+                bg-[#a9d6f5]
+                min-h-45
+                px-8 py-10
+                shadow-[0_20px_40px_rgba(0,0,0,0.16)]
+              "
+            >
+              <p className="font-[cursive] text-2xl text-[#1e3a5f]/80 leading-snug">
+                asdf
               </p>
             </div>
           </div>

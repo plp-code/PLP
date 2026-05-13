@@ -19,13 +19,15 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-100 flex flex-col bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] border-b border-black">
-        <div className="flex items-center justify-between h-16 bg-plp-maroon p-2 mx-1 mt-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
+      <header className="fixed top-0 left-0 w-full z-100 flex flex-col bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] border-b-2 border-black">
+        <div className="flex items-center justify-between h-14 bg-plp-maroon p-2 mx-1 my-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="cursor-pointer flex items-center justify-center w-10 h-10 bg-[#c0c0c0] shadow-[inset_2px_2px_#fff,inset_-2px_-2px_#808080] active:shadow-[inset_-2px_-2px_#fff,inset_2px_2px_#808080] group"
+            className="cursor-pointer flex flex-col items-center justify-center gap-1 w-9 h-9 bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080] group"
           >
-            <div className="w-4 h-1 bg-black shadow-[0_2px_0_#808080]" />
+            <div className="w-4 h-0.5 bg-black" />
+            <div className="w-4 h-0.5 bg-black" />
+            <div className="w-4 h-0.5 bg-black" />
           </button>
 
           <div className="flex-1 text-center">
@@ -37,22 +39,23 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
             </Link>
           </div>
 
-          <div className="flex items-center h-full gap-1">
+          <div className="flex items-center h-full">
             <Link
               href="/waitlist"
-              className="cursor-pointer flex items-center h-full px-4 bg-plp-lime text-plp-maroon font-bold text-[14px] uppercase tracking-tighter shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] hover:brightness-110 active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080]"
+              className="cursor-pointer flex items-center h-9 px-3 bg-plp-lime text-plp-maroon font-bold text-[11px] md:text-[13px] uppercase tracking-tighter shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] hover:brightness-110 active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080]"
             >
-              Access Request <ArrowUpRight size={14} className="ml-1" />
+              Access <span className="hidden md:inline ml-1">Request</span>{" "}
+              <ArrowUpRight size={14} className="ml-1" />
             </Link>
           </div>
         </div>
 
-        <div className="flex items-center gap-8 px-6 py-1.5 text-xs font-bold text-black border-b border-[#808080] bg-[#c0c0c0]">
+        <div className="flex items-center gap-8 px-6 py-1 text-[10px] font-bold text-black border-t border-[#808080] bg-[#c0c0c0]">
           <button className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
             Coming Soon
           </button>
           <button className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
-            Add
+            Something
           </button>
         </div>
       </header>

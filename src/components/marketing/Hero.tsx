@@ -14,7 +14,7 @@ export default function Hero() {
         </div>
 
         <div className="w-full text-center">
-          <Label className="text-sm md:text-[2vw] lg:text-[1.5vw] tracking-[0.3em] font-black opacity-90 uppercase text-plp-maroon">
+          <Label className="text-sm md:text-[2vw] lg:text-[1.5vw] tracking-wide font-black opacity-90 uppercase text-plp-maroon">
             Power never goes out of style.
           </Label>
         </div>
@@ -26,10 +26,6 @@ export default function Hero() {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
-        <span className="font-plp text-[40vw] rotate-12">PLP</span>
       </div>
     </section>
   );

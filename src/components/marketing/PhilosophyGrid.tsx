@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Container } from "../common/Container";
 import { Label, Display } from "../common/Typography";
-import { ChevronRight, Plus } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 const FEATURES = [
   {
