@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { SiInstagram, SiTiktok, SiPinterest } from "react-icons/si";
-import { Label } from "../common/Typography";
+import { Label } from "../ui/Typography";
 
 const SOCIAL_LINKS = [
   {
@@ -51,7 +51,7 @@ export default function Footer() {
             />
           </Link>
 
-          <div className="flex justify-center gap-x-8 gap-y-6">
+          <nav className="flex justify-center gap-x-8 gap-y-6" aria-label="Social links">
             {SOCIAL_LINKS.map((social) => (
               <a
                 key={social.name}
@@ -69,17 +69,17 @@ export default function Footer() {
                 </span>
               </a>
             ))}
-          </div>
+          </nav>
         </div>
       </div>
 
       <div className="relative z-10 flex flex-col md:flex-row justify-between items-center px-6 py-4 border-t border-plp-parchment/10">
-        <div className="flex flex-col md:flex-row gap-3 md:gap-8 opacity-25 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-black">
+        <div className="flex flex-col md:flex-row gap-3 md:gap-8 opacity-35 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-black">
           <Label>text if we want</Label>
         </div>
 
-        <div className="mt-4 md:mt-0 opacity-50">
-          <span className="font-plp text-3xl tracking-normal">PLP</span>
+        <div className="mt-4 md:mt-0 opacity-50 text-[8px] md:text-[9px] uppercase tracking-[0.2em] font-black">
+          <span>{currentYear} The Preloved Professional</span>
         </div>
       </div>
     </footer>

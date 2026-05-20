@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Label, Display } from "@/components/common/Typography";
+import { Label, Display } from "@/components/ui/Typography";
 import { ArrowLeft } from "lucide-react";
 
 export default function NotFound() {

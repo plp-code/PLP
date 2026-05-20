@@ -1,6 +1,6 @@
 "use client";
 
-import { Display, Subtitle } from "../common/Typography";
+import { Display, Subtitle } from "@/components/ui/Typography";
 
 export default function Manifesto() {
   return (
@@ -96,37 +96,6 @@ export default function Manifesto() {
               </article>
             </div>
           </div>
-        </div>
-
-        <div className="relative flex flex-col items-center lg:items-start gap-8 pl-24">
-          
-          <div className="relative w-80 rotate-2">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-[#eae3d2]/70 rotate-[-3deg] backdrop-blur-sm shadow-sm z-20" />
-            <div className="relative bg-[#f2e8c4] min-h-55 px-8 py-10 shadow-[0_15px_35px_rgba(0,0,0,0.12)]">
-              <p className="font-[cursive] text-3xl text-plp-navy/80 leading-snug">
-                asdfasdf
-              </p>
-            </div>
-          </div>
-
-          <div className="relative w-72 -rotate-2 -translate-x-6">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 bg-[#eae3d2]/70 rotate-[4deg] backdrop-blur-sm shadow-sm z-20" />
-            <div className="relative bg-[#e3c8b7] min-h-55 px-8 py-10 shadow-[0_15px_35px_rgba(0,0,0,0.14)]">
-              <p className="font-[cursive] text-2xl text-[#3a2a22]/85 leading-tight">
-                asdfasdf
-              </p>
-            </div>
-          </div>
-
-          <div className="relative w-80 rotate-1 translate-x-3">
-            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-20 h-6 bg-[#eae3d2]/70 -rotate-2 backdrop-blur-sm shadow-sm z-20" />
-            <div className="relative bg-[#c2cdbd] min-h-45 px-8 py-10 shadow-[0_15px_35px_rgba(0,0,0,0.12)]">
-              <p className="font-[cursive] text-2xl text-[#2c3629]/80 leading-snug">
-                asdf
-              </p>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>

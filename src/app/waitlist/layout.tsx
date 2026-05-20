@@ -1,5 +1,3 @@
-"use client";
-
 import HeaderSimplified from "@/components/layout/HeaderSimplified";
 import Footer from "@/components/layout/Footer";
 import MobileGuard from "@/components/layout/MobileGuard";

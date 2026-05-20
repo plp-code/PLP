@@ -11,6 +11,7 @@ export default function HeaderSimplified() {
           href="/"
           className="cursor-pointer flex items-center justify-center w-9 h-9 bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080] hover:brightness-105 group"
           title="Return to Index"
+          aria-label="Return to home"
         >
           <ArrowLeft
             size={16}
@@ -22,6 +23,7 @@ export default function HeaderSimplified() {
           <Link
             href="/"
             className="font-seventies text-white text-lg md:text-xl tracking-tight uppercase px-4"
+            aria-label="The Preloved Professional home"
           >
             The Preloved Professional
           </Link>

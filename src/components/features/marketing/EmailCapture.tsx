@@ -1,16 +1,19 @@
-import Banner from "@/components/common/Banner";
+import Banner from "../../ui/Banner";
 import Link from "next/link";
-import { Label } from "../common/Typography";
+import { Label } from "../../ui/Typography";
 import { ArrowRight } from "lucide-react";
 
 export default function EmailCapture() {
   return (
-    <Banner className="overflow-hidden relative bg-plp-maroon text-plp-parchment py-12 md:py-20">
+    <Banner
+      className="relative overflow-hidden bg-plp-maroon text-plp-parchment"
+      contentClassName="py-12 md:py-20"
+    >
       <div className="absolute bottom-2 right-4 text-[20vw] font-seventies opacity-[0.05] leading-none pointer-events-none select-none">
         PLP
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
           <div className="flex flex-col items-start gap-8">
             <p className="font-bodoni text-xl md:text-3xl leading-[1.15] tracking-tight max-w-lg">

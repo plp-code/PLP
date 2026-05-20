@@ -1,5 +1,5 @@
 import { Monitor } from "lucide-react";
-import { Display, Subtitle, Label } from "../common/Typography";
+import { Display, Subtitle, Label } from "../ui/Typography";
 
 export default function MobileGuard() {
   return (

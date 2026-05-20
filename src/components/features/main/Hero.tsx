@@ -1,6 +1,6 @@
 "use client";
 
-import { Display, Label } from "../common/Typography";
+import { Display, Label } from "../../ui/Typography";
 
 export default function Hero() {
   return (

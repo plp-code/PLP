@@ -6,6 +6,7 @@ interface ContainerProps {
   className?: string;
   fullBleed?: boolean;
   bg?: string;
+  contentClassName?: string;
   as?: ElementType;
 }
 
@@ -13,7 +14,8 @@ export const Container = ({
   children,
   className = "",
   fullBleed = false,
-  bg = "bg-plp-cream",
+  bg = "bg-transparent",
+  contentClassName = "",
   as: Component = "section",
 }: ContainerProps) => {
   return (
@@ -26,7 +28,8 @@ export const Container = ({
     >
       <div
         className={twMerge(
-          "mx-auto max-w-7xl", 
+          "mx-auto max-w-7xl",
+          contentClassName,
           !fullBleed && "px-6 md:px-12 lg:px-16"
         )}
       >

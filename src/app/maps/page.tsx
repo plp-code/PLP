@@ -1,15 +1,27 @@
-"use client";
+import type { Metadata } from "next";
+import Banner from "@/components/ui/Banner";
+import { Container } from "@/components/ui/Container";
+import MapDirectory from "@/components/features/maps/MapDirectory";
 
-
-import { Container } from "@/components/common/Container";
+export const metadata: Metadata = {
+  title: "Maps",
+};  
 
 export default function MapsPage() {
-
-
   return (
     <main className="min-h-screen bg-plp-parchment flex flex-col font-text selection:bg-plp-lime selection:text-plp-maroon">
-      <Container className="flex-1 flex flex-col justify-center py-20 md:py-28">
-       here
+      <Banner
+        title="Maps"
+        description="A clean place to sketch the structure of the project before the content system expands."
+        contentClassName="py-14 md:py-20"
+      />
+
+      <Container
+        as="section"
+        className="flex-1 py-8 md:py-12"
+        contentClassName="max-w-6xl w-full"
+      >
+        <MapDirectory />
       </Container>
     </main>
   );

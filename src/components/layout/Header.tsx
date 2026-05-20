@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUpRight, BookOpen, LogIn, X, Scroll, Globe } from "lucide-react";
-import { Label } from "../common/Typography";
+import { Label } from "../ui/Typography";
 
 interface HeaderProps {
   isMenuOpen: boolean;
@@ -51,14 +51,17 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
             </Link>
           </div>
         </div>
-        <div className="flex items-center gap-8 px-6 py-1 text-[10px] font-bold text-black border-t border-[#808080] bg-[#c0c0c0]">
+        <nav
+          className="flex items-center gap-8 px-6 py-1 text-[10px] font-bold text-black border-t border-[#808080] bg-[#c0c0c0]"
+          aria-label="Primary"
+        >
           <button className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
             Coming Soon
           </button>
           <Link href="/maps" className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
             Maps
           </Link>
-        </div>
+        </nav>
       </header>
 
       <aside

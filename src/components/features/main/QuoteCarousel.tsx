@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Container } from "../common/Container";
+import { Container } from "../../ui/Container";
 
 interface CarouselProps {
   quotes?: { [key: string]: string };
@@ -45,13 +45,14 @@ export default function QuoteCarousel({
     <Container
       fullBleed
       className="bg-plp-maroon border-y border-plp-maroon relative overflow-hidden"
+      contentClassName="max-w-6xl px-10"
     >
       <div
         className="relative pt-12 pb-8 md:pt-16 md:pb-10 group"
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}
       >
-        <div className="max-w-6xl mx-auto px-10 relative z-10 flex items-center justify-center">
+        <div className="relative z-10 flex items-center justify-center">
           <button
             onClick={prevQuote}
             className="hidden lg:block p-2 opacity-0 group-hover:opacity-100 transition-all hover:-translate-x-1 text-plp-lime/30 hover:text-plp-lime flex-shrink-0"
@@ -70,7 +71,7 @@ export default function QuoteCarousel({
                 }`}
               >
                 <blockquote className="font-handwriting text-lg md:text-2xl lg:text-3xl leading-relaxed tracking-tight mb-6 text-balance">
-                  “{quote}”
+                  "{quote}"
                 </blockquote>
 
                 <cite className="flex not-italic flex-col flex-wrap gap-2 justify-center">
@@ -99,17 +100,15 @@ export default function QuoteCarousel({
               aria-label={`View quote ${i + 1}`}
             >
               <div
-                className={`h-0.5 transition-all duration-500 ease-out rounded-full ${
+                className={`h-1 transition-all ${
                   i === index
-                    ? "w-8 bg-plp-lime"
-                    : "w-2 bg-plp-lime/20 group-hover:bg-plp-lime/40"
+                    ? "w-6 bg-plp-lime"
+                    : "w-1 bg-plp-lime/30 group-hover:bg-plp-lime/60"
                 }`}
               />
             </button>
           ))}
         </div>
-
-        <div className="absolute top-1/2 left-[-5%] w-[110%] h-24 bg-white/2 mix-blend-overlay -rotate-1 pointer-events-none z-0" />
       </div>
     </Container>
   );

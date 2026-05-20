@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Container } from "../common/Container";
-import { Label, Display } from "../common/Typography";
+import { Container } from "../../ui/Container";
+import { Label, Display } from "../../ui/Typography";
 import { ChevronRight } from "lucide-react";
 
 const FEATURES = [
@@ -97,28 +97,17 @@ export default function FeatureDossierStack() {
                 className={`
                   absolute inset-0 bg-white border border-plp-maroon p-8 md:p-12 shadow-xl transition-all duration-700 ease-in-out group/page
                   ${
-                    activeIndex === index
-                      ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
-                      : "opacity-0 translate-y-8 scale-95 pointer-events-none"
+                    activeIndex === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
                   }
                 `}
               >
-                <div className="flex flex-col h-full justify-between">
-                  <div className="space-y-8">
-                    <h4 className="font-prata not-italic text-3xl md:text-5xl text-plp-maroon leading-[0.9] uppercase tracking-tighter">
-                      {feature.title}
-                    </h4>
-
-                    <p className="font-text text-base md:text-lg text-plp-maroon/80 leading-relaxed max-w-lg">
-                      {feature.desc}
-                    </p>
-                  </div>
-
-                  <div className="pt-8 mt-12 border-t border-plp-maroon/10 flex items-center justify-between">
-                    <div
-                      className={`h-2 w-2 rounded-full bg-plp-lime ${isAutoPlaying ? "animate-pulse" : "opacity-50"}`}
-                    />
-                  </div>
+                <div className="space-y-6">
+                  <p className="font-mono uppercase tracking-[0.2em] text-xs text-plp-maroon/40 leading-relaxed">
+                    {feature.secret}
+                  </p>
+                  <p className="text-lg md:text-xl leading-relaxed text-plp-maroon font-light">
+                    {feature.desc}
+                  </p>
                 </div>
               </div>
             ))}
