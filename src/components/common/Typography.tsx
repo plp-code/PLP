@@ -9,7 +9,7 @@ interface TextProps {
 export const Display = ({ children, className = "" }: TextProps) => (
   <p
     className={twMerge(
-      "font-seventies text-6xl md:text-9xl capitalize tracking-tight leading-none",
+      "font-seventies text-plp-maroon leading-[0.85] tracking-tighter",
       className,
     )}
   >

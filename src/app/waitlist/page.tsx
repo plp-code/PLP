@@ -14,10 +14,9 @@ export default function WaitlistPage() {
       <Container className="flex-1 flex flex-col justify-center py-20 md:py-28">
         <div className="max-w-6xl mx-auto w-full">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-24 items-center">
-            {/* LEFT SIDE: SIMPLE MESSAGE */}
             <div className="space-y-6">
               <div className="space-y-4">
-                <Display className="text-6xl md:text-8xl leading-[0.85] lowercase text-plp-maroon tracking-tighter">
+                <Display className="text-6xl md:text-8xl lowercase">
                   Join Today
                 </Display>
               </div>

@@ -44,7 +44,7 @@ export default function FeatureDossierStack() {
     <section className="bg-plp-parchment py-12 md:py-20" id="philosophy">
       <Container>
         <div className="mb-16 border-l-2 border-plp-maroon pl-6 max-w-2xl">
-          <Display className="text-4xl md:text-5xl capitalize mb-3 leading-none text-plp-maroon">
+          <Display className="text-4xl md:text-5xl mb-3 capitalize leading-none">
             How We Serve
           </Display>
           <p className="font-prata not-italic text-sm md:text-base text-plp-maroon/70 tracking-wide uppercase">

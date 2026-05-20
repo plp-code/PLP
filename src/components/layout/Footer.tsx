@@ -33,7 +33,7 @@ export default function Footer() {
       </div>
 
       <div className="relative z-10 pt-10 pb-8 md:pt-16 md:pb-12 text-center">
-        <h2 className="text-[8vw] md:text-[4.5vw] font-seventies leading-[0.85] mb-8 tracking-tight uppercase italic">
+        <h2 className="text-[8vw] md:text-[4.5vw] font-seventies leading-[0.85] mb-8 tracking-tight uppercase ">
           The Preloved <br className="md:hidden" /> Professional
         </h2>
 

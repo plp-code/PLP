@@ -21,16 +21,18 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
     <>
       <header className="fixed top-0 left-0 w-full z-100 flex flex-col bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] border-b-2 border-black">
         <div className="flex items-center justify-between h-14 bg-plp-maroon p-2 mx-1 my-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
-          <button
-            onClick={() => setIsMenuOpen(true)}
-            className="cursor-pointer flex flex-col items-center justify-center gap-1 w-9 h-9 bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080] group"
-          >
-            <div className="w-4 h-0.5 bg-black" />
-            <div className="w-4 h-0.5 bg-black" />
-            <div className="w-4 h-0.5 bg-black" />
-          </button>
+          <div className="flex-1 flex justify-start">
+            <button
+              onClick={() => setIsMenuOpen(true)}
+              className="cursor-pointer flex flex-col items-center justify-center gap-1 w-9 h-9 bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080] group"
+            >
+              <div className="w-4 h-0.5 bg-black" />
+              <div className="w-4 h-0.5 bg-black" />
+              <div className="w-4 h-0.5 bg-black" />
+            </button>
+          </div>
 
-          <div className="flex-1 text-center">
+          <div className="text-center whitespace-nowrap">
             <Link
               href="/"
               className="font-seventies text-white text-lg md:text-xl tracking-tight uppercase px-4"
@@ -39,12 +41,12 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
             </Link>
           </div>
 
-          <div className="flex items-center h-full">
+          <div className="flex-1 flex justify-end items-center h-full">
             <Link
               href="/waitlist"
               className="cursor-pointer flex items-center h-9 px-3 bg-plp-lime text-plp-maroon font-bold text-[11px] md:text-[13px] uppercase tracking-tighter shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] hover:brightness-110 active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080]"
             >
-              Access <span className="hidden md:inline ml-1">Request</span>{" "}
+              Access <span className="hidden md:inline ml-1">Request</span>
               <ArrowUpRight size={14} className="ml-1" />
             </Link>
           </div>
