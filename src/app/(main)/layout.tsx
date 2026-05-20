@@ -27,7 +27,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
       scrollTimeout.current = setTimeout(() => {
         setIsVisible(true);
-      }, 300);
+      }, 500);
 
       lastScrollY.current = currentScrollY;
     };

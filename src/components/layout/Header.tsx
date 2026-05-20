@@ -19,7 +19,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-100 flex flex-col bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] border-b-2 border-black">
+      <header className="w-full flex flex-col bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] border-b-2 border-black"> 
         <div className="flex items-center justify-between h-14 bg-plp-maroon p-2 mx-1 my-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
           <div className="flex-1 flex justify-start">
             <button
@@ -51,13 +51,12 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
             </Link>
           </div>
         </div>
-
         <div className="flex items-center gap-8 px-6 py-1 text-[10px] font-bold text-black border-t border-[#808080] bg-[#c0c0c0]">
           <button className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
             Coming Soon
           </button>
           <button className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
-            Something
+            Map (some name)
           </button>
         </div>
       </header>

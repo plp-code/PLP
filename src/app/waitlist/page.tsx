@@ -16,7 +16,7 @@ export default function WaitlistPage() {
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-24 items-center">
             <div className="space-y-6">
               <div className="space-y-4">
-                <Display className="text-6xl md:text-8xl lowercase">
+                <Display className="text-6xl md:text-8xl capitalize">
                   Join Today
                 </Display>
               </div>
