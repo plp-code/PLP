@@ -14,6 +14,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
     { name: "Home", icon: <Globe size={18} />, to: "/#home" },
     { name: "Manifesto", icon: <Scroll size={18} />, to: "/#manifesto" },
     { name: "Philosophy", icon: <BookOpen size={18} />, to: "/#philosophy" },
+    { name: "Maps", icon: <Globe size={18} />, to: "/maps" },
     { name: "Join", icon: <LogIn size={18} />, to: "/waitlist" },
   ];
 
