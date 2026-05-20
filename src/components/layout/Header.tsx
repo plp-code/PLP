@@ -55,9 +55,9 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
           <button className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
             Coming Soon
           </button>
-          <button className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
-            Map (some name)
-          </button>
+          <Link href="/maps" className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
+            Maps
+          </Link>
         </div>
       </header>
 
