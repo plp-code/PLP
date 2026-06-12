@@ -19,9 +19,9 @@ export default function Manifesto() {
       />
 
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-[18%] -left-[10%] w-[120%] h-12 bg-[#e8e1a8]/40 mix-blend-multiply rotate-[2deg] blur-[2px]" />
-        <div className="absolute top-[45%] -left-[10%] w-[120%] h-16 bg-[#e8e1a8]/45 mix-blend-multiply -rotate-[12deg] blur-[2px]" />
-        <div className="absolute bottom-[18%] -left-[10%] w-[120%] h-10 bg-[#e8e1a8]/35 mix-blend-multiply rotate-[24deg] blur-[2px]" />
+        <div className="absolute top-[18%] -left-[10%] w-[120%] h-12 bg-plp-lime/40 mix-blend-multiply rotate-[2deg] blur-[2px]" />
+        <div className="absolute top-[45%] -left-[10%] w-[120%] h-16 bg-plp-lime/45 mix-blend-multiply -rotate-[12deg] blur-[2px]" />
+        <div className="absolute bottom-[18%] -left-[10%] w-[120%] h-10 bg-plp-lime/35 mix-blend-multiply rotate-[24deg] blur-[2px]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-16 items-center">

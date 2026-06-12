@@ -32,7 +32,6 @@
   --font-bodoni: "Bodoni Moda", serif;
   --font-handwriting: "Rock Salt", cursive;
   --font-architect: "Architects Daughter", cursive;
-
   --font-alike: "Alike Angular", serif;
 
   /* Colors */
@@ -43,6 +42,9 @@
   --color-plp-olive: #313e1b;
   --color-plp-clay: #624045;
   --color-plp-slate: #a0a0a0;
+  --color-plp-babyblue: #bdd5e7;
+  --color-plp-testy: #a6b569;
+  --color-plp-testz: #b4c472;
 
   /* Animations */
   --animation-carousel: carousel 12s infinite;

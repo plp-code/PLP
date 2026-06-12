@@ -1,35 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { usePathname } from "next/navigation";
+import AuthAction from "../features/login/AuthBtn";
+import BackButton from "@/components/ui/BackBtn"; 
 
 export default function HeaderSimplified() {
+  const pathname = usePathname();
+  const isUserLoggedIn = false; 
+
+  const isLoginPage = pathname === "/login";
+
   return (
     <header className="fixed top-0 left-0 w-full z-100 flex flex-col bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] border-b-2 border-black">
       <div className="flex items-center justify-between h-14 bg-plp-maroon p-2 mx-1 my-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
-        <Link
-          href="/"
-          className="cursor-pointer flex items-center justify-center w-9 h-9 bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080] hover:brightness-105 group"
-          title="Return to Index"
-          aria-label="Return to home"
-        >
-          <ArrowLeft
-            size={16}
-            className="text-black group-hover:-translate-x-0.5 transition-transform"
-          />
-        </Link>
+        <div className="flex-1 flex justify-start pl-1">
+          {isLoginPage ? <BackButton /> : null}
+        </div>
 
-        <div className="flex-1 text-center">
+        <div className="flex-none text-center">
           <Link
             href="/"
             className="font-seventies text-white text-lg md:text-xl tracking-tight uppercase px-4"
-            aria-label="The Preloved Professional home"
           >
             The Preloved Professional
           </Link>
         </div>
 
-        <div className="w-9" />
+        <div className="flex-1 flex justify-end items-center h-full pr-1">
+          {!isLoginPage && <AuthAction isLoggedIn={isUserLoggedIn} />}
+        </div>
       </div>
     </header>
   );

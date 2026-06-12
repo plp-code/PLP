@@ -12,9 +12,9 @@ export default function SimplifiedLayout({ children }: { children: ReactNode }) 
 
       <MobileGuard />
 
-      <main className="grow pt-16">
+      <div className="grow pt-16">
         {children}
-      </main>
+      </div>
 
       <Footer />
     </div>

@@ -27,9 +27,9 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
               onClick={() => setIsMenuOpen(true)}
               className="cursor-pointer flex flex-col items-center justify-center gap-1 w-9 h-9 bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080] group"
             >
-              <div className="w-4 h-0.5 bg-black" />
-              <div className="w-4 h-0.5 bg-black" />
-              <div className="w-4 h-0.5 bg-black" />
+              <div className="w-4 h-0.5 bg-plp-navy" />
+              <div className="w-4 h-0.5 bg-plp-navy" />
+              <div className="w-4 h-0.5 bg-plp-navy" />
             </button>
           </div>
 
@@ -45,7 +45,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
           <div className="flex-1 flex justify-end items-center h-full">
             <Link
               href="/waitlist"
-              className="cursor-pointer flex items-center h-9 px-3 bg-plp-lime text-plp-maroon font-bold text-[11px] md:text-[13px] uppercase tracking-tighter shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] hover:brightness-110 active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080]"
+              className="cursor-pointer flex items-center h-9 px-3 bg-plp-babyblue text-plp-white font-bold text-[11px] md:text-[13px] uppercase tracking-tighter shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] hover:brightness-110 active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080]"
             >
               Access <span className="hidden md:inline ml-1">Request</span>
               <ArrowUpRight size={14} className="ml-1" />
@@ -56,10 +56,8 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
           className="flex items-center gap-8 px-6 py-1 text-[10px] font-bold text-black border-t border-[#808080] bg-[#c0c0c0]"
           aria-label="Primary"
         >
-          <button className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
-            Coming Soon
-          </button>
-          <Link href="/maps" className="hover:bg-plp-maroon hover:text-white px-2 transition-colors cursor-pointer underline underline-offset-2 decoration-1">
+     
+          <Link href="/maps" className="hover:bg-plp-maroon hover:text-white px-2 uppercase transition-colors cursor-pointer underline underline-offset-2 decoration-1">
             Maps
           </Link>
         </nav>

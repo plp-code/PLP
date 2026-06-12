@@ -60,7 +60,7 @@ export default function QuoteCarousel({
             <ChevronLeft className="w-6 h-6 stroke-[1.5px]" />
           </button>
 
-          <div className="grid grid-cols-1 grid-rows-1 w-full text-center text-plp-lime px-4 md:px-12">
+          <div className="grid grid-cols-1 grid-rows-1 w-full text-center text-plp-testz px-4 md:px-12">
             {Object.entries(quotes).map(([author, quote], i) => (
               <div
                 key={i}

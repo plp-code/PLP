@@ -63,13 +63,13 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         `}
       />
 
-      <main
+      <div
         className={`grow pt-16 transition-all duration-700 
           ${isMenuOpen ? "scale-[0.98] origin-top brightness-90" : "scale-100 brightness-100"}
         `}
       >
         {children}
-      </main>
+      </div>
 
       <Footer />
     </div>

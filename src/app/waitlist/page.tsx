@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function WaitlistPage() {
   return (
-    <main className="min-h-screen bg-plp-parchment flex flex-col font-text selection:bg-plp-lime selection:text-plp-maroon">
+    <div className="min-h-screen bg-plp-parchment flex flex-col font-text selection:bg-plp-lime selection:text-plp-maroon">
       <Banner
         eyebrow="Access request"
         title="Join the waitlist"
@@ -41,6 +41,6 @@ export default function WaitlistPage() {
           </div>
         </div>
       </Container>
-    </main>
+    </div>
   );
 }

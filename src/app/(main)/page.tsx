@@ -6,12 +6,12 @@ import EmailCapture from "@/components/features/marketing/EmailCapture";
 
 export default function LandingPage() {
   return (
-    <main>
+    <div>
       <Hero />
       <EmailCapture />
       <Manifesto />
       <QuoteCarousel />
       <PhilosophyGrid />
-    </main>
+    </div>
   );
 }

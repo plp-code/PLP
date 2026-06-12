@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-plp-parchment p-6 text-center overflow-hidden">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-plp-parchment p-6 text-center overflow-hidden">
       <Label className="mb-4 opacity-40 uppercase tracking-[0.4em] text-xs md:text-sm">
         Error 404
       </Label>
@@ -33,6 +33,6 @@ export default function NotFound() {
       <div className="absolute bottom-6 right-8 opacity-[0.03] font-plp text-[15vw] pointer-events-none select-none">
         PLP
       </div>
-    </main>
+    </div>
   );
 }
