@@ -13,13 +13,30 @@ export function useAuth() {
     const payload = Object.fromEntries(formData.entries());
 
     try {
-      await api.post(endpoint, payload);
+      if (isLogin) {
+        const params = new URLSearchParams();
+        params.append("username", formData.get("username") as string);
+        params.append("password", formData.get("password") as string);
 
-      window.location.href = "/maps"; 
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params,
+        });
 
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.detail || "Authentication failed.");
+        }
+      } else {
+        const payload = Object.fromEntries(formData.entries());
+        await api.post(endpoint, payload);
+      }
+
+      window.location.href = "/maps";
     } catch (err: any) {
       console.error("Auth Error:", err);
-      setError(err.message); 
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }

@@ -67,7 +67,7 @@ export default function AuthForm() {
             </label>
             <input
               type="email"
-              name="email"
+              name="username"
               required
               disabled={isLoading}
               className="h-9 px-2 bg-white text-black text-sm outline-none shadow-[inset_2px_2px_#808080,inset_-1px_-1px_#fff] focus:bg-plp-parchment disabled:opacity-70"

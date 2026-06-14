@@ -4,10 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthAction from "../features/login/AuthBtn";
 import BackButton from "@/components/ui/BackBtn"; 
+import { useAuthUser } from "@/context/AuthContext"; 
 
 export default function HeaderSimplified() {
   const pathname = usePathname();
-  const isUserLoggedIn = false; 
+  
+  const { isAuthenticated, isLoading } = useAuthUser(); 
 
   const isLoginPage = pathname === "/login";
 
@@ -28,7 +30,9 @@ export default function HeaderSimplified() {
         </div>
 
         <div className="flex-1 flex justify-end items-center h-full pr-1">
-          {!isLoginPage && <AuthAction isLoggedIn={isUserLoggedIn} />}
+          {!isLoginPage && !isLoading && (
+            <AuthAction isLoggedIn={isAuthenticated} />
+          )}
         </div>
       </div>
     </header>
