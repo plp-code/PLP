@@ -7,6 +7,7 @@ import {
   useState,
   ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 
 interface User {
@@ -21,6 +22,7 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   logout: () => Promise<void>;
+  checkSession: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -28,31 +30,46 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   isAuthenticated: false,
   logout: async () => {},
+  checkSession: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  const checkSession = async () => {
+    try {
+      setIsLoading(true);
+
+      const response = await fetch("/api/user/me", {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Not authenticated");
+      }
+
+      const userData = await response.json();
+      setUser(userData);
+    } catch (error) {
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await api.get<User>("/api/user/me");
-        setUser(userData);
-      } catch (error) {
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchUser();
+    checkSession();
   }, []);
 
   const logout = async () => {
     try {
       setIsLoading(true);
-
       await api.post("/api/auth/logout");
     } catch (error) {
       console.error("Logout failed", error);
@@ -60,13 +77,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       setIsLoading(false);
 
-      window.location.href = "/login";
+      router.push("/login");
     }
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, isAuthenticated: !!user, logout }}
+      value={{ user, isLoading, isAuthenticated: !!user, logout, checkSession }}
     >
       {children}
     </AuthContext.Provider>

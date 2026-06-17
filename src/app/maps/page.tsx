@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link"; // 🟢 1. Import Next.js native Link
 import Banner from "@/components/ui/Banner";
 import { Container } from "@/components/ui/Container";
 import MapDirectory from "@/components/features/maps/MapDirectory";
@@ -19,8 +20,8 @@ export default function MapsPage() {
       <Container
         as="section"
         className="flex-1 py-8 md:py-12"
-        contentClassName="max-w-6xl w-full"
-      >
+        contentClassName="max-w-6xl w-full flex flex-col gap-8" 
+      >      
         <MapDirectory />
       </Container>
     </section>

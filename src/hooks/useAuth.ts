@@ -1,46 +1,62 @@
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { useAuthUser } from "@/context/AuthContext";
 
-export function useAuth() {
+export function useAuthActions() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const authenticate = async (isLogin: boolean, formData: FormData) => {
+  const { checkSession } = useAuthUser();
+
+  const login = async (formData: FormData) => {
     setIsLoading(true);
     setError(null);
 
-    const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
-    const payload = Object.fromEntries(formData.entries());
-
     try {
-      if (isLogin) {
-        const params = new URLSearchParams();
-        params.append("username", formData.get("username") as string);
-        params.append("password", formData.get("password") as string);
+      const params = new URLSearchParams();
+      params.append("username", formData.get("email") as string);
+      params.append("password", formData.get("password") as string);
 
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: params,
-        });
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString(),
+      });
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.detail || "Authentication failed.");
-        }
-      } else {
-        const payload = Object.fromEntries(formData.entries());
-        await api.post(endpoint, payload);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || "Invalid email or password.");
       }
 
-      window.location.href = "/maps";
+      await checkSession();
+
+      router.push("/maps");
     } catch (err: any) {
-      console.error("Auth Error:", err);
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { authenticate, isLoading, error };
+  const register = async (formData: FormData) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const payload = Object.fromEntries(formData.entries());
+
+      await api.post("/api/auth/register", payload);
+      await checkSession();
+
+      router.push("/maps");
+    } catch (err: any) {
+      setError(err.message || "Registration failed. Please check your inputs.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { login, register, isLoading, error };
 }
