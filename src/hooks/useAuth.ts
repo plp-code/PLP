@@ -1,7 +1,9 @@
+"use client";
+
 import { useState } from "react";
-import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useAuthUser } from "@/context/AuthContext";
+import { api } from "@/lib/api";
 
 export function useAuthActions() {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,26 +17,19 @@ export function useAuthActions() {
     setError(null);
 
     try {
-      const params = new URLSearchParams();
-      params.append("username", formData.get("email") as string);
-      params.append("password", formData.get("password") as string);
+      const email = formData.get("email");
+      const password = formData.get("password");
 
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: params.toString(),
+     
+      await api.post("/api/auth/login", {
+        email: email,
+        password: password,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || "Invalid email or password.");
-      }
-
       await checkSession();
-
       router.push("/maps");
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Invalid email or password.");
     } finally {
       setIsLoading(false);
     }
@@ -48,8 +43,8 @@ export function useAuthActions() {
       const payload = Object.fromEntries(formData.entries());
 
       await api.post("/api/auth/register", payload);
-      await checkSession();
 
+      await checkSession();
       router.push("/maps");
     } catch (err: any) {
       setError(err.message || "Registration failed. Please check your inputs.");

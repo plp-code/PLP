@@ -41,20 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkSession = async () => {
     try {
       setIsLoading(true);
-
-      const response = await fetch("/api/user/me", {
-        method: "GET",
-        cache: "no-store",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Not authenticated");
-      }
-
-      const userData = await response.json();
+      const userData = await api.get("/api/user/me");
       setUser(userData);
     } catch (error) {
       setUser(null);

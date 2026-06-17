@@ -2,8 +2,6 @@ interface FetchOptions extends RequestInit {
   _retry?: boolean;
 }
 
-let isRefreshing = false;
-
 async function fetcher<T>(url: string, options: FetchOptions = {}): Promise<T> {
   const headers = {
     "Content-Type": "application/json",
@@ -22,7 +20,7 @@ async function fetcher<T>(url: string, options: FetchOptions = {}): Promise<T> {
 
       try {
         const refreshResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`,
+          `${process.env.FASTAPI_URL}/api/auth/refresh`,
           {
             method: "POST",
             credentials: "include",
