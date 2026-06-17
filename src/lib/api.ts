@@ -1,4 +1,10 @@
-async function fetcher<T>(url: string, options: RequestInit = {}): Promise<T> {
+interface FetchOptions extends RequestInit {
+  _retry?: boolean;
+}
+
+let isRefreshing = false;
+
+async function fetcher<T>(url: string, options: FetchOptions = {}): Promise<T> {
   const headers = {
     "Content-Type": "application/json",
     ...options.headers,
@@ -10,6 +16,36 @@ async function fetcher<T>(url: string, options: RequestInit = {}): Promise<T> {
     credentials: "include",
   });
 
+  if (response.status === 401) {
+    if (!options._retry) {
+      options._retry = true;
+
+      try {
+        const refreshResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`,
+          {
+            method: "POST",
+            credentials: "include",
+          },
+        );
+
+        if (refreshResponse.ok) {
+          return fetcher<T>(url, options);
+        }
+      } catch (refreshError) {
+        console.error("Silent refresh failed", refreshError);
+      }
+    }
+
+    if (
+      typeof window !== "undefined" &&
+      window.location.pathname !== "/login"
+    ) {
+      window.location.href = "/login";
+    }
+    throw new Error("Session expired. Please log in again.");
+  }
+
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(
@@ -18,31 +54,28 @@ async function fetcher<T>(url: string, options: RequestInit = {}): Promise<T> {
   }
 
   const text = await response.text();
-  if (!text) {
-    return {} as T;
-  }
-
+  if (!text) return {} as T;
   return JSON.parse(text) as T;
 }
 
 export const api = {
-  get: <T = any>(url: string, options?: RequestInit) =>
+  get: <T = any>(url: string, options?: FetchOptions) =>
     fetcher<T>(url, { ...options, method: "GET" }),
 
-  post: <T = any>(url: string, body?: any, options?: RequestInit) =>
+  post: <T = any>(url: string, body?: any, options?: FetchOptions) =>
     fetcher<T>(url, {
       ...options,
       method: "POST",
       body: body ? JSON.stringify(body) : undefined,
     }),
 
-  put: <T = any>(url: string, body?: any, options?: RequestInit) =>
+  put: <T = any>(url: string, body?: any, options?: FetchOptions) =>
     fetcher<T>(url, {
       ...options,
       method: "PUT",
       body: body ? JSON.stringify(body) : undefined,
     }),
 
-  delete: <T = any>(url: string, options?: RequestInit) =>
+  delete: <T = any>(url: string, options?: FetchOptions) =>
     fetcher<T>(url, { ...options, method: "DELETE" }),
 };

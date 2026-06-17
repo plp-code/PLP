@@ -18,7 +18,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <HeaderSimplified />
       </div>
 
-      <MobileGuard />
+      {/* <MobileGuard /> */}
 
       <main className="flex-1 flex pt-14">
         <div className="w-full lg:w-1/2 bg-plp-parchment relative flex items-center justify-center p-6 md:p-12 overflow-hidden">
