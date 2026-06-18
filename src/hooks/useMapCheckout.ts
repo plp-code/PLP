@@ -1,4 +1,6 @@
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuthUser } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { MapItem } from "@/types";
 
@@ -6,10 +8,22 @@ export function useMapCheckout() {
   const [checkoutLoadingId, setCheckoutLoadingId] = useState<number | null>(
     null,
   );
+  const { isAuthenticated, isLoading } = useAuthUser();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleMapAction = async (map: MapItem) => {
+    if (isLoading) {
+      return;
+    }
+
+    if (!isAuthenticated) {
+      router.push(`/login?returnTo=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
     if (map.has_access) {
-      window.location.href = `/maps/${map.slug}`;
+      router.push(`/maps/${map.slug}`);
       return;
     }
 

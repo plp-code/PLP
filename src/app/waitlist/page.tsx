@@ -5,7 +5,7 @@ import { Subtitle } from "@/components/ui/Typography";
 import WaitlistForm from "@/components/features/marketing/WaitlistForm";
 
 export const metadata: Metadata = {
-  title: "Waitlist",
+  title: "Waitlist | The Preloved Professional",
   description:
     "Join the PLP waitlist to receive launch updates and early access to new releases.",
 };

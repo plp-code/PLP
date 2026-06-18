@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { LogIn, LogOut, Loader2 } from "lucide-react";
 import { useAuthUser } from "@/context/AuthContext";
 
 export default function AuthAction({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { logout, isLoading } = useAuthUser();
+  const pathname = usePathname();
 
   if (isLoggedIn) {
     return (
@@ -29,7 +31,7 @@ export default function AuthAction({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   return (
     <Link
-      href="/login"
+      href={{ pathname: "/login", query: { returnTo: pathname } }}
       className="cursor-pointer flex items-center gap-1.5 h-10 md:h-9 px-3 sm:px-4 bg-plp-babyblue text-plp-white font-bold text-[11px] md:text-[13px] capitalize tracking-tighter shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] hover:brightness-110 active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080] transition-all"
     >
       Login<LogIn size={14} />

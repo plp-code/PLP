@@ -6,12 +6,25 @@ import { useAuthUser } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { AuthResponse } from "@/types/api";
 
-export function useAuthActions() {
+const DEFAULT_RETURN_PATH = "/maps";
+
+function getSafeReturnPath(returnTo?: string | null) {
+  if (!returnTo) return DEFAULT_RETURN_PATH;
+
+  if (!returnTo.startsWith("/") || returnTo.startsWith("//")) {
+    return DEFAULT_RETURN_PATH;
+  }
+
+  return returnTo;
+}
+
+export function useAuthActions(returnTo?: string | null) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const { checkSession } = useAuthUser();
+  const targetPath = getSafeReturnPath(returnTo);
 
   const login = async (formData: FormData) => {
     setIsLoading(true);
@@ -28,7 +41,7 @@ export function useAuthActions() {
       });
 
       await checkSession();
-      router.push("/maps");
+      router.replace(targetPath);
     } catch (err: any) {
       setError(err.message || "Invalid email or password.");
     } finally {
@@ -46,7 +59,7 @@ export function useAuthActions() {
       await api.post("/api/auth/register", payload);
 
       await checkSession();
-      router.push("/maps");
+      router.replace(targetPath);
     } catch (err: any) {
       setError(err.message || "Registration failed. Please check your inputs.");
     } finally {

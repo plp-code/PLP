@@ -4,6 +4,10 @@ import AuthForm from "@/components/features/login/AuthForm";
 export const metadata: Metadata = {
   title: "Login | The Preloved Professional",
   description: "Access your Preloved Professional account.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function LoginPage() {

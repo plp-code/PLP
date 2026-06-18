@@ -4,7 +4,9 @@ import { Container } from "@/components/ui/Container";
 import MapDirectory from "@/components/features/maps/MapDirectory";
 
 export const metadata: Metadata = {
-  title: "Maps",
+  title: "Maps | The Preloved Professional",
+  description:
+    "Explore curated map directories and browse available locations and routes.",
 };  
 
 export default function MapsPage() {

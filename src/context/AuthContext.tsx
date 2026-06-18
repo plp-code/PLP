@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   ReactNode,
 } from "react";
@@ -31,8 +32,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const sessionCheckRef = useRef<Promise<void> | null>(null);
 
   const checkSession = async () => {
+    if (sessionCheckRef.current) {
+      return sessionCheckRef.current;
+    }
+
+    const sessionCheck = (async () => {
     try {
       setIsLoading(true);
 
@@ -43,6 +50,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
     } finally {
       setIsLoading(false);
+    }
+
+    })();
+
+    sessionCheckRef.current = sessionCheck;
+
+    try {
+      await sessionCheck;
+    } finally {
+      sessionCheckRef.current = null;
     }
   };
 
@@ -59,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setUser(null);
       setIsLoading(false);
-      router.push("/");
+      router.replace("/");
     }
   };
 

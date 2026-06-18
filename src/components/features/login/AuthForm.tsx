@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuthActions } from "@/hooks/useAuth";
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
-  const { login, register, isLoading, error } = useAuthActions();
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get("returnTo");
+  const { login, register, isLoading, error } = useAuthActions(returnTo);
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -5,9 +5,10 @@ interface Props {
   map: MapItem;
   onAction: () => void;
   isLoading: boolean;
+  isAuthenticated: boolean;
 }
 
-export function MapCardGrid({ map, onAction, isLoading }: Props) {
+export function MapCardGrid({ map, onAction, isLoading, isAuthenticated }: Props) {
   return (
     <div className="group bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:border-gray-300 transition-all duration-300 flex flex-col overflow-hidden relative">
       
@@ -66,7 +67,11 @@ export function MapCardGrid({ map, onAction, isLoading }: Props) {
               <Loader2 size={16} className="animate-spin" />
             ) : (
               <>
-                {map.has_access ? "View Tour" : "Buy Now"}
+                {map.has_access
+                  ? "View Tour"
+                  : isAuthenticated
+                    ? "Buy Now"
+                    : "Log In to Buy"}
                 <ArrowRight size={14} className="transition-transform group-hover/btn:translate-x-1 sm:w-4 sm:h-4" />
               </>
             )}

@@ -5,9 +5,10 @@ interface Props {
   maps: MapItem[];
   onAction: (map: MapItem) => void;
   loadingId: number | null;
+  isAuthenticated: boolean;
 }
 
-export function MapListView({ maps, onAction, loadingId }: Props) {
+export function MapListView({ maps, onAction, loadingId, isAuthenticated }: Props) {
   return (
     <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
       <div className="divide-y divide-gray-100">
@@ -74,7 +75,11 @@ export function MapListView({ maps, onAction, loadingId }: Props) {
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   <>
-                    {map.has_access ? "View Tour" : "Buy Now"}
+                    {map.has_access
+                      ? "View Tour"
+                      : isAuthenticated
+                        ? "Buy Now"
+                        : "Log In to Buy"}
                     <ArrowRight size={14} className="transition-transform group-hover/btn:translate-x-1" />
                   </>
                 )}

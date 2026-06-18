@@ -5,7 +5,12 @@ import { Analytics } from "@vercel/analytics/next";
 import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
-  title: "The Preloved Professional",
+  title: {
+    default: "The Preloved Professional",
+    template: "%s | The Preloved Professional",
+  },
+  description:
+    "A curated marketplace and editorial home for preloved fashion, access, and map-based discovery.",
 };
 
 export default function RootLayout({

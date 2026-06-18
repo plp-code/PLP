@@ -7,10 +7,12 @@ import {
   List,
   Search,
   Map as MapIcon,
+  Shield,
   AlertCircle,
 } from "lucide-react";
 import { useMapDirectory } from "@/hooks/useMapDirectory";
 import { useMapCheckout } from "@/hooks/useMapCheckout";
+import { useAuthUser } from "@/context/AuthContext";
 import { MapCardGrid } from "./MapCardGrid";
 import { MapListView } from "./MapListView";
 
@@ -21,6 +23,7 @@ export default function MapDirectory() {
   const searchParams = useSearchParams();
   const isSuccess = searchParams.get("success") === "true";
   
+  const { isAuthenticated, isLoading: authLoading } = useAuthUser();
   const { maps, loading, error, refetch } = useMapDirectory();
   const { handleMapAction, checkoutLoadingId } = useMapCheckout();
 
@@ -125,6 +128,16 @@ export default function MapDirectory() {
         </div>
       </div>
 
+      {!authLoading && !isAuthenticated && (
+        <div className="mb-8 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 sm:px-5 sm:py-4 text-amber-900 flex items-start gap-3">
+          <Shield size={18} className="mt-0.5 shrink-0 text-amber-700" />
+          <p className="text-sm sm:text-base leading-relaxed">
+            You are browsing as a guest. You can view directories, but you will
+            need to log in when you click buy.
+          </p>
+        </div>
+      )}
+
       {filteredMaps.length === 0 ? (
         /* Refined Empty State */
         <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-gray-50/50 rounded-[2rem] border-2 border-dashed border-gray-200 mt-4 transition-all">
@@ -159,6 +172,7 @@ export default function MapDirectory() {
                   map={map}
                   onAction={() => handleMapAction(map)}
                   isLoading={checkoutLoadingId === map.id}
+                  isAuthenticated={isAuthenticated}
                 />
               ))}
             </div>
@@ -167,6 +181,7 @@ export default function MapDirectory() {
               maps={filteredMaps}
               onAction={handleMapAction}
               loadingId={checkoutLoadingId}
+              isAuthenticated={isAuthenticated}
             />
           )}
         </div>

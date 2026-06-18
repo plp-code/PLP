@@ -5,6 +5,27 @@ interface FetchOptions extends RequestInit {
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
+let refreshPromise: Promise<boolean> | null = null;
+
+async function refreshSession() {
+  if (!refreshPromise) {
+    refreshPromise = fetch(`${BASE_URL}/api/v1/auth/refresh`, {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((response) => response.ok)
+      .catch((error) => {
+        console.error("Silent refresh failed", error);
+        return false;
+      })
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+
+  return refreshPromise;
+}
+
 async function fetcher<T>(
   endpoint: string,
   options: FetchOptions = {},
@@ -25,28 +46,14 @@ async function fetcher<T>(
   if (response.status === 401) {
     if (!options._retry) {
       options._retry = true;
-      try {
-        const refreshResponse = await fetch(`${BASE_URL}/api/v1/auth/refresh`, {
-          method: "POST",
-          credentials: "include",
-        });
+      const refreshed = await refreshSession();
 
-        if (refreshResponse.ok) {
-          return fetcher<T>(endpoint, options);
-        }
-      } catch (refreshError) {
-        console.error("Silent refresh failed", refreshError);
+      if (refreshed) {
+        return fetcher<T>(endpoint, options);
       }
     }
 
-    // if (
-    //   !options.skipRedirect && 
-    //   typeof window !== "undefined" &&
-    //   window.location.pathname !== "/login"
-    // ) {
-    //   window.location.href = "/login";
-    // }
-    // throw new Error("Session expired or Unauthorized.");
+    throw new Error("Session expired or unauthorized.");
   }
 
   if (!response.ok) {
