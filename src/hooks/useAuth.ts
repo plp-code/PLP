@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthUser } from "@/context/AuthContext";
 import { api } from "@/lib/api";
+import { AuthResponse } from "@/types/api";
 
 export function useAuthActions() {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +22,7 @@ export function useAuthActions() {
       const password = formData.get("password");
 
      
-      await api.post("/api/auth/login", {
+      await api.post<AuthResponse>("/auth/login", {
         email: email,
         password: password,
       });

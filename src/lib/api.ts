@@ -2,7 +2,14 @@ interface FetchOptions extends RequestInit {
   _retry?: boolean;
 }
 
-async function fetcher<T>(url: string, options: FetchOptions = {}): Promise<T> {
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+
+async function fetcher<T>(
+  endpoint: string,
+  options: FetchOptions = {},
+): Promise<T> {
+  const url = `${BASE_URL}/api/v1${endpoint}`;
+
   const headers = {
     "Content-Type": "application/json",
     ...options.headers,
@@ -17,18 +24,14 @@ async function fetcher<T>(url: string, options: FetchOptions = {}): Promise<T> {
   if (response.status === 401) {
     if (!options._retry) {
       options._retry = true;
-
       try {
-        const refreshResponse = await fetch(
-          `${process.env.FASTAPI_URL}/api/auth/refresh`,
-          {
-            method: "POST",
-            credentials: "include",
-          },
-        );
+        const refreshResponse = await fetch(`${BASE_URL}/api/v1/auth/refresh`, {
+          method: "POST",
+          credentials: "include",
+        });
 
         if (refreshResponse.ok) {
-          return fetcher<T>(url, options);
+          return fetcher<T>(endpoint, options);
         }
       } catch (refreshError) {
         console.error("Silent refresh failed", refreshError);

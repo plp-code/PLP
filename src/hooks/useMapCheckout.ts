@@ -1,28 +1,18 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuthUser } from "@/context/AuthContext";
 import { api } from "@/lib/api";
-
-export interface MapItem {
-  id: number;
-  title: string;
-  slug: string;
-  description?: string;
-  region?: string;
-  map_price: number;
-  has_access: boolean;
-}
+import { MapItem } from "@/types";
 
 export function useMapCheckout() {
   const router = useRouter();
+  const pathname = usePathname();
   const { isAuthenticated } = useAuthUser();
-  const [checkoutLoadingId, setCheckoutLoadingId] = useState<number | null>(
-    null,
-  );
+  const [checkoutLoadingId, setCheckoutLoadingId] = useState<number | null>(null);
 
   const handleMapAction = async (map: MapItem) => {
     if (!isAuthenticated) {
-      router.push("/login");
+      router.push(`/login?callbackUrl=${pathname}`);
       return;
     }
 
@@ -33,22 +23,11 @@ export function useMapCheckout() {
 
     try {
       setCheckoutLoadingId(map.id);
-
-      const response = await api.post<{ url: string }>(
-        "/api/checkout/create-session",
-        {
-          map_id: map.id,
-        },
-      );
-
-      if (response.url) {
-        window.location.href = response.url;
-      } else {
-        throw new Error("No checkout URL returned");
-      }
+      const response = await api.post<{ url: string }>("/api/checkout/create-session", {
+        map_id: map.id,
+      });
+      if (response.url) window.location.href = response.url; // Go to Stripe
     } catch (err) {
-      console.error("Failed to initiate checkout:", err);
-
       alert("Unable to start checkout. Please try again.");
     } finally {
       setCheckoutLoadingId(null);

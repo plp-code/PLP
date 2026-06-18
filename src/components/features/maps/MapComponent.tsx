@@ -1,9 +1,16 @@
 "use client";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  ZoomControl,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useEffect, useRef } from "react";
-import { Navigation } from "lucide-react"; // NEW: imported icon
+import { useEffect, useRef, useState } from "react";
+import { Navigation } from "lucide-react";
 
 const iconConfig = {
   iconSize: [25, 41] as [number, number],
@@ -18,12 +25,14 @@ const blueIcon = new L.Icon({
     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
+
 const redIcon = new L.Icon({
   ...iconConfig,
   iconUrl:
     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
+
 const userIcon = new L.Icon({
   ...iconConfig,
   iconUrl:
@@ -64,6 +73,15 @@ export default function MapComponent({
 }: any) {
   const markerRefs = useRef<{ [key: number]: L.Marker | null }>({});
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const validStores = stores.filter(
     (s: any) =>
       typeof s.latitude === "number" && typeof s.longitude === "number",
@@ -79,9 +97,12 @@ export default function MapComponent({
     <MapContainer
       center={[37.7749, -122.4194]}
       zoom={11}
+      zoomControl={false} 
       className="h-full w-full z-0"
     >
       <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
+
+      {!isMobile && <ZoomControl position="topright" />}
 
       {validStores.map((s: any) => {
         const gmapsUrl = `https://maps.google.com/?q=${encodeURIComponent(s.store_name + " " + (s.address || ""))}`;

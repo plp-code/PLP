@@ -54,7 +54,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       </div>
 
-      <MobileGuard />
+      {/* <MobileGuard /> */}
 
       <div
         onClick={() => setIsMenuOpen(false)}

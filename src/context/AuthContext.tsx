@@ -9,13 +9,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
-
-interface User {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-}
+import { User } from "@/types";
 
 interface AuthContextType {
   user: User | null;
@@ -41,7 +35,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkSession = async () => {
     try {
       setIsLoading(true);
-      const userData = await api.get("/api/user/me");
+
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+      const response = await fetch(`${baseUrl}/api/v1/user/me`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Guest user");
+      }
+
+      const userData = await response.json();
       setUser(userData);
     } catch (error) {
       setUser(null);
@@ -49,7 +58,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
     }
   };
-
   useEffect(() => {
     checkSession();
   }, []);
@@ -57,14 +65,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     try {
       setIsLoading(true);
-      await api.post("/api/auth/logout");
+      await api.post("/auth/logout");
     } catch (error) {
       console.error("Logout failed", error);
     } finally {
       setUser(null);
       setIsLoading(false);
 
-      router.push("/login");
+      router.push("/");
     }
   };
 

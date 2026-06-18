@@ -1,14 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
-
-interface MapItem {
-  id: number;
-  title: string;
-  slug: string;
-  description: string;
-  has_access: boolean;
-  map_price: number;
-}
+import { MapItem } from "@/types";
 
 export function useMapDirectory() {
   const [maps, setMaps] = useState<MapItem[]>([]);
@@ -19,7 +11,7 @@ export function useMapDirectory() {
     async function fetchMaps() {
       try {
         setLoading(true);
-        const data = await api.get<MapItem[]>("/api/maps");
+        const data = await api.get<MapItem[]>("/maps");
         setMaps(data);
       } catch (err: any) {
         setError(err.message || "Failed to load maps");

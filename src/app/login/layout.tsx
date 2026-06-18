@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import HeaderSimplified from "@/components/layout/HeaderSimplified";
-import MobileGuard from "@/components/layout/MobileGuard";
 import { SiInstagram, SiTiktok, SiPinterest } from "react-icons/si";
 
 const SOCIAL_LINKS = [
@@ -18,10 +17,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <HeaderSimplified />
       </div>
 
-      {/* <MobileGuard /> */}
-
       <main className="flex-1 flex pt-14">
-        <div className="w-full lg:w-1/2 bg-plp-parchment relative flex items-center justify-center p-6 md:p-12 overflow-hidden">
+        <div className="w-full lg:w-1/2 bg-plp-parchment relative flex flex-col items-center justify-between lg:justify-center p-4 sm:p-6 md:p-12 overflow-x-hidden min-h-[calc(100vh-3.5rem)]">
           <div
             className="absolute inset-0 pointer-events-none opacity-20"
             style={{
@@ -30,7 +27,31 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             }}
           />
 
-          <div className="relative z-10 w-full max-w-[360px]">{children}</div>
+          <div className="lg:hidden w-full h-8" />
+
+          <div className="relative z-10 w-full max-w-[360px] mx-auto">
+            {children}
+          </div>
+
+          <div className="relative z-10 lg:hidden flex flex-col items-center gap-4 mt-12 mb-4">
+            <nav className="flex gap-6" aria-label="Social links">
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-plp-maroon/60 hover:text-plp-maroon transition-colors duration-300 p-2"
+                  title={social.name}
+                >
+                  <social.icon size={20} />
+                </a>
+              ))}
+            </nav>
+            <div className="opacity-60 text-[9px] uppercase tracking-[0.2em] font-black text-center text-plp-maroon">
+              <span>{currentYear} The Preloved Professional</span>
+            </div>
+          </div>
         </div>
 
         <div className="hidden lg:flex w-1/2 bg-plp-maroon text-plp-parchment relative overflow-hidden flex-col justify-between p-12 lg:p-20 border-l-2 border-black">
