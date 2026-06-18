@@ -7,20 +7,20 @@ export function useMapDirectory() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchMaps() {
-      try {
-        setLoading(true);
-        const data = await api.get<MapItem[]>("/maps");
-        setMaps(data);
-      } catch (err: any) {
-        setError(err.message || "Failed to load maps");
-      } finally {
-        setLoading(false);
-      }
+  console.log(maps)
+
+  const refetch = async () => {
+    try {
+      const data = await api.get<MapItem[]>("/maps");
+      setMaps(data);
+    } catch (err: any) {
+      setError(err.message || "Failed to load maps");
     }
-    fetchMaps();
+  };
+
+  useEffect(() => {
+    refetch().finally(() => setLoading(false));
   }, []);
 
-  return { maps, loading, error };
+  return { maps, loading, error, refetch }; 
 }

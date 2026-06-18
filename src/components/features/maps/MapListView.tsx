@@ -18,36 +18,44 @@ export function MapListView({ maps, onAction, loadingId }: Props) {
           >
             {/* Main Info */}
             <div className="flex-1 min-w-0 w-full sm:w-auto sm:pr-6">
-              <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-1">
-                <h3 className="text-base font-bold text-gray-900 truncate">
+              
+              {/* Title & Badge */}
+              <div className="flex items-start sm:items-center justify-between sm:justify-start gap-3 mb-2 sm:mb-1">
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-tight pr-2 sm:pr-0">
                   {map.title}
                 </h3>
                 {map.has_access ? (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded uppercase tracking-wide shrink-0">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 sm:py-0.5 rounded-md sm:rounded uppercase tracking-wide shrink-0">
                     <Unlock size={10} /> Owned
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded uppercase tracking-wide shrink-0">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-gray-500 bg-gray-100 px-2.5 py-1 sm:py-0.5 rounded-md sm:rounded uppercase tracking-wide shrink-0">
                     <Lock size={10} /> Locked
                   </span>
                 )}
               </div>
               
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500">
+              {/* Location & Description (Stacked on mobile, inline on desktop) */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500">
                 <span className="inline-flex items-center gap-1 font-medium text-gray-600 whitespace-nowrap">
                   <MapPin size={12} className="text-gray-400 shrink-0" />
                   {map.region || "Global"}
                 </span>
-                <span className="text-gray-300">•</span>
-                <span className="truncate">{map.description}</span>
+                <span className="hidden sm:inline text-gray-300">•</span>
+                <span className="line-clamp-2 sm:line-clamp-1 leading-relaxed sm:leading-normal">
+                  {map.description}
+                </span>
               </div>
             </div>
 
-            {/* Actions (Right Aligned on Desktop, Bottom on Mobile) */}
-            <div className="flex items-center gap-4 sm:gap-6 mt-4 sm:mt-0 w-full sm:w-auto shrink-0 justify-between sm:justify-end">
+            {/* Actions (Bottom Bar on Mobile, Right Aligned on Desktop) */}
+            <div className="flex items-center gap-4 sm:gap-6 mt-4 sm:mt-0 pt-4 sm:pt-0 border-t border-gray-100 sm:border-0 w-full sm:w-auto shrink-0 justify-between sm:justify-end">
                {!map.has_access && (
                 <div className="flex flex-col items-start sm:items-end shrink-0">
-                  <span className="text-lg font-black text-gray-900 leading-none">
+                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block sm:hidden mb-0.5">
+                    Price
+                  </span>
+                  <span className="text-xl sm:text-lg font-black text-gray-900 leading-none">
                     ${map.map_price}
                   </span>
                 </div>
@@ -56,7 +64,7 @@ export function MapListView({ maps, onAction, loadingId }: Props) {
               <button
                 onClick={() => onAction(map)}
                 disabled={loadingId === map.id}
-                className={`group/btn cursor-pointer flex items-center justify-center gap-2 px-5 py-2.5 sm:py-2 w-full sm:w-auto rounded-xl sm:rounded-lg text-sm font-bold transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed ${
+                className={`group/btn cursor-pointer flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 sm:py-2 rounded-xl sm:rounded-lg text-sm font-bold transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed ${
                   map.has_access
                     ? "bg-plp-maroon text-white hover:bg-red-800"
                     : "bg-gray-900 text-white hover:bg-gray-800"
@@ -66,7 +74,7 @@ export function MapListView({ maps, onAction, loadingId }: Props) {
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   <>
-                    {map.has_access ? "View Tour" : "Buy"}
+                    {map.has_access ? "View Tour" : "Buy Now"}
                     <ArrowRight size={14} className="transition-transform group-hover/btn:translate-x-1" />
                   </>
                 )}

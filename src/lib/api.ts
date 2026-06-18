@@ -1,5 +1,6 @@
 interface FetchOptions extends RequestInit {
   _retry?: boolean;
+  skipRedirect?: boolean;
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
@@ -38,13 +39,14 @@ async function fetcher<T>(
       }
     }
 
-    if (
-      typeof window !== "undefined" &&
-      window.location.pathname !== "/login"
-    ) {
-      window.location.href = "/login";
-    }
-    throw new Error("Session expired. Please log in again.");
+    // if (
+    //   !options.skipRedirect && 
+    //   typeof window !== "undefined" &&
+    //   window.location.pathname !== "/login"
+    // ) {
+    //   window.location.href = "/login";
+    // }
+    // throw new Error("Session expired or Unauthorized.");
   }
 
   if (!response.ok) {

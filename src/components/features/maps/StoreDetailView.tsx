@@ -1,86 +1,117 @@
-import { ChevronLeft, MapPin, Navigation, Clock, DollarSign, Info } from "lucide-react";
+import {
+  ChevronLeft,
+  MapPin,
+  Navigation,
+  Clock,
+  DollarSign,
+  Info,
+} from "lucide-react";
 import { getTodayHours } from "@/lib/utils";
 
-export function StoreDetailView({ store, onBack }: any) {
+export function StoreDetailView({ store, onBack, distance }: any) {
   return (
-    <div className="flex-1 overflow-y-auto flex flex-col bg-white animate-in slide-in-from-right-4 duration-300 pb-24 md:pb-0">
-      
-      {/* Sticky Header - Increased touch target size for the Back Button on mobile */}
-      <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-100 p-2 md:p-3">
+    <div className="flex-1 overflow-y-auto flex flex-col bg-white animate-in slide-in-from-right-4 duration-300 pb-24 md:pb-0 relative">
+      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 p-2 md:p-4 transition-all">
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 md:gap-2 text-[14px] md:text-sm font-semibold text-gray-600 active:text-blue-600 hover:text-blue-600 px-3 py-2 md:py-1.5 rounded-lg active:bg-blue-50 hover:bg-blue-50 transition-colors"
+          className="flex items-center gap-1.5 md:gap-2 text-[14px] md:text-sm font-bold text-gray-600 active:text-blue-600 hover:text-blue-700 px-3 py-2 md:py-1.5 rounded-xl active:bg-blue-50 hover:bg-gray-100 transition-colors"
         >
-          <ChevronLeft size={18} className="md:w-4 md:h-4" /> 
-          Back to results
+          <ChevronLeft size={20} className="md:w-5 md:h-5" />
+          Back to list
         </button>
       </div>
 
-      {/* Hero Image Area - slightly taller on mobile so it doesn't feel squished */}
-      <div className="h-40 md:h-48 w-full bg-gradient-to-br from-gray-100 to-gray-200 relative flex items-center justify-center shrink-0">
-        <MapPin size={28} className="text-gray-400 opacity-50" />
+      <div className="h-44 md:h-56 w-full bg-gradient-to-br from-blue-50 via-gray-100 to-gray-200 relative flex items-center justify-center shrink-0 border-b border-gray-100">
+        <div className="bg-white/50 p-4 rounded-full backdrop-blur-sm shadow-sm">
+          <MapPin size={32} className="text-gray-400" />
+        </div>
       </div>
 
-      <div className="p-5 md:p-6 flex flex-col gap-6 md:gap-6">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-1.5 md:mb-2 leading-tight">
+      <div className="p-5 md:p-8 flex flex-col gap-6 md:gap-8 max-w-3xl mx-auto w-full">
+        <div className="flex flex-col">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2 leading-tight tracking-tight">
             {store.store_name}
           </h2>
-          <p className="text-gray-500 text-[14px] md:text-sm mb-5">
+          <p className="text-gray-500 text-[15px] md:text-base mb-2 leading-relaxed">
             {store.address}
           </p>
-          
-          {/* Directions Button - Added 'w-full' so it stretches edge-to-edge on phones */}
+
+          {distance !== null && (
+            <div className="flex items-center gap-1.5 text-blue-600 font-bold text-[14px] md:text-sm mb-6 bg-blue-50 w-fit px-2.5 py-1 rounded-md">
+              <Navigation size={14} className="fill-blue-100" />
+              <span>{distance.toFixed(1)} miles away</span>
+            </div>
+          )}
+
+          {distance === null && <div className="mb-6"></div>}
+
           <a
-            href={`https://maps.google.com/?q=${encodeURIComponent(store.store_name + " " + (store.address || ""))}`}
+            href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(store.store_name + " " + (store.address || ""))}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center justify-center gap-2 py-3.5 md:py-3 bg-blue-600 text-white text-[14px] md:text-sm font-bold rounded-xl shadow-sm active:scale-[0.98] active:bg-blue-700 transition-all"
+            className="w-full flex items-center justify-center gap-2 py-3.5 md:py-4 bg-blue-600 hover:bg-blue-700 text-white text-[15px] md:text-base font-bold rounded-xl shadow-md shadow-blue-600/20 active:scale-[0.98] transition-all"
           >
-            <Navigation size={18} className="md:w-4 md:h-4" /> 
-            Directions
+            <Navigation size={18} className="md:w-5 md:h-5" />
+            Get Directions
           </a>
         </div>
-        
+
         <hr className="border-gray-100" />
-        
-        {/* Info Sections - Adjusted padding and text sizes for mobile legibility */}
-        <div className="flex flex-col gap-5">
-          <div className="flex gap-3.5 md:gap-4">
-            <div className="bg-blue-50 p-2.5 md:p-2 rounded-full h-fit shrink-0">
-              <Clock size={18} className="text-blue-600 md:w-4 md:h-4" />
+
+        <div className="flex flex-col gap-6 md:gap-8">
+          <div className="flex gap-4 md:gap-5">
+            <div className="bg-blue-50/80 p-3 rounded-2xl h-fit shrink-0 border border-blue-100/50">
+              <Clock size={20} className="text-blue-600" />
             </div>
-            <div className="flex-1">
-              <span className="font-bold text-[14px] md:text-sm text-gray-900 block mb-0.5">Hours</span>
-              <span className="text-gray-600 text-[14px] md:text-sm">{getTodayHours(store.hours).string}</span>
+            <div className="flex-1 pt-0.5">
+              <span className="font-bold text-[15px] md:text-base text-gray-900 block mb-1">
+                Hours
+              </span>
+              <span className="text-gray-600 text-[14px] md:text-[15px]">
+                {getTodayHours(store.hours).string}
+              </span>
             </div>
           </div>
 
           {(store.price_range || store.price_notes) && (
-            <div className="flex gap-3.5 md:gap-4">
-              <div className="bg-emerald-50 p-2.5 md:p-2 rounded-full h-fit shrink-0">
-                <DollarSign size={18} className="text-emerald-600 md:w-4 md:h-4" />
+            <div className="flex gap-4 md:gap-5">
+              <div className="bg-emerald-50/80 p-3 rounded-2xl h-fit shrink-0 border border-emerald-100/50">
+                <DollarSign size={20} className="text-emerald-600" />
               </div>
-              <div className="flex-1">
-                <span className="font-bold text-[14px] md:text-sm text-gray-900 block mb-0.5">Pricing</span>
-                <span className="text-gray-600 text-[14px] md:text-sm block">Level: {store.price_range || "N/A"}</span>
-                {store.price_notes && <span className="text-gray-500 text-[13px] mt-1 block leading-snug">{store.price_notes}</span>}
+              <div className="flex-1 pt-0.5">
+                <span className="font-bold text-[15px] md:text-base text-gray-900 block mb-1">
+                  Pricing
+                </span>
+                <div className="bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-lg w-fit mb-2">
+                  <span className="text-gray-800 font-semibold text-[14px] md:text-[15px]">
+                    Level: {store.price_range || "N/A"}
+                  </span>
+                </div>
+                {store.price_notes && (
+                  <span className="text-gray-500 text-[14px] leading-relaxed block">
+                    {store.price_notes}
+                  </span>
+                )}
               </div>
             </div>
           )}
 
           {store.notes && (
-            <div className="flex gap-3.5 md:gap-4">
-              <div className="bg-gray-50 p-2.5 md:p-2 rounded-full h-fit shrink-0">
-                <Info size={18} className="text-gray-600 md:w-4 md:h-4" />
+            <div className="flex gap-4 md:gap-5">
+              <div className="bg-gray-50 p-3 rounded-2xl h-fit shrink-0 border border-gray-100">
+                <Info size={20} className="text-gray-600" />
               </div>
-              <div className="flex-1">
-                <span className="font-bold text-[14px] md:text-sm text-gray-900 block mb-1">About</span>
-                <p className="text-gray-600 text-[14px] md:text-sm leading-relaxed">{store.notes}</p>
+              <div className="flex-1 pt-0.5">
+                <span className="font-bold text-[15px] md:text-base text-gray-900 block mb-1.5">
+                  About
+                </span>
+                <p className="text-gray-600 text-[14px] md:text-[15px] leading-relaxed whitespace-pre-wrap">
+                  {store.notes}
+                </p>
               </div>
             </div>
           )}
-        </div>        
+        </div>
       </div>
     </div>
   );

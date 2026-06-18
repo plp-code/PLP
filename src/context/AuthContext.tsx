@@ -36,21 +36,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
 
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      const userData = await api.get("/user/me", { skipRedirect: true });
 
-      const response = await fetch(`${baseUrl}/api/v1/user/me`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error("Guest user");
-      }
-
-      const userData = await response.json();
       setUser(userData);
     } catch (error) {
       setUser(null);
@@ -58,6 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     checkSession();
   }, []);
@@ -71,7 +59,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setUser(null);
       setIsLoading(false);
-
       router.push("/");
     }
   };
