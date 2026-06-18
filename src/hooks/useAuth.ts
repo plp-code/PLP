@@ -56,7 +56,7 @@ export function useAuthActions(returnTo?: string | null) {
     try {
       const payload = Object.fromEntries(formData.entries());
 
-      await api.post("/api/auth/register", payload);
+      await api.post("/auth/register", payload);
 
       await checkSession();
       router.replace(targetPath);
