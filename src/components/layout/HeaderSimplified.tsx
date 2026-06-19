@@ -13,24 +13,21 @@ export default function HeaderSimplified() {
 
   return (
     <header className="fixed top-0 left-0 w-full z-[100] flex flex-col bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] border-b-2 border-black">
-      <div className="flex items-center justify-between h-14 bg-plp-maroon p-2 mx-1 my-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
-        <div className="flex-1 flex justify-start pl-1 min-w-[40px]">
-          {!isMapsPage && <BackButton />}
-        </div>
+      <div className="relative flex items-center justify-between h-14 bg-plp-maroon mx-1 my-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
+        <div className="z-10 pl-2">{!isMapsPage && <BackButton />}</div>
 
-        <div className="flex-none text-center px-2">
+        <div className="absolute inset-x-0 flex justify-center pointer-events-none px-12 min-[375px]:px-14 sm:px-20">
           <Link
             href="/"
-            className="font-seventies text-white tracking-tight uppercase hover:opacity-90 transition-opacity"
+            className="pointer-events-auto font-seventies text-white tracking-tight uppercase hover:opacity-90 transition-opacity truncate"
           >
-            <span className="text-base sm:hidden">Preloved Pro</span>
-            <span className="hidden sm:inline text-lg md:text-xl">
+            <span className="text-xs min-[375px]:text-sm sm:text-lg md:text-xl whitespace-nowrap">
               The Preloved Professional
             </span>
           </Link>
         </div>
 
-        <div className="flex-1 flex justify-end items-center h-full pr-1 min-w-[40px]">
+        <div className="z-10 pr-2 flex items-center h-full">
           {isMapsPage && !isLoading && (
             <AuthAction isLoggedIn={isAuthenticated} />
           )}

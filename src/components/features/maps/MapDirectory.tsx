@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, useMemo } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
   LayoutGrid,
   List,
@@ -9,6 +9,8 @@ import {
   Map as MapIcon,
   Shield,
   AlertCircle,
+  X,
+  CheckCircle2,
 } from "lucide-react";
 import { useMapDirectory } from "@/hooks/useMapDirectory";
 import { useMapCheckout } from "@/hooks/useMapCheckout";
@@ -19,10 +21,13 @@ import { MapListView } from "./MapListView";
 export default function MapDirectory() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const isSuccess = searchParams.get("success") === "true";
-  
+
   const { isAuthenticated, isLoading: authLoading } = useAuthUser();
   const { maps, loading, error, refetch } = useMapDirectory();
   const { handleMapAction, checkoutLoadingId } = useMapCheckout();
@@ -30,8 +35,27 @@ export default function MapDirectory() {
   useEffect(() => {
     if (isSuccess) {
       refetch();
+      setShowSuccessMessage(true);
+
+      router.replace(pathname, { scroll: false });
+
+      const timer = setTimeout(() => setShowSuccessMessage(false), 5000);
+      return () => clearTimeout(timer);
     }
-  }, [isSuccess]);
+  }, [isSuccess, refetch, router, pathname]);
+
+  const filteredMaps = useMemo(() => {
+    if (!maps) return [];
+    if (!searchQuery) return maps;
+
+    const lowerQuery = searchQuery.toLowerCase();
+    return maps.filter(
+      (map) =>
+        map.title.toLowerCase().includes(lowerQuery) ||
+        map.region?.toLowerCase().includes(lowerQuery) ||
+        map.description?.toLowerCase().includes(lowerQuery),
+    );
+  }, [maps, searchQuery]);
 
   if (loading) {
     return (
@@ -64,16 +88,34 @@ export default function MapDirectory() {
     );
   }
 
-  const filteredMaps =
-    maps?.filter(
-      (map) =>
-        map.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        map.region?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        map.description?.toLowerCase().includes(searchQuery.toLowerCase()),
-    ) || [];
-
   return (
     <div className="w-full max-w-7xl mx-auto py-6 sm:py-10 px-4 sm:px-6 lg:px-8">
+      {showSuccessMessage && (
+        <div className="mb-6 animate-in slide-in-from-top-4 fade-in duration-300 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 sm:px-5 sm:py-4 text-green-900 flex items-start justify-between gap-3 shadow-sm">
+          <div className="flex items-start gap-3">
+            <CheckCircle2
+              size={20}
+              className="mt-0.5 shrink-0 text-green-600"
+            />
+            <div>
+              <p className="font-bold text-sm sm:text-base">
+                Transaction Successful!
+              </p>
+              {/* <p className="text-sm text-green-800 mt-0.5">
+                You've 
+              </p> */}
+            </div>
+          </div>
+          <button
+            onClick={() => setShowSuccessMessage(false)}
+            className="text-green-600 hover:text-green-900 transition-colors"
+            aria-label="Close success message"
+          >
+            <X size={18} />
+          </button>
+        </div>
+      )}
+
       <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between pb-6 mb-8 sm:mb-10 border-b border-gray-100 gap-y-6 lg:gap-y-0 gap-x-8">
         <div className="w-full lg:w-auto">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">
@@ -96,15 +138,25 @@ export default function MapDirectory() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by title, region, or keyword..."
-              className="block w-full pl-11 pr-4 py-3 sm:py-2.5 bg-white border border-gray-200 rounded-2xl leading-5 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-plp-maroon/10 focus:border-plp-maroon text-base sm:text-sm shadow-sm transition-all duration-300"
+              className="block w-full pl-11 pr-10 py-3 sm:py-2.5 bg-white border border-gray-200 rounded-2xl leading-5 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-plp-maroon/10 focus:border-plp-maroon text-base sm:text-sm shadow-sm transition-all duration-300"
             />
+
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Clear search"
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
 
           <div className="w-fit self-end sm:self-auto flex items-center bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200/50 shrink-0">
             <button
               onClick={() => setViewMode("grid")}
               aria-label="Grid View"
-              className={`p-2.5 sm:p-2 rounded-xl transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              className={`p-2.5 sm:p-2 rounded-xl transition-all duration-300 flex items-center justify-center min-w-[44px] sm:min-w-0 ${
                 viewMode === "grid"
                   ? "bg-white text-plp-maroon shadow-sm ring-1 ring-black/5 scale-100"
                   : "text-gray-400 hover:text-gray-900 hover:bg-gray-200/50 scale-95 hover:scale-100"
@@ -116,7 +168,7 @@ export default function MapDirectory() {
             <button
               onClick={() => setViewMode("list")}
               aria-label="List View"
-              className={`p-2.5 sm:p-2 rounded-xl transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              className={`p-2.5 sm:p-2 rounded-xl transition-all duration-300 flex items-center justify-center min-w-[44px] sm:min-w-0 ${
                 viewMode === "list"
                   ? "bg-white text-plp-maroon shadow-sm ring-1 ring-black/5 scale-100"
                   : "text-gray-400 hover:text-gray-900 hover:bg-gray-200/50 scale-95 hover:scale-100"
@@ -132,60 +184,60 @@ export default function MapDirectory() {
         <div className="mb-8 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 sm:px-5 sm:py-4 text-amber-900 flex items-start gap-3">
           <Shield size={18} className="mt-0.5 shrink-0 text-amber-700" />
           <p className="text-sm sm:text-base leading-relaxed">
-            You are browsing as a guest. You can view directories, but you will
-            need to log in when you click buy.
+            You are browsing as a guest. You need to log in and buy items to
+            view the maps.
           </p>
         </div>
       )}
 
-      {filteredMaps.length === 0 ? (
-        /* Refined Empty State */
-        <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-gray-50/50 rounded-[2rem] border-2 border-dashed border-gray-200 mt-4 transition-all">
-          <div className="bg-white p-5 rounded-full shadow-sm border border-gray-100 mb-5">
-            <MapIcon size={36} className="text-gray-300" />
-          </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2 tracking-tight">
-            No maps found
-          </h3>
-          <p className="text-gray-500 max-w-sm text-sm sm:text-base leading-relaxed">
-            {searchQuery
-              ? `We couldn't find anything matching "${searchQuery}". Try adjusting your search terms.`
-              : "No maps are currently available in the directory. Please check back later."}
-          </p>
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="mt-6 text-sm font-bold text-plp-maroon hover:text-red-800 transition-colors bg-red-50 hover:bg-red-100 px-5 py-2 rounded-full"
-            >
-              Clear Search
-            </button>
-          )}
-        </div>
-      ) : (
-        /* Data Views */
-        <div className="animate-in fade-in duration-500">
-          {viewMode === "grid" ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {filteredMaps.map((map) => (
-                <MapCardGrid
-                  key={map.id}
-                  map={map}
-                  onAction={() => handleMapAction(map)}
-                  isLoading={checkoutLoadingId === map.id}
-                  isAuthenticated={isAuthenticated}
-                />
-              ))}
+      <div aria-live="polite" className="w-full">
+        {filteredMaps.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-gray-50/50 rounded-[2rem] border-2 border-dashed border-gray-200 mt-4 transition-all">
+            <div className="bg-white p-5 rounded-full shadow-sm border border-gray-100 mb-5">
+              <MapIcon size={36} className="text-gray-300" />
             </div>
-          ) : (
-            <MapListView
-              maps={filteredMaps}
-              onAction={handleMapAction}
-              loadingId={checkoutLoadingId}
-              isAuthenticated={isAuthenticated}
-            />
-          )}
-        </div>
-      )}
+            <h3 className="text-xl font-bold text-gray-900 mb-2 tracking-tight">
+              No maps found
+            </h3>
+            <p className="text-gray-500 max-w-sm text-sm sm:text-base leading-relaxed">
+              {searchQuery
+                ? `We couldn't find anything matching "${searchQuery}". Try adjusting your search terms.`
+                : "No maps are currently available in the directory. Please check back later."}
+            </p>
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="mt-6 text-sm font-bold text-plp-maroon hover:text-red-800 transition-colors bg-red-50 hover:bg-red-100 px-5 py-2 rounded-full"
+              >
+                Clear Search
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="animate-in fade-in duration-500">
+            {viewMode === "grid" ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                {filteredMaps.map((map) => (
+                  <MapCardGrid
+                    key={map.id}
+                    map={map}
+                    onAction={() => handleMapAction(map)}
+                    isLoading={checkoutLoadingId === map.id}
+                    isAuthenticated={isAuthenticated}
+                  />
+                ))}
+              </div>
+            ) : (
+              <MapListView
+                maps={filteredMaps}
+                onAction={handleMapAction}
+                loadingId={checkoutLoadingId}
+                isAuthenticated={isAuthenticated}
+              />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

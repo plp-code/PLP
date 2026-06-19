@@ -18,7 +18,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       </div>
 
       <main className="flex-1 flex pt-14">
-        <div className="w-full lg:w-1/2 bg-plp-parchment relative flex flex-col items-center justify-between lg:justify-center p-4 sm:p-6 md:p-12 overflow-x-hidden min-h-[calc(100vh-3.5rem)]">
+        <div className="w-full md:w-1/2 bg-plp-parchment relative flex flex-col items-center justify-between md:justify-center p-4 sm:p-6 md:p-8 lg:p-12 overflow-x-hidden min-h-[calc(100vh-3.5rem)]">
           <div
             className="absolute inset-0 pointer-events-none opacity-20"
             style={{
@@ -27,13 +27,13 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             }}
           />
 
-          <div className="lg:hidden w-full h-8" />
+          <div className="md:hidden w-full h-8" />
 
           <div className="relative z-10 w-full max-w-[360px] mx-auto">
             {children}
           </div>
 
-          <div className="relative z-10 lg:hidden flex flex-col items-center gap-4 mt-12 mb-4">
+          <div className="relative z-10 md:hidden flex flex-col items-center gap-4 mt-12 mb-4">
             <nav className="flex gap-6" aria-label="Social links">
               {SOCIAL_LINKS.map((social) => (
                 <a
@@ -54,22 +54,22 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <div className="hidden lg:flex w-1/2 bg-plp-maroon text-plp-parchment relative overflow-hidden flex-col justify-between p-12 lg:p-20 border-l-2 border-black">
+        <div className="hidden md:flex md:w-1/2 bg-plp-maroon text-plp-parchment relative overflow-hidden flex-col justify-between p-8 lg:p-16 xl:p-20 border-l-2 border-black">
           <div className="absolute -top-12 -right-12 text-plp-parchment/5 font-plp text-[25vw] leading-none pointer-events-none select-none">
             PLP
           </div>
 
-          <div className="relative z-10">
-            <h2 className="text-4xl xl:text-5xl font-seventies leading-[0.85] mb-6 tracking-tight uppercase">
+          <div className="relative z-10 mt-8 md:mt-0">
+            <h2 className="text-3xl lg:text-4xl xl:text-5xl font-seventies leading-[0.85] mb-4 lg:mb-6 tracking-tight uppercase">
               The Preloved <br /> Professional
             </h2>
-            <p className="text-plp-parchment/70 font-bold text-xs uppercase tracking-widest max-w-sm mb-8 leading-relaxed">
+            <p className="text-plp-parchment/70 font-bold text-[10px] lg:text-xs uppercase tracking-widest max-w-sm mb-8 leading-relaxed">
               some texts
             </p>
           </div>
 
-          <div className="relative z-10 flex items-end justify-between w-full border-t border-plp-parchment/20 pt-6 mt-12">
-            <nav className="flex gap-6" aria-label="Social links">
+          <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-end justify-between w-full border-t border-plp-parchment/20 pt-6 mt-12 gap-4 lg:gap-0">
+            <nav className="flex gap-4 lg:gap-6" aria-label="Social links">
               {SOCIAL_LINKS.map((social) => (
                 <a
                   key={social.name}
@@ -84,7 +84,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
               ))}
             </nav>
 
-            <div className="opacity-50 text-[9px] uppercase tracking-[0.2em] font-black text-right">
+            <div className="opacity-50 text-[9px] uppercase tracking-[0.2em] font-black lg:text-right">
               <span>{currentYear} The Preloved Professional</span>
             </div>
           </div>
