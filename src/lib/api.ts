@@ -4,12 +4,13 @@ interface FetchOptions extends RequestInit {
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const CLEAN_BASE_URL = BASE_URL.replace(/\/$/, "");
 
 let refreshPromise: Promise<boolean> | null = null;
 
 async function refreshSession() {
   if (!refreshPromise) {
-    refreshPromise = fetch(`${BASE_URL}/api/v1/auth/refresh`, {
+    refreshPromise = fetch(`${CLEAN_BASE_URL}/api/v1/auth/refresh`, {
       method: "POST",
       credentials: "include",
     })
@@ -30,7 +31,9 @@ async function fetcher<T>(
   endpoint: string,
   options: FetchOptions = {},
 ): Promise<T> {
-  const url = `${BASE_URL}/api/v1${endpoint}`;
+  const cleanEndpoint = endpoint.replace(/^\//, "");
+  
+  const url = `${CLEAN_BASE_URL}/api/v1/${cleanEndpoint}`;
 
   const headers = {
     "Content-Type": "application/json",
