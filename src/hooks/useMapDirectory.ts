@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
 import { MapItem } from "@/types";
+import { useAuthUser } from "@/context/AuthContext";
 
 export function useMapDirectory() {
   const [maps, setMaps] = useState<MapItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(maps)
+  const { isAuthenticated } = useAuthUser();
 
   const refetch = async () => {
     try {
@@ -19,8 +20,9 @@ export function useMapDirectory() {
   };
 
   useEffect(() => {
+    setLoading(true);
     refetch().finally(() => setLoading(false));
-  }, []);
+  }, [isAuthenticated]);
 
-  return { maps, loading, error, refetch }; 
+  return { maps, loading, error, refetch };
 }
