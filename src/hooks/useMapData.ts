@@ -15,27 +15,27 @@ export function useMapData(mapSlug: string) {
 
     const fetchInitial = async () => {
       setLoading(true);
-      try {
-        const [pinsData, storesData] = await Promise.all([
-          api.get(`/maps/${mapSlug}/stores/minimal`, {
-            signal: controller.signal,
-          }),
-          api.get(`/maps/${mapSlug}/stores?page=1&limit=5`, {
-            signal: controller.signal,
-          }),
-        ]);
+      // try {
+      //   const [pinsData, storesData] = await Promise.all([
+      //     api.get(`/maps/${mapSlug}/stores/minimal`, {
+      //       signal: controller.signal,
+      //     }),
+      //     api.get(`/maps/${mapSlug}/stores?page=1&limit=5`, {
+      //       signal: controller.signal,
+      //     }),
+      //   ]);
 
-        setPins(pinsData);
-        setDetailedStores(storesData);
-        setHasMore(storesData.length === 5);
-      } catch (err) {
-        if (controller.signal.aborted) return;
-        console.error("Failed to load map data:", err);
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false);
-        }
-      }
+      //   setPins(pinsData);
+      //   setDetailedStores(storesData);
+      //   setHasMore(storesData.length === 5);
+      // } catch (err) {
+      //   if (controller.signal.aborted) return;
+      //   console.error("Failed to load map data:", err);
+      // } finally {
+      //   if (!controller.signal.aborted) {
+      //     setLoading(false);
+      //   }
+      // }
     };
     if (mapSlug) fetchInitial();
 
