@@ -20,8 +20,16 @@ export function useMapDirectory() {
   };
 
   useEffect(() => {
+    if (isAuthenticated === undefined) return;
+
+    let cancelled = false;
     setLoading(true);
-    refetch().finally(() => setLoading(false));
+
+    refetch().finally(() => {
+      if (!cancelled) setLoading(false);
+    });
+
+    return () => { cancelled = true; };
   }, [isAuthenticated]);
 
   return { maps, loading, error, refetch };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
   LayoutGrid,
@@ -22,6 +22,7 @@ export default function MapDirectory() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const hasHandledSuccess = useRef(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -33,7 +34,8 @@ export default function MapDirectory() {
   const { handleMapAction, checkoutLoadingId } = useMapCheckout();
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && !hasHandledSuccess.current) {
+      hasHandledSuccess.current = true;
       refetch();
       setShowSuccessMessage(true);
 
