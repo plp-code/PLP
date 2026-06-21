@@ -34,8 +34,14 @@ export function useMapCheckout() {
         `/checkout/create-session?map_slug=${encodeURIComponent(map.slug)}`,
       );
 
-      if (response && response.url) {
-        window.location.href = response.url;
+      const checkoutUrl =
+        response?.url ?? response?.checkout_url ?? response?.session_url;
+
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      } else {
+        console.error("No checkout URL in response:", response);
+        alert("Checkout session was created but no redirect URL was returned.");
       }
     } catch (error) {
       console.error("Checkout failed:", error);

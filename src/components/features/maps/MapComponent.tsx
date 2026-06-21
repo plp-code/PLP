@@ -109,7 +109,7 @@ export default function MapComponent({
 
         return (
           <Marker
-            key={s.id}
+            key={s.id ?? `${s.latitude},${s.longitude}`}
             position={[s.latitude, s.longitude]}
             icon={activeId === s.id ? redIcon : blueIcon}
             eventHandlers={{ click: () => setActiveId(s.id) }}
