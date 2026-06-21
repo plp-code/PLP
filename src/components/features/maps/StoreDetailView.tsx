@@ -6,7 +6,11 @@ import {
   DollarSign,
   Info,
 } from "lucide-react";
-import { getTodayHours } from "@/lib/utils";
+import {
+  getTodayHours,
+  formatPriceLevel,
+  formatPriceRange,
+} from "@/lib/utils";
 
 export function StoreDetailView({ store, onBack, distance }: any) {
   return (
@@ -30,11 +34,8 @@ export function StoreDetailView({ store, onBack, distance }: any) {
       <div className="p-5 md:p-8 flex flex-col gap-6 md:gap-8 max-w-3xl mx-auto w-full">
         <div className="flex flex-col">
           <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2 leading-tight tracking-tight">
-            {store.store_name}
+            {store.name}
           </h2>
-          <p className="text-gray-500 text-[15px] md:text-base mb-2 leading-relaxed">
-            {store.address}
-          </p>
 
           {distance !== null && (
             <div className="flex items-center gap-1.5 text-blue-600 font-bold text-[14px] md:text-sm mb-6 bg-blue-50 w-fit px-2.5 py-1 rounded-md">
@@ -46,7 +47,7 @@ export function StoreDetailView({ store, onBack, distance }: any) {
           {distance === null && <div className="mb-6"></div>}
 
           <a
-            href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(store.store_name + " " + (store.address || ""))}`}
+            href={`https://www.google.com/maps/dir/?api=1&destination=${store.latitude},${store.longitude}`}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-2 py-3.5 md:py-4 bg-blue-600 hover:bg-blue-700 text-white text-[15px] md:text-base font-bold rounded-xl shadow-md shadow-blue-600/20 active:scale-[0.98] transition-all"
@@ -73,7 +74,7 @@ export function StoreDetailView({ store, onBack, distance }: any) {
             </div>
           </div>
 
-          {(store.price_range || store.price_notes) && (
+          {(store.price_level || store.min_price != null || store.max_price != null) && (
             <div className="flex gap-4 md:gap-5">
               <div className="bg-emerald-50/80 p-3 rounded-2xl h-fit shrink-0 border border-emerald-100/50">
                 <DollarSign size={20} className="text-emerald-600" />
@@ -84,19 +85,19 @@ export function StoreDetailView({ store, onBack, distance }: any) {
                 </span>
                 <div className="bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-lg w-fit mb-2">
                   <span className="text-gray-800 font-semibold text-[14px] md:text-[15px]">
-                    Level: {store.price_range || "N/A"}
+                    Level: {formatPriceLevel(store.price_level) || "N/A"}
                   </span>
                 </div>
-                {store.price_notes && (
+                {formatPriceRange(store.min_price, store.max_price) && (
                   <span className="text-gray-500 text-[14px] leading-relaxed block">
-                    {store.price_notes}
+                    {formatPriceRange(store.min_price, store.max_price)}
                   </span>
                 )}
               </div>
             </div>
           )}
 
-          {store.notes && (
+          {store.description && (
             <div className="flex gap-4 md:gap-5">
               <div className="bg-gray-50 p-3 rounded-2xl h-fit shrink-0 border border-gray-100">
                 <Info size={20} className="text-gray-600" />
@@ -106,7 +107,7 @@ export function StoreDetailView({ store, onBack, distance }: any) {
                   About
                 </span>
                 <p className="text-gray-600 text-[14px] md:text-[15px] leading-relaxed whitespace-pre-wrap">
-                  {store.notes}
+                  {store.description}
                 </p>
               </div>
             </div>

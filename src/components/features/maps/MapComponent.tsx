@@ -105,7 +105,7 @@ export default function MapComponent({
       {!isMobile && <ZoomControl position="topright" />}
 
       {validStores.map((s: any) => {
-        const gmapsUrl = `https://maps.google.com/?q=${encodeURIComponent(s.store_name + " " + (s.address || ""))}`;
+        const gmapsUrl = `https://maps.google.com/?q=${s.latitude},${s.longitude}`;
 
         return (
           <Marker
@@ -121,12 +121,12 @@ export default function MapComponent({
               <div className="flex flex-col min-w-[180px] pt-1">
                 <div className="flex justify-between items-start gap-3 mb-1">
                   <h3 className="font-bold text-[15px] text-gray-900 leading-tight m-0 tracking-tight">
-                    {s.store_name}
+                    {s.name}
                   </h3>
                 </div>
 
                 <p className="text-xs text-gray-500 m-0 leading-tight mb-3">
-                  {s.address}
+                  {s.description}
                 </p>
 
                 <a

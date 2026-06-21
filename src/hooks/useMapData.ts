@@ -1,9 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { api } from "@/lib/api";
+import { Location, LocationPin } from "@/types";
+
+const PAGE_SIZE = 5;
 
 export function useMapData(mapSlug: string) {
-  const [pins, setPins] = useState<any[]>([]);
-  const [detailedStores, setDetailedStores] = useState<any[]>([]);
+  // `pins` = every location on the map (lightweight: id/name/lat/lng) for the
+  // map markers. `stores` = the detailed, paginated set that backs the list and
+  // the detail panel.
+  const [pins, setPins] = useState<LocationPin[]>([]);
+  const [stores, setStores] = useState<Location[]>([]);
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -17,17 +23,19 @@ export function useMapData(mapSlug: string) {
       setLoading(true);
       try {
         const [pinsData, storesData] = await Promise.all([
-          api.get(`/maps/${mapSlug}/stores/minimal`, {
+          api.get<LocationPin[]>(`/maps/${mapSlug}/locations/pins`, {
             signal: controller.signal,
           }),
-          api.get(`/maps/${mapSlug}/stores?page=1&limit=5`, {
-            signal: controller.signal,
-          }),
+          api.get<Location[]>(
+            `/maps/${mapSlug}/locations?page=1&limit=${PAGE_SIZE}`,
+            { signal: controller.signal },
+          ),
         ]);
 
         setPins(pinsData);
-        setDetailedStores(storesData);
-        setHasMore(storesData.length === 5);
+        setStores(storesData);
+        setPage(1);
+        setHasMore(storesData.length === PAGE_SIZE);
       } catch (err) {
         if (controller.signal.aborted) return;
         console.error("Failed to load map data:", err);
@@ -48,28 +56,23 @@ export function useMapData(mapSlug: string) {
     try {
       const nextPage = page + 1;
 
-      const moreStores = await api.get(
-        `/maps/${mapSlug}/stores?page=${nextPage}&limit=5`,
+      const moreStores = await api.get<Location[]>(
+        `/maps/${mapSlug}/locations?page=${nextPage}&limit=${PAGE_SIZE}`,
       );
 
-      setDetailedStores((prev) => [...prev, ...moreStores]);
+      setStores((prev) => [...prev, ...moreStores]);
       setPage(nextPage);
-      setHasMore(moreStores.length === 5);
+      setHasMore(moreStores.length === PAGE_SIZE);
     } catch (err) {
-      console.error("Failed to load more stores:", err);
+      console.error("Failed to load more locations:", err);
     } finally {
       setLoadingMore(false);
     }
   }, [page, hasMore, loadingMore, mapSlug]);
 
-  const sidebarStores = detailedStores.map((store) => {
-    const pinData = pins.find((p) => p.id === store.id) || {};
-    return { ...pinData, ...store };
-  });
-
   return {
     pins,
-    stores: sidebarStores,
+    stores,
     loading,
     loadMore,
     hasMore,

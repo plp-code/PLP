@@ -17,11 +17,13 @@ import { useMapCheckout } from "@/hooks/useMapCheckout";
 import { useAuthUser } from "@/context/AuthContext";
 import { MapCardGrid } from "./MapCardGrid";
 import { MapListView } from "./MapListView";
+import { Snackbar } from "@/components/ui/Snackbar";
 
 export default function MapDirectory() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showGuestBanner, setShowGuestBanner] = useState(true);
   const hasHandledSuccess = useRef(false);
 
   const searchParams = useSearchParams();
@@ -32,6 +34,17 @@ export default function MapDirectory() {
   const { isAuthenticated, isLoading: authLoading } = useAuthUser();
   const { maps, loading, error, refetch } = useMapDirectory();
   const { handleMapAction, checkoutLoadingId } = useMapCheckout();
+
+  useEffect(() => {
+    if (isSuccess && !hasHandledSuccess.current) {
+      hasHandledSuccess.current = true;
+      refetch();
+      setShowSuccessMessage(true);
+      router.replace(pathname, { scroll: false });
+    }
+  }, [isSuccess, refetch, router, pathname]);
+
+  const purchasedMapName = searchParams.get("map");
 
   useEffect(() => {
     if (isSuccess && !hasHandledSuccess.current) {
@@ -53,7 +66,7 @@ export default function MapDirectory() {
     const lowerQuery = searchQuery.toLowerCase();
     return maps.filter(
       (map) =>
-        map.title.toLowerCase().includes(lowerQuery) ||
+        map.name.toLowerCase().includes(lowerQuery) ||
         map.region?.toLowerCase().includes(lowerQuery) ||
         map.description?.toLowerCase().includes(lowerQuery),
     );
@@ -93,29 +106,36 @@ export default function MapDirectory() {
   return (
     <div className="w-full max-w-7xl mx-auto py-6 sm:py-10 px-4 sm:px-6 lg:px-8">
       {showSuccessMessage && (
-        <div className="mb-6 animate-in slide-in-from-top-4 fade-in duration-300 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 sm:px-5 sm:py-4 text-green-900 flex items-start justify-between gap-3 shadow-sm">
-          <div className="flex items-start gap-3">
-            <CheckCircle2
-              size={20}
-              className="mt-0.5 shrink-0 text-green-600"
-            />
-            <div>
-              <p className="font-bold text-sm sm:text-base">
-                Transaction Successful!
-              </p>
-              {/* <p className="text-sm text-green-800 mt-0.5">
-                You've 
-              </p> */}
-            </div>
-          </div>
-          <button
-            onClick={() => setShowSuccessMessage(false)}
-            className="text-green-600 hover:text-green-900 transition-colors"
-            aria-label="Close success message"
-          >
-            <X size={18} />
-          </button>
-        </div>
+        <Snackbar
+          show={showSuccessMessage}
+          onClose={() => setShowSuccessMessage(false)}
+          icon={CheckCircle2}
+          iconColor="text-green-600"
+          borderColor="border-green-200"
+          bgColor="bg-green-50"
+          textColor="text-green-900"
+          title="Transaction Successful!"
+          subtitle={
+            purchasedMapName
+              ? `You now have access to ${decodeURIComponent(purchasedMapName)}`
+              : undefined
+          }
+          autoCloseMs={3000}
+        />
+      )}
+      {!authLoading && !isAuthenticated && showGuestBanner && (
+        <Snackbar
+          show={!authLoading && !isAuthenticated && showGuestBanner}
+          onClose={() => setShowGuestBanner(false)}
+          icon={Shield}
+          iconColor="text-amber-700"
+          borderColor="border-amber-200"
+          bgColor="bg-amber-50"
+          textColor="text-amber-900"
+          title="Browsing as Guest"
+          subtitle="You need to log in and buy items to view the maps."
+          autoCloseMs={5000}
+        />
       )}
 
       <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between pb-6 mb-8 sm:mb-10 border-b border-gray-100 gap-y-6 lg:gap-y-0 gap-x-8">
@@ -181,16 +201,6 @@ export default function MapDirectory() {
           </div>
         </div>
       </div>
-
-      {!authLoading && !isAuthenticated && (
-        <div className="mb-8 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 sm:px-5 sm:py-4 text-amber-900 flex items-start gap-3">
-          <Shield size={18} className="mt-0.5 shrink-0 text-amber-700" />
-          <p className="text-sm sm:text-base leading-relaxed">
-            You are browsing as a guest. You need to log in and buy items to
-            view the maps.
-          </p>
-        </div>
-      )}
 
       <div aria-live="polite" className="w-full">
         {filteredMaps.length === 0 ? (

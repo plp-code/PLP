@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
 
-      const userData = await api.get("/user/me", { skipRedirect: true });
+      const userData = await api.get("/users/me", { skipRedirect: true });
 
       setUser(userData);
     } catch (error) {

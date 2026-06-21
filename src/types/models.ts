@@ -7,22 +7,52 @@ export interface User {
 
 export interface MapItem {
   id: number;
-  title: string;
+  name: string;
   slug: string;
-  description: string;
-  region: string;
-  map_price: number;
-  has_access: boolean;
+  description?: string | null;
+  region?: string | null;
+  price: number; // amount in cents
+  is_purchased: boolean;
 }
 
-export interface Store {
+// Paginated envelope returned by GET /maps
+export interface MapListResponse {
+  maps: MapItem[];
+  total: number;
+  page: number;
+  limit: number;
+  has_more: boolean;
+}
+
+// One day's opening hours (LocationHoursRead)
+export interface LocationHours {
   id: number;
-  store_name: string;
+  day_of_week: number; // 0 = Monday ... 6 = Sunday
+  open_time?: string | null; // "HH:MM:SS"
+  close_time?: string | null; // "HH:MM:SS"
+  is_closed: boolean;
+}
+
+// A point on a map (GET /maps/{slug}/locations -> LocationRead)
+export interface Location {
+  id: number;
+  map_id: number;
+  name: string;
   latitude: number;
   longitude: number;
-  price_range: string;
-  notes?: string;
-  price_notes?: string;
-  hours?: Record<string, string>;
-  address?: string;
+  min_price?: number | null;
+  max_price?: number | null;
+  price_level?: number | null; // 1-3
+  description?: string | null;
+  hours: LocationHours[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+// Lightweight marker (GET /maps/{slug}/locations/pins -> LocationMinimalRead)
+export interface LocationPin {
+  id: number;
+  name: string;
+  latitude: number;
+  longitude: number;
 }

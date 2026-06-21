@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
-import { MapItem } from "@/types";
+import { MapItem, MapListResponse } from "@/types";
 import { useAuthUser } from "@/context/AuthContext";
 
 export function useMapDirectory() {
@@ -12,8 +12,8 @@ export function useMapDirectory() {
 
   const refetch = async () => {
     try {
-      const data = await api.get<MapItem[]>("/maps");
-      setMaps(data);
+      const data = await api.get<MapListResponse>("/maps");
+      setMaps(data.maps ?? []);
     } catch (err: any) {
       setError(err.message || "Failed to load maps");
     }

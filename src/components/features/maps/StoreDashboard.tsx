@@ -37,43 +37,8 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   return R * c;
 }
 
-function checkIsOpenNow(hoursObj: any): boolean {
-  if (!hoursObj) return false;
-  try {
-    const now = new Date();
-    const days = [
-      "sunday",
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-    ];
-    const todayStr = days[now.getDay()];
-    const todayHours = hoursObj[todayStr];
-
-    if (!todayHours || !todayHours.open || !todayHours.close) return false;
-    if (todayHours.open.toLowerCase() === "closed") return false;
-
-    const currentTime = now.getHours() * 60 + now.getMinutes();
-
-    const [openH, openM] = todayHours.open.split(":").map(Number);
-    const openTime = openH * 60 + (openM || 0);
-
-    const [closeH, closeM] = todayHours.close.split(":").map(Number);
-    let closeTime = closeH * 60 + (closeM || 0);
-
-    if (closeTime < openTime) closeTime += 24 * 60;
-
-    return currentTime >= openTime && currentTime <= closeTime;
-  } catch (e) {
-    return false;
-  }
-}
-
 export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
-  const { stores, loading, loadMore, hasMore, loadingMore } =
+  const { pins, stores, loading, loadMore, hasMore, loadingMore } =
     useMapData(mapSlug);
 
   const [activePrice, setActivePrice] = useState<string | null>(null);
@@ -159,19 +124,16 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     const cleanSearch = searchTerm.trim().toLowerCase();
     if (cleanSearch) {
       result = result.filter((s) => {
-        const name = (s.store_name || "").toLowerCase();
-        const address = (s.address || "").toLowerCase();
-        const notes = (s.notes || "").toLowerCase();
+        const name = (s.name || "").toLowerCase();
+        const description = (s.description || "").toLowerCase();
         return (
-          name.includes(cleanSearch) ||
-          address.includes(cleanSearch) ||
-          notes.includes(cleanSearch)
+          name.includes(cleanSearch) || description.includes(cleanSearch)
         );
       });
     }
 
     if (activePrice) {
-      result = result.filter((s) => s.price_level === activePrice);
+      result = result.filter((s) => s.price_level === Number(activePrice));
     }
 
     if (isOpenNow) {
@@ -199,9 +161,26 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     return result;
   }, [stores, searchTerm, activePrice, isOpenNow, userLocation]);
 
+  // Every pin shows on the map; text search narrows it (pins lack price/hours,
+  // so the price / open-now filters refine the list only).
+  const mapPins = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return pins;
+    return pins.filter((p) => (p.name || "").toLowerCase().includes(q));
+  }, [pins, searchTerm]);
+
+  // Resolve a selection to the richest record we have: the detailed location if
+  // it's been loaded, otherwise the lightweight pin.
+  const storeById = useMemo(() => {
+    const byId = new Map<number, any>();
+    pins.forEach((p) => byId.set(p.id, p));
+    stores.forEach((s) => byId.set(s.id, s));
+    return byId;
+  }, [pins, stores]);
+
   const activeStore = useMemo(
-    () => filteredStores.find((s) => s.id === activeId) || null,
-    [filteredStores, activeId],
+    () => (activeId != null ? storeById.get(activeId) ?? null : null),
+    [storeById, activeId],
   );
 
   if (loading) {
@@ -217,7 +196,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
       <div className="absolute inset-0 z-0">
         {MapComponent && (
           <MapComponent
-            stores={filteredStores}
+            stores={mapPins}
             activeId={activeId}
             setActiveId={(id: number) => {
               setActiveId(id);

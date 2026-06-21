@@ -22,7 +22,7 @@ export function useMapCheckout() {
       return;
     }
 
-    if (map.has_access) {
+    if (map.is_purchased) {
       router.push(`/maps/${map.slug}`);
       return;
     }
@@ -30,9 +30,9 @@ export function useMapCheckout() {
     setCheckoutLoadingId(map.id);
 
     try {
-      const response = await api.post("/checkout/create-session", {
-        map_id: map.id,
-      });
+      const response = await api.post(
+        `/checkout/create-session?map_slug=${encodeURIComponent(map.slug)}`,
+      );
 
       if (response && response.url) {
         window.location.href = response.url;

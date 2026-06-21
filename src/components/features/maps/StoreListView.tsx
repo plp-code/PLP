@@ -73,7 +73,7 @@ export function StoreListView({
                       : "text-gray-900 group-hover:text-blue-600"
                   }`}
                 >
-                  {store.store_name}
+                  {store.name}
                 </h3>
 
                 <div className="flex items-center gap-2 text-[13px] md:text-[14px] text-gray-500 overflow-hidden w-full">
@@ -87,7 +87,7 @@ export function StoreListView({
                     </span>
                   )}
 
-                  <span className="truncate flex-1">{store.address}</span>
+                  <span className="truncate flex-1">{store.description}</span>
                 </div>
               </div>
 
