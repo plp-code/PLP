@@ -4,16 +4,14 @@ import { Location, LocationPin } from "@/types";
 
 const PAGE_SIZE = 5;
 
-export function useMapData(mapSlug: string) {
-  // `pins` = every location on the map (lightweight) for the markers.
+export function useMapData(mapSlug: string) {  
   const pinsQuery = useQuery({
     queryKey: ["locations", "pins", mapSlug],
     queryFn: ({ signal }) =>
       api.get<LocationPin[]>(`/maps/${mapSlug}/locations/pins`, { signal }),
     enabled: !!mapSlug,
   });
-
-  // `stores` = the detailed, paginated set that backs the list + detail panel.
+  
   const locationsQuery = useInfiniteQuery({
     queryKey: ["locations", "list", mapSlug],
     queryFn: ({ pageParam, signal }) =>

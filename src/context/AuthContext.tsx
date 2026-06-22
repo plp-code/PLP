@@ -26,8 +26,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  // React Query dedupes concurrent calls and caches the result, so the manual
-  // in-flight ref we used to keep here is no longer needed.
   const { data: user = null, isLoading } = useQuery<User | null>({
     queryKey: ["session"],
     queryFn: async ({ signal }) => {
@@ -37,8 +35,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           signal,
         });
       } catch {
-        // Not authenticated — a logged-out session is a valid "null" result,
-        // not a query error (so it won't retry).
         return null;
       }
     },
@@ -56,7 +52,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error("Logout failed", error);
     } finally {
-      // Clear the session and any user-scoped caches (purchased state, etc.).
       queryClient.setQueryData(["session"], null);
       queryClient.invalidateQueries({ queryKey: ["maps"] });
       queryClient.removeQueries({ queryKey: ["locations"] });

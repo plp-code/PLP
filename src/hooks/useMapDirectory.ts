@@ -7,7 +7,6 @@ export function useMapDirectory() {
   const { isAuthenticated, isLoading: authLoading } = useAuthUser();
 
   const query = useQuery({
-    // Keyed on auth so the list refetches after login/logout (is_purchased flips)
     queryKey: ["maps", { isAuthenticated }],
     queryFn: async ({ signal }) => {
       const data = await api.get<MapListResponse>("/maps", { signal });

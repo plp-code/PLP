@@ -9,70 +9,72 @@ interface Props {
 }
 
 export function MapCardGrid({ map, onAction, isLoading, isAuthenticated }: Props) {
-  return (
-    <div className="group bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:border-gray-300 transition-all duration-300 flex flex-col overflow-hidden relative">
-      
-      {/* Decorative Header Bar */}
-      <div className="h-2 w-full bg-gradient-to-r from-plp-maroon to-plp-babyblue opacity-80" />
+  const owned = map.is_purchased;
 
-      <div className="p-4 sm:p-6 flex-1 flex flex-col">
-        {/* Status & Region */}
-        <div className="flex items-center justify-between mb-3 sm:mb-4">
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500">
-            <MapPin size={14} className="text-gray-400 shrink-0" />
-            <span className="truncate max-w-[120px] sm:max-w-none">{map.region || "Global"}</span>
+  return (
+    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-xl">
+      {/* Slim accent bar */}
+      <div className="h-1.5 w-full bg-gradient-to-r from-plp-maroon to-plp-babyblue opacity-80" />
+
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        {/* Region + single ownership indicator */}
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <span className="inline-flex min-w-0 items-center gap-1.5 text-xs font-medium text-gray-500">
+            <MapPin size={14} className="shrink-0 text-gray-400" />
+            <span className="truncate">{map.region || "Global"}</span>
           </span>
-          {map.is_purchased ? (
-            <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-1 rounded-md uppercase tracking-wide shrink-0">
+          {owned ? (
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">
               <Unlock size={12} /> Owned
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-bold text-gray-600 bg-gray-100 px-2 sm:px-2.5 py-1 rounded-md uppercase tracking-wide shrink-0">
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-gray-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-gray-500">
               <Lock size={12} /> Locked
             </span>
           )}
         </div>
 
-        {/* Content */}
-        <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight mb-1.5 sm:mb-2">
+        {/* Title */}
+        <h3 className="mb-2 text-lg font-bold leading-tight text-gray-900 sm:text-xl">
           {map.name}
         </h3>
-        <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 sm:line-clamp-3 mb-5 sm:mb-8 flex-1 leading-relaxed">
+
+        {/* Description — the focal content */}
+        <p className="mb-6 line-clamp-4 flex-1 text-sm leading-relaxed text-gray-600">
           {map.description || "No description available for this directory."}
         </p>
 
-        {/* Footer Actions */}
-        <div className="mt-auto pt-4 sm:pt-5 border-t border-gray-100 flex items-center justify-between gap-4">
-          {!map.is_purchased && (
+        {/* Footer: price + action */}
+        <div className="mt-auto flex items-center justify-between gap-4 border-t border-gray-100 pt-4 sm:pt-5">
+          {!owned && (
             <div className="flex flex-col shrink-0">
-              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
                 Price
               </span>
-              <span className="text-lg sm:text-xl font-black text-gray-900 leading-none mt-0.5">
+              <span className="mt-0.5 text-xl font-black leading-none text-gray-900">
                 ${(map.price / 100).toFixed(2)}
               </span>
             </div>
           )}
-          
+
           <button
             onClick={onAction}
             disabled={isLoading}
-            className={`group/btn cursor-pointer flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed ${
-              map.is_purchased
-                ? "bg-plp-maroon text-white hover:bg-red-800 hover:shadow-lg w-full"
-                : "bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg flex-1 sm:flex-none sm:ml-auto"
+            className={`group/btn flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${
+              owned
+                ? "w-full bg-plp-maroon text-white hover:bg-red-800 hover:shadow-lg"
+                : "flex-1 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg sm:flex-none"
             }`}
           >
             {isLoading ? (
               <Loader2 size={16} className="animate-spin" />
             ) : (
               <>
-                {map.is_purchased
-                  ? "View Tour"
-                  : isAuthenticated
-                    ? "Buy Now"
-                    : "Log In to Buy"}
-                <ArrowRight size={14} className="transition-transform group-hover/btn:translate-x-1 sm:w-4 sm:h-4" />
+                {owned ? "View Tour" : isAuthenticated ? "Buy Now" : "Log In to Buy"}
+                <ArrowRight
+                  size={14}
+                  className="transition-transform group-hover/btn:translate-x-0.5"
+                />
               </>
             )}
           </button>

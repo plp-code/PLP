@@ -1,7 +1,5 @@
 import { LocationHours } from "@/types";
 
-// Derives today's open/closed status from a location's `hours` array
-// (one LocationHoursRead per day_of_week; 0 = Monday ... 6 = Sunday).
 export const getTodayHours = (
   hours?: LocationHours[],
 ): { isOpen: boolean; string: string } => {
@@ -9,7 +7,6 @@ export const getTodayHours = (
     return { isOpen: false, string: "Hours unavailable" };
   }
 
-  // JS getDay(): 0 = Sunday ... 6 = Saturday. API: 0 = Monday ... 6 = Sunday.
   const apiDay = (new Date().getDay() + 6) % 7;
   const today = hours.find((h) => h.day_of_week === apiDay);
 
@@ -44,16 +41,17 @@ export const getTodayHours = (
     return `${h}${m > 0 ? `:${m.toString().padStart(2, "0")}` : ""}${ampm}`;
   };
 
-  return { isOpen, string: `${formatTime(openMins)} - ${formatTime(closeMins)}` };
+  return {
+    isOpen,
+    string: `${formatTime(openMins)} - ${formatTime(closeMins)}`,
+  };
 };
 
-// price_level (1-3) -> "$" / "$$" / "$$$"
 export const formatPriceLevel = (level?: number | null): string => {
   if (!level || level < 1) return "";
   return "$".repeat(Math.min(level, 4));
 };
 
-// min/max prices are stored in cents, like the rest of the API
 export const formatPriceRange = (
   min?: number | null,
   max?: number | null,

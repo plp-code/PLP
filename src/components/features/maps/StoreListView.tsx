@@ -1,7 +1,6 @@
 import { ChevronRight, Loader2, Navigation } from "lucide-react";
 import { getTodayHours } from "@/lib/utils";
 
-// Distance Calculator helper
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 3958.8;
   const dLat = (lat2 - lat1) * (Math.PI / 180);

@@ -1,3 +1,6 @@
+"use client";
+
+import React, { useState, useRef } from "react";
 import {
   ChevronLeft,
   MapPin,
@@ -6,16 +9,65 @@ import {
   DollarSign,
   Info,
 } from "lucide-react";
-import {
-  getTodayHours,
-  formatPriceLevel,
-  formatPriceRange,
-} from "@/lib/utils";
+import { getTodayHours, formatPriceLevel, formatPriceRange } from "@/lib/utils";
 
 export function StoreDetailView({ store, onBack, distance }: any) {
+  const [translateY, setTranslateY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const startY = useRef(0);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (contentRef.current && contentRef.current.scrollTop > 0) return;
+
+    startY.current = e.touches[0].clientY;
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+
+    const currentY = e.touches[0].clientY;
+    const deltaY = currentY - startY.current;
+
+    if (deltaY > 0) {
+      setTranslateY(deltaY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+
+    if (translateY > 120) {
+      setTranslateY(window.innerHeight);
+      setTimeout(() => {
+        onBack();
+      }, 250);
+    } else {
+      setTranslateY(0);
+    }
+  };
+
   return (
-    <div className="flex-1 overflow-y-auto flex flex-col bg-white animate-in slide-in-from-right-4 duration-300 pb-24 md:pb-0 relative">
-      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 p-2 md:p-4 transition-all">
+    <div
+      ref={contentRef}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      style={{ "--drag-y": `${translateY}px` } as React.CSSProperties}
+      className={`flex-1 overflow-y-auto flex flex-col bg-white pb-24 md:pb-0 relative 
+        transform translate-y-[var(--drag-y,0px)] md:!translate-y-0
+        ${isDragging ? "transition-none" : "transition-transform duration-300 ease-out"}
+        animate-in slide-in-from-right-4 md:duration-300
+      `}
+    >
+      <div className="w-full flex justify-center pt-3 pb-1 md:hidden absolute top-0 left-0 z-30">
+        <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
+      </div>
+
+      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 p-2 md:p-4 transition-all pt-6 md:pt-4">
         <button
           onClick={onBack}
           className="flex items-center gap-1.5 md:gap-2 text-[14px] md:text-sm font-bold text-gray-600 active:text-blue-600 hover:text-blue-700 px-3 py-2 md:py-1.5 rounded-xl active:bg-blue-50 hover:bg-gray-100 transition-colors"
@@ -74,7 +126,9 @@ export function StoreDetailView({ store, onBack, distance }: any) {
             </div>
           </div>
 
-          {(store.price_level || store.min_price != null || store.max_price != null) && (
+          {(store.price_level ||
+            store.min_price != null ||
+            store.max_price != null) && (
             <div className="flex gap-4 md:gap-5">
               <div className="bg-emerald-50/80 p-3 rounded-2xl h-fit shrink-0 border border-emerald-100/50">
                 <DollarSign size={20} className="text-emerald-600" />

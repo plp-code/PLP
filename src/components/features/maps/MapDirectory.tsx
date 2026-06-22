@@ -42,8 +42,6 @@ export default function MapDirectory() {
   useEffect(() => {
     if (isSuccess && !hasHandledSuccess.current) {
       hasHandledSuccess.current = true;
-      // Purchase just completed — drop the cached (pre-purchase) maps list so
-      // the newly-owned map shows as unlocked.
       queryClient.invalidateQueries({ queryKey: ["maps"] });
       setShowSuccessMessage(true);
       router.replace(pathname, { scroll: false });
@@ -168,7 +166,7 @@ export default function MapDirectory() {
             )}
           </div>
 
-          <div className="w-fit self-end sm:self-auto flex items-center bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200/50 shrink-0">
+          <div className="w-fit self-end sm:self-auto hidden sm:flex items-center bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200/50 shrink-0">
             <button
               onClick={() => setViewMode("grid")}
               aria-label="Grid View"
@@ -221,25 +219,35 @@ export default function MapDirectory() {
           </div>
         ) : (
           <div className="animate-in fade-in duration-500">
-            {viewMode === "grid" ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                {filteredMaps.map((map) => (
-                  <MapCardGrid
-                    key={map.id}
-                    map={map}
-                    onAction={() => handleMapAction(map)}
-                    isLoading={checkoutLoadingId === map.id}
-                    isAuthenticated={isAuthenticated}
-                  />
-                ))}
+            {/* Grid — always used on mobile; on desktop only when grid mode is active */}
+            <div
+              className={
+                viewMode === "grid"
+                  ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6"
+                  : "grid grid-cols-1 gap-5 sm:hidden"
+              }
+            >
+              {filteredMaps.map((map) => (
+                <MapCardGrid
+                  key={map.id}
+                  map={map}
+                  onAction={() => handleMapAction(map)}
+                  isLoading={checkoutLoadingId === map.id}
+                  isAuthenticated={isAuthenticated}
+                />
+              ))}
+            </div>
+
+            {/* List — desktop only, and only when list mode is active */}
+            {viewMode === "list" && (
+              <div className="hidden sm:block">
+                <MapListView
+                  maps={filteredMaps}
+                  onAction={handleMapAction}
+                  loadingId={checkoutLoadingId}
+                  isAuthenticated={isAuthenticated}
+                />
               </div>
-            ) : (
-              <MapListView
-                maps={filteredMaps}
-                onAction={handleMapAction}
-                loadingId={checkoutLoadingId}
-                isAuthenticated={isAuthenticated}
-              />
             )}
           </div>
         )}

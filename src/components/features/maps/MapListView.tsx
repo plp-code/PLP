@@ -10,83 +10,94 @@ interface Props {
 
 export function MapListView({ maps, onAction, loadingId, isAuthenticated }: Props) {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       <div className="divide-y divide-gray-100">
-        {maps.map((map) => (
-          <div 
-            key={map.id} 
-            className="group flex flex-col sm:flex-row items-start sm:items-center p-4 sm:p-5 hover:bg-gray-50/50 transition-colors"
-          >
-            {/* Main Info */}
-            <div className="flex-1 min-w-0 w-full sm:w-auto sm:pr-6">
-              
-              {/* Title & Badge */}
-              <div className="flex items-start sm:items-center justify-between sm:justify-start gap-3 mb-2 sm:mb-1">
-                <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-tight pr-2 sm:pr-0">
-                  {map.name}
-                </h3>
-                {map.is_purchased ? (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 sm:py-0.5 rounded-md sm:rounded uppercase tracking-wide shrink-0">
-                    <Unlock size={10} /> Owned
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-gray-500 bg-gray-100 px-2.5 py-1 sm:py-0.5 rounded-md sm:rounded uppercase tracking-wide shrink-0">
-                    <Lock size={10} /> Locked
-                  </span>
-                )}
-              </div>
-              
-              {/* Location & Description (Stacked on mobile, inline on desktop) */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500">
-                <span className="inline-flex items-center gap-1 font-medium text-gray-600 whitespace-nowrap">
-                  <MapPin size={12} className="text-gray-400 shrink-0" />
-                  {map.region || "Global"}
-                </span>
-                <span className="hidden sm:inline text-gray-300">•</span>
-                <span className="line-clamp-2 sm:line-clamp-1 leading-relaxed sm:leading-normal">
-                  {map.description}
-                </span>
-              </div>
-            </div>
+        {maps.map((map) => {
+          const owned = map.is_purchased;
 
-            {/* Actions (Bottom Bar on Mobile, Right Aligned on Desktop) */}
-            <div className="flex items-center gap-4 sm:gap-6 mt-4 sm:mt-0 pt-4 sm:pt-0 border-t border-gray-100 sm:border-0 w-full sm:w-auto shrink-0 justify-between sm:justify-end">
-               {!map.is_purchased && (
-                <div className="flex flex-col items-start sm:items-end shrink-0">
-                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block sm:hidden mb-0.5">
-                    Price
+          return (
+            <div
+              key={map.id}
+              className="group flex items-center gap-3 p-3 transition-colors hover:bg-gray-50/60 sm:gap-4 sm:p-4"
+            >
+              {/* Leading map tile — always visible, scales up on desktop */}
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-100 bg-gradient-to-br from-slate-50 to-blue-50/60 sm:h-14 sm:w-14">
+                <MapPin className="h-4 w-4 text-plp-maroon sm:h-5 sm:w-5" />
+              </div>
+
+              {/* Main info */}
+              <div className="min-w-0 flex-1">
+                <div className="mb-0.5 flex items-center gap-2 sm:mb-1">
+                  <h3 className="truncate text-sm font-bold leading-tight text-gray-900 sm:text-lg">
+                    {map.name}
+                  </h3>
+                  {owned ? (
+                    <span className="hidden shrink-0 items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700 sm:inline-flex">
+                      <Unlock size={10} /> Owned
+                    </span>
+                  ) : (
+                    <span className="hidden shrink-0 items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gray-500 sm:inline-flex">
+                      <Lock size={10} /> Locked
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 sm:gap-2 sm:text-sm">
+                  <span className="inline-flex shrink-0 items-center gap-1 font-medium text-gray-600">
+                    <MapPin size={12} className="shrink-0 text-gray-400" />
+                    {map.region || "Global"}
                   </span>
-                  <span className="text-xl sm:text-lg font-black text-gray-900 leading-none">
+                  {map.description && (
+                    <>
+                      <span className="text-gray-300">•</span>
+                      <span className="truncate">{map.description}</span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Price + action */}
+              <div className="flex shrink-0 items-center gap-2.5 sm:gap-5">
+                {!owned && (
+                  <span className="text-sm font-black leading-none text-gray-900 sm:text-lg">
                     ${(map.price / 100).toFixed(2)}
                   </span>
-                </div>
-              )}
-              
-              <button
-                onClick={() => onAction(map)}
-                disabled={loadingId === map.id}
-                className={`group/btn cursor-pointer flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 sm:py-2 rounded-xl sm:rounded-lg text-sm font-bold transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed ${
-                  map.is_purchased
-                    ? "bg-plp-maroon text-white hover:bg-red-800"
-                    : "bg-gray-900 text-white hover:bg-gray-800"
-                }`}
-              >
-                {loadingId === map.id ? (
-                  <Loader2 size={16} className="animate-spin" />
-                ) : (
-                  <>
-                    {map.is_purchased
-                      ? "View Tour"
-                      : isAuthenticated
-                        ? "Buy Now"
-                        : "Log In to Buy"}
-                    <ArrowRight size={14} className="transition-transform group-hover/btn:translate-x-1" />
-                  </>
                 )}
-              </button>
+
+                <button
+                  onClick={() => onAction(map)}
+                  disabled={loadingId === map.id}
+                  aria-label={
+                    owned ? "View tour" : isAuthenticated ? "Buy now" : "Log in to buy"
+                  }
+                  className={`group/btn flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 sm:gap-2 sm:px-5 sm:text-sm ${
+                    owned
+                      ? "bg-plp-maroon text-white hover:bg-red-800"
+                      : "bg-gray-900 text-white hover:bg-gray-800"
+                  }`}
+                >
+                  {loadingId === map.id ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <>
+                      {/* Short label on mobile, full label on desktop */}
+                      <span className="sm:hidden">
+                        {owned ? "View" : isAuthenticated ? "Buy" : "Log In"}
+                      </span>
+                      <span className="hidden sm:inline">
+                        {owned ? "View Tour" : isAuthenticated ? "Buy Now" : "Log In to Buy"}
+                      </span>
+                      <ArrowRight
+                        size={14}
+                        className="transition-transform group-hover/btn:translate-x-0.5"
+                      />
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

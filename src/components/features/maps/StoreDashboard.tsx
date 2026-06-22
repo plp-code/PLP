@@ -126,9 +126,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
       result = result.filter((s) => {
         const name = (s.name || "").toLowerCase();
         const description = (s.description || "").toLowerCase();
-        return (
-          name.includes(cleanSearch) || description.includes(cleanSearch)
-        );
+        return name.includes(cleanSearch) || description.includes(cleanSearch);
       });
     }
 
@@ -161,16 +159,12 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     return result;
   }, [stores, searchTerm, activePrice, isOpenNow, userLocation]);
 
-  // Every pin shows on the map; text search narrows it (pins lack price/hours,
-  // so the price / open-now filters refine the list only).
   const mapPins = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
     if (!q) return pins;
     return pins.filter((p) => (p.name || "").toLowerCase().includes(q));
   }, [pins, searchTerm]);
 
-  // Resolve a selection to the richest record we have: the detailed location if
-  // it's been loaded, otherwise the lightweight pin.
   const storeById = useMemo(() => {
     const byId = new Map<number, any>();
     pins.forEach((p) => byId.set(p.id, p));
@@ -179,7 +173,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   }, [pins, stores]);
 
   const activeStore = useMemo(
-    () => (activeId != null ? storeById.get(activeId) ?? null : null),
+    () => (activeId != null ? (storeById.get(activeId) ?? null) : null),
     [storeById, activeId],
   );
 
