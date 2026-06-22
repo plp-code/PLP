@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  ReactNode,
-} from "react";
+import { createContext, useContext, ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { User } from "@/types";
 
@@ -29,60 +23,56 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const sessionCheckRef = useRef<Promise<void> | null>(null);
+  const queryClient = useQueryClient();
+
+  // React Query dedupes concurrent calls and caches the result, so the manual
+  // in-flight ref we used to keep here is no longer needed.
+  const { data: user = null, isLoading } = useQuery<User | null>({
+    queryKey: ["session"],
+    queryFn: async ({ signal }) => {
+      try {
+        return await api.get<User>("/users/me", {
+          skipRedirect: true,
+          signal,
+        });
+      } catch {
+        // Not authenticated — a logged-out session is a valid "null" result,
+        // not a query error (so it won't retry).
+        return null;
+      }
+    },
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const checkSession = async () => {
-    if (sessionCheckRef.current) {
-      return sessionCheckRef.current;
-    }
-
-    const sessionCheck = (async () => {
-    try {
-      setIsLoading(true);
-
-      const userData = await api.get("/users/me", { skipRedirect: true });
-
-      setUser(userData);
-    } catch (error) {
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
-
-    })();
-
-    sessionCheckRef.current = sessionCheck;
-
-    try {
-      await sessionCheck;
-    } finally {
-      sessionCheckRef.current = null;
-    }
+    await queryClient.invalidateQueries({ queryKey: ["session"] });
   };
-
-  useEffect(() => {
-    checkSession();
-  }, []);
 
   const logout = async () => {
     try {
-      setIsLoading(true);
       await api.post("/auth/logout");
     } catch (error) {
       console.error("Logout failed", error);
     } finally {
-      setUser(null);
-      setIsLoading(false);
+      // Clear the session and any user-scoped caches (purchased state, etc.).
+      queryClient.setQueryData(["session"], null);
+      queryClient.invalidateQueries({ queryKey: ["maps"] });
+      queryClient.removeQueries({ queryKey: ["locations"] });
       router.replace("/");
     }
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, isAuthenticated: !!user, logout, checkSession }}
+      value={{
+        user,
+        isLoading,
+        isAuthenticated: !!user,
+        logout,
+        checkSession,
+      }}
     >
       {children}
     </AuthContext.Provider>

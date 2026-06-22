@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   LayoutGrid,
   List,
@@ -32,32 +33,25 @@ export default function MapDirectory() {
   const isSuccess = searchParams.get("success") === "true";
 
   const { isAuthenticated, isLoading: authLoading } = useAuthUser();
-  const { maps, loading, error, refetch } = useMapDirectory();
+  const { maps, loading, error } = useMapDirectory();
   const { handleMapAction, checkoutLoadingId } = useMapCheckout();
-
-  useEffect(() => {
-    if (isSuccess && !hasHandledSuccess.current) {
-      hasHandledSuccess.current = true;
-      refetch();
-      setShowSuccessMessage(true);
-      router.replace(pathname, { scroll: false });
-    }
-  }, [isSuccess, refetch, router, pathname]);
+  const queryClient = useQueryClient();
 
   const purchasedMapName = searchParams.get("map");
 
   useEffect(() => {
     if (isSuccess && !hasHandledSuccess.current) {
       hasHandledSuccess.current = true;
-      refetch();
+      // Purchase just completed — drop the cached (pre-purchase) maps list so
+      // the newly-owned map shows as unlocked.
+      queryClient.invalidateQueries({ queryKey: ["maps"] });
       setShowSuccessMessage(true);
-
       router.replace(pathname, { scroll: false });
 
       const timer = setTimeout(() => setShowSuccessMessage(false), 5000);
       return () => clearTimeout(timer);
     }
-  }, [isSuccess, refetch, router, pathname]);
+  }, [isSuccess, queryClient, router, pathname]);
 
   const filteredMaps = useMemo(() => {
     if (!maps) return [];

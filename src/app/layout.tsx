@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { AuthProvider } from "@/context/AuthContext";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: {
@@ -21,11 +22,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <AuthProvider>
-        <main className="flex-1">{children}</main>
-        <Analytics />
-        <SpeedInsights />
-        </AuthProvider>
+        <Providers>
+          <AuthProvider>
+            <main className="flex-1">{children}</main>
+            <Analytics />
+            <SpeedInsights />
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   );
