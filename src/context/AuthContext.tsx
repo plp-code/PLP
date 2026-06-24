@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryFn: async ({ signal }) => {
       try {
         const data = await api.get<User>("/users/me", { signal });
-        setTokenExpiry();
+        setTokenExpiry(30 * 60);
         return data;
       } catch {
         clearTokenExpiry();
