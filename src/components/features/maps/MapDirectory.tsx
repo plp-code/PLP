@@ -209,9 +209,7 @@ export default function MapDirectory() {
           </div>
         ) : (
           <div className="animate-in fade-in duration-500">
-           P
-
-           
+            P
             <div
               className={
                 viewMode === "grid"
@@ -229,10 +227,6 @@ export default function MapDirectory() {
                 />
               ))}
             </div>
-
-           P
-
-           
             {viewMode === "list" && (
               <div className="hidden sm:block">
                 <MapListView
