@@ -1,16 +1,26 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api";
+import {
+  api,
+  clearTokenExpiry,
+  setTokenExpiry,
+  onAuthExpired,
+} from "@/lib/api";
 import { User } from "@/types";
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  /** True while a login/register/logout request is in flight. */
   isAuthBusy: boolean;
   setAuthBusy: (busy: boolean) => void;
   logout: () => Promise<void>;
@@ -36,17 +46,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryKey: ["session"],
     queryFn: async ({ signal }) => {
       try {
-        return await api.get<User>("/users/me", {
-          skipRedirect: true,
-          signal,
-        });
+        const data = await api.get<User>("/users/me", { signal });
+        setTokenExpiry();
+        return data;
       } catch {
+        clearTokenExpiry();
         return null;
       }
     },
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    return onAuthExpired(() => {
+      queryClient.setQueryData(["session"], null);
+    });
+  }, [queryClient]);
 
   const checkSession = async () => {
     await queryClient.invalidateQueries({ queryKey: ["session"] });
@@ -59,6 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error("Logout failed", error);
     } finally {
+      clearTokenExpiry();
       queryClient.setQueryData(["session"], null);
       queryClient.invalidateQueries({ queryKey: ["maps"] });
       queryClient.removeQueries({ queryKey: ["locations"] });
@@ -66,7 +83,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setAuthBusy(false);
     }
   };
-
   return (
     <AuthContext.Provider
       value={{

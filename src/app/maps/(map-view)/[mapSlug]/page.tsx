@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { use } from "react";
 import dynamic from "next/dynamic";
 import { useAuthUser } from "@/context/AuthContext";
+import { Spinner } from "@/components/ui/Spinner";
 
 const StoreDashboard = dynamic(
   () => import("@/components/features/maps/StoreDashboard"),
@@ -24,9 +25,7 @@ export default function Page({ params }: { params: Promise<{ mapSlug: string }> 
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center text-sm font-medium text-gray-500">
-        Checking access...
-      </div>
+      <Spinner text="Checking access" />
     );
   }
 

@@ -19,6 +19,7 @@ import { useAuthUser } from "@/context/AuthContext";
 import { MapCardGrid } from "./MapCardGrid";
 import { MapListView } from "./MapListView";
 import { Snackbar } from "@/components/ui/Snackbar";
+import { Spinner } from "@/components/ui/Spinner";
 
 export default function MapDirectory() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -65,18 +66,7 @@ export default function MapDirectory() {
   }, [maps, searchQuery]);
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
-        <div className="relative flex items-center justify-center w-16 h-16">
-          <div className="absolute inset-0 border-4 border-gray-100 rounded-full"></div>
-          <div className="absolute inset-0 border-4 border-plp-maroon rounded-full border-t-transparent animate-spin"></div>
-          <MapIcon size={20} className="text-plp-maroon animate-pulse" />
-        </div>
-        <p className="text-sm font-semibold text-gray-500 uppercase tracking-widest animate-pulse">
-          Loading Maps
-        </p>
-      </div>
-    );
+    return <Spinner text="Loading maps..." />;
   }
 
   if (error) {
@@ -219,7 +209,9 @@ export default function MapDirectory() {
           </div>
         ) : (
           <div className="animate-in fade-in duration-500">
-            {/* Grid — always used on mobile; on desktop only when grid mode is active */}
+           P
+
+           
             <div
               className={
                 viewMode === "grid"
@@ -238,7 +230,9 @@ export default function MapDirectory() {
               ))}
             </div>
 
-            {/* List — desktop only, and only when list mode is active */}
+           P
+
+           
             {viewMode === "list" && (
               <div className="hidden sm:block">
                 <MapListView

@@ -235,19 +235,6 @@
     transform: translateY(1px);
   }
 }
-
-.city-pin {
-  background: none !important;
-  border: none !important;
-}
- 
-.city-pin svg {
-  transition: transform 0.2s ease;
-}
- 
-.city-pin:hover svg {
-  transform: scale(1.1);
-}
  
 
 /* 7. UTILITIES */
@@ -268,6 +255,68 @@
   .ink-bleed {
     filter: contrast(1.2) brightness(0.9) sepia(0.2);
   }
+}
+
+
+/* 8. THEMED MAP MARKERS */ 
+.plp-marker-wrapper {
+  background: none;
+  border: none;
+}
+
+.plp-marker {
+  position: relative;
+  width: 34px;
+  height: 44px;
+}
+
+.plp-marker__pin {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  margin-left: -15px;
+  background: var(--pin, #3d0b19);
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    box-shadow 200ms ease,
+    filter 200ms ease;
+}
+
+.plp-marker__icon {
+  width: 16px;
+  height: 16px;
+  transform: rotate(45deg);
+  user-select: none;
+  pointer-events: none;
+}
+
+.plp-marker--active {
+  z-index: 1000;
+}
+
+.plp-marker--active .plp-marker__pin {
+  box-shadow:
+    0 0 0 4px rgba(228, 0, 43, 0.18),
+    0 6px 12px rgba(0, 0, 0, 0.35);
+}
+
+.plp-user-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2563eb;
+  border: 3px solid #fff;
+  box-shadow:
+    0 0 0 4px rgba(37, 99, 235, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 

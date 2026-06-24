@@ -8,16 +8,19 @@ interface Props {
   isAuthenticated: boolean;
 }
 
-export function MapCardGrid({ map, onAction, isLoading, isAuthenticated }: Props) {
+export function MapCardGrid({
+  map,
+  onAction,
+  isLoading,
+  isAuthenticated,
+}: Props) {
   const owned = map.is_purchased;
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-xl">
-      {/* Slim accent bar */}
       <div className="h-1.5 w-full bg-gradient-to-r from-plp-maroon to-plp-babyblue opacity-80" />
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        {/* Region + single ownership indicator */}
         <div className="mb-3 flex items-center justify-between gap-3">
           <span className="inline-flex min-w-0 items-center gap-1.5 text-xs font-medium text-gray-500">
             <MapPin size={14} className="shrink-0 text-gray-400" />
@@ -34,17 +37,14 @@ export function MapCardGrid({ map, onAction, isLoading, isAuthenticated }: Props
           )}
         </div>
 
-        {/* Title */}
         <h3 className="mb-2 text-lg font-bold leading-tight text-gray-900 sm:text-xl">
           {map.name}
         </h3>
 
-        {/* Description — the focal content */}
         <p className="mb-6 line-clamp-4 flex-1 text-sm leading-relaxed text-gray-600">
           {map.description || "No description available for this directory."}
         </p>
 
-        {/* Footer: price + action */}
         <div className="mt-auto flex items-center justify-between gap-4 border-t border-gray-100 pt-4 sm:pt-5">
           {!owned && (
             <div className="flex flex-col shrink-0">
@@ -70,7 +70,11 @@ export function MapCardGrid({ map, onAction, isLoading, isAuthenticated }: Props
               <Loader2 size={16} className="animate-spin" />
             ) : (
               <>
-                {owned ? "View Tour" : isAuthenticated ? "Buy Now" : "Log In to Buy"}
+                {owned
+                  ? "View Tour"
+                  : isAuthenticated
+                    ? "Buy Now"
+                    : "Log In to Buy"}
                 <ArrowRight
                   size={14}
                   className="transition-transform group-hover/btn:translate-x-0.5"

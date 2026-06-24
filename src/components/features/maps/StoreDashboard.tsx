@@ -22,6 +22,7 @@ import {
 import { getTodayHours } from "@/lib/utils";
 import { StoreListView } from "./StoreListView";
 import { StoreDetailView } from "./StoreDetailView";
+import { Spinner } from "@/components/ui/Spinner";
 
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 3958.8;
@@ -178,11 +179,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   );
 
   if (loading) {
-    return (
-      <div className="h-full flex items-center justify-center font-medium text-gray-500">
-        Loading Map...
-      </div>
-    );
+    return <Spinner text="Loading Stores" />;
   }
 
   return (

@@ -8,7 +8,12 @@ interface Props {
   isAuthenticated: boolean;
 }
 
-export function MapListView({ maps, onAction, loadingId, isAuthenticated }: Props) {
+export function MapListView({
+  maps,
+  onAction,
+  loadingId,
+  isAuthenticated,
+}: Props) {
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       <div className="divide-y divide-gray-100">
@@ -20,12 +25,10 @@ export function MapListView({ maps, onAction, loadingId, isAuthenticated }: Prop
               key={map.id}
               className="group flex items-center gap-3 p-3 transition-colors hover:bg-gray-50/60 sm:gap-4 sm:p-4"
             >
-              {/* Leading map tile — always visible, scales up on desktop */}
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-100 bg-gradient-to-br from-slate-50 to-blue-50/60 sm:h-14 sm:w-14">
                 <MapPin className="h-4 w-4 text-plp-maroon sm:h-5 sm:w-5" />
               </div>
 
-              {/* Main info */}
               <div className="min-w-0 flex-1">
                 <div className="mb-0.5 flex items-center gap-2 sm:mb-1">
                   <h3 className="truncate text-sm font-bold leading-tight text-gray-900 sm:text-lg">
@@ -56,7 +59,6 @@ export function MapListView({ maps, onAction, loadingId, isAuthenticated }: Prop
                 </div>
               </div>
 
-              {/* Price + action */}
               <div className="flex shrink-0 items-center gap-2.5 sm:gap-5">
                 {!owned && (
                   <span className="text-sm font-black leading-none text-gray-900 sm:text-lg">
@@ -68,7 +70,11 @@ export function MapListView({ maps, onAction, loadingId, isAuthenticated }: Prop
                   onClick={() => onAction(map)}
                   disabled={loadingId === map.id}
                   aria-label={
-                    owned ? "View tour" : isAuthenticated ? "Buy now" : "Log in to buy"
+                    owned
+                      ? "View tour"
+                      : isAuthenticated
+                        ? "Buy now"
+                        : "Log in to buy"
                   }
                   className={`group/btn flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 sm:gap-2 sm:px-5 sm:text-sm ${
                     owned
@@ -80,12 +86,15 @@ export function MapListView({ maps, onAction, loadingId, isAuthenticated }: Prop
                     <Loader2 size={16} className="animate-spin" />
                   ) : (
                     <>
-                      {/* Short label on mobile, full label on desktop */}
                       <span className="sm:hidden">
                         {owned ? "View" : isAuthenticated ? "Buy" : "Log In"}
                       </span>
                       <span className="hidden sm:inline">
-                        {owned ? "View Tour" : isAuthenticated ? "Buy Now" : "Log In to Buy"}
+                        {owned
+                          ? "View Tour"
+                          : isAuthenticated
+                            ? "Buy Now"
+                            : "Log In to Buy"}
                       </span>
                       <ArrowRight
                         size={14}

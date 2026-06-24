@@ -35,7 +35,6 @@ export function useAuthActions(returnTo?: string | null) {
       const email = formData.get("email");
       const password = formData.get("password");
 
-     
       await api.post<AuthResponse>(
         "/auth/login",
         {
@@ -62,9 +61,7 @@ export function useAuthActions(returnTo?: string | null) {
 
     try {
       const payload = Object.fromEntries(formData.entries());
-
-      await api.post("/auth/register", payload);
-
+      await api.post("/auth/register", payload, { skipRefresh: true });
       await checkSession();
       router.replace(targetPath);
     } catch (err: any) {
@@ -74,6 +71,5 @@ export function useAuthActions(returnTo?: string | null) {
       setAuthBusy(false);
     }
   };
-
   return { login, register, isLoading, error };
 }
