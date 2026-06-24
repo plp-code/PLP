@@ -2,7 +2,7 @@ import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Location, LocationPin } from "@/types";
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 25;
 
 export function useMapData(mapSlug: string) {  
   const pinsQuery = useQuery({
