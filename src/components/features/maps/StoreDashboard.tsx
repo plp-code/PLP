@@ -277,9 +277,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
           ${isDrawerOpen ? "md:translate-x-0 md:translate-y-0" : "md:-translate-x-[120%] md:translate-y-0"}
         `}
       >
-        <div className="w-full flex justify-center pt-3 pb-1 md:hidden">
-          <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
-        </div>
+       
 
         <StoreListView
           stores={filteredStores}

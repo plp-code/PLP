@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState, useRef } from "react";
 import {
   ChevronLeft,
   MapPin,
@@ -12,60 +11,10 @@ import {
 import { getTodayHours, formatPriceLevel, formatPriceRange } from "@/lib/utils";
 
 export function StoreDetailView({ store, onBack, distance }: any) {
-  const [translateY, setTranslateY] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const startY = useRef(0);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (contentRef.current && contentRef.current.scrollTop > 0) return;
-
-    startY.current = e.touches[0].clientY;
-    setIsDragging(true);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-
-    const currentY = e.touches[0].clientY;
-    const deltaY = currentY - startY.current;
-
-    if (deltaY > 0) {
-      setTranslateY(deltaY);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-
-    if (translateY > 120) {
-      setTranslateY(window.innerHeight);
-      setTimeout(() => {
-        onBack();
-      }, 250);
-    } else {
-      setTranslateY(0);
-    }
-  };
-
   return (
     <div
-      ref={contentRef}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      style={{ "--drag-y": `${translateY}px` } as React.CSSProperties}
-      className={`flex-1 overflow-y-auto flex flex-col bg-white pb-24 md:pb-0 relative 
-        transform translate-y-[var(--drag-y,0px)] md:!translate-y-0
-        ${isDragging ? "transition-none" : "transition-transform duration-300 ease-out"}
-        animate-in slide-in-from-right-4 md:duration-300
-      `}
+      className="flex-1 overflow-y-auto flex flex-col bg-white pb-24 md:pb-0 relative animate-in slide-in-from-right-4 md:duration-300"
     >
-      <div className="w-full flex justify-center pt-3 pb-1 md:hidden absolute top-0 left-0 z-30">
-        <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
-      </div>
 
       <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 p-2 md:p-4 transition-all pt-6 md:pt-4">
         <button
