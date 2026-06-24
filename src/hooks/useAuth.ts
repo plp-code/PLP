@@ -23,11 +23,12 @@ export function useAuthActions(returnTo?: string | null) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const { checkSession } = useAuthUser();
+  const { checkSession, setAuthBusy } = useAuthUser();
   const targetPath = getSafeReturnPath(returnTo);
 
   const login = async (formData: FormData) => {
     setIsLoading(true);
+    setAuthBusy(true);
     setError(null);
 
     try {
@@ -50,11 +51,13 @@ export function useAuthActions(returnTo?: string | null) {
       setError(err.message || "Invalid email or password.");
     } finally {
       setIsLoading(false);
+      setAuthBusy(false);
     }
   };
 
   const register = async (formData: FormData) => {
     setIsLoading(true);
+    setAuthBusy(true);
     setError(null);
 
     try {
@@ -68,6 +71,7 @@ export function useAuthActions(returnTo?: string | null) {
       setError(err.message || "Registration failed. Please check your inputs.");
     } finally {
       setIsLoading(false);
+      setAuthBusy(false);
     }
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
@@ -10,6 +10,9 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  /** True while a login/register/logout request is in flight. */
+  isAuthBusy: boolean;
+  setAuthBusy: (busy: boolean) => void;
   logout: () => Promise<void>;
   checkSession: () => Promise<void>;
 }
@@ -18,6 +21,8 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   isAuthenticated: false,
+  isAuthBusy: false,
+  setAuthBusy: () => {},
   logout: async () => {},
   checkSession: async () => {},
 });
@@ -25,6 +30,7 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [isAuthBusy, setAuthBusy] = useState(false);
 
   const { data: user = null, isLoading } = useQuery<User | null>({
     queryKey: ["session"],
@@ -47,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
+    setAuthBusy(true);
     try {
       await api.post("/auth/logout");
     } catch (error) {
@@ -56,6 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       queryClient.invalidateQueries({ queryKey: ["maps"] });
       queryClient.removeQueries({ queryKey: ["locations"] });
       router.replace("/");
+      setAuthBusy(false);
     }
   };
 
@@ -65,11 +73,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isLoading,
         isAuthenticated: !!user,
+        isAuthBusy,
+        setAuthBusy,
         logout,
         checkSession,
       }}
     >
       {children}
+      {isAuthBusy && (
+        <div
+          aria-hidden
+          className="fixed inset-0 z-[9999] cursor-wait bg-transparent"
+        />
+      )}
     </AuthContext.Provider>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, Lock, User, AlertTriangle } from "lucide-react";
 import { useAuthActions } from "@/hooks/useAuth";
 
 export default function AuthForm() {
@@ -22,83 +22,105 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="bg-[#c0c0c0] p-1 border-2 border-black shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080]">
-      <div className="bg-plp-maroon h-9 md:h-8 flex items-center px-3 md:px-2 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a] mb-5 md:mb-6">
-        <h2 className="text-white font-bold text-[13px] md:text-sm capitalize tracking-tight">
+    <div className="plp-window p-1">
+      <div className="plp-titlebar h-9 md:h-8 flex items-center justify-between px-3 md:px-2">
+        <h2 className="font-bold text-[13px] md:text-sm capitalize tracking-tight">
           {isLogin ? "Login" : "Create Account"}
         </h2>
       </div>
 
-      <div className="px-4 sm:px-6 pb-5 sm:pb-6">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-4">
+      <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-5 sm:pb-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {error && (
-            <div
-              className="bg-red-500/10 border border-red-500 text-red-700 text-[11px] sm:text-xs font-bold normal-case
- p-2 text-center"
-            >
-              {error}
+            <div className="flex items-center gap-2 bg-plp-maroon/10 border border-plp-maroon/40 text-plp-maroon text-[11px] sm:text-xs font-bold normal-case p-2.5">
+              <AlertTriangle size={14} className="shrink-0" />
+              <span>{error}</span>
             </div>
           )}
 
           {!isLogin && (
             <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5 sm:gap-1">
-                <label className="text-black font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-plp-maroon font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
                   First Name
                 </label>
-                <input
-                  type="text"
-                  name="first_name"
-                  required
-                  disabled={isLoading}
-                  className="h-10 md:h-9 px-2 bg-white text-black text-sm md:text-base outline-none shadow-[inset_2px_2px_#808080,inset_-1px_-1px_#fff] focus:bg-plp-parchment disabled:opacity-70"
-                />
+                <div className="relative">
+                  <User
+                    size={15}
+                    className="absolute left-2.5 top-1/2 -translate-y-1/2 text-plp-maroon/40 pointer-events-none"
+                  />
+                  <input
+                    type="text"
+                    name="first_name"
+                    required
+                    disabled={isLoading}
+                    className="plp-input h-10 md:h-9 w-full pl-8 pr-2 text-sm md:text-base"
+                  />
+                </div>
               </div>
-              <div className="flex flex-col gap-1.5 sm:gap-1">
-                <label className="text-black font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-plp-maroon font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
                   Last Name
                 </label>
-                <input
-                  type="text"
-                  name="last_name"
-                  required
-                  disabled={isLoading}
-                  className="h-10 md:h-9 px-2 bg-white text-black text-sm md:text-base outline-none shadow-[inset_2px_2px_#808080,inset_-1px_-1px_#fff] focus:bg-plp-parchment disabled:opacity-70"
-                />
+                <div className="relative">
+                  <User
+                    size={15}
+                    className="absolute left-2.5 top-1/2 -translate-y-1/2 text-plp-maroon/40 pointer-events-none"
+                  />
+                  <input
+                    type="text"
+                    name="last_name"
+                    required
+                    disabled={isLoading}
+                    className="plp-input h-10 md:h-9 w-full pl-8 pr-2 text-sm md:text-base"
+                  />
+                </div>
               </div>
             </div>
           )}
 
-          <div className="flex flex-col gap-1.5 sm:gap-1">
-            <label className="text-black font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-plp-maroon font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
               Email
             </label>
-            <input
-              type="email"
-              name="email"
-              required
-              disabled={isLoading}
-              className="h-10 md:h-9 px-2 bg-white text-black text-sm md:text-base outline-none shadow-[inset_2px_2px_#808080,inset_-1px_-1px_#fff] focus:bg-plp-parchment disabled:opacity-70"
-            />
+            <div className="relative">
+              <Mail
+                size={15}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-plp-maroon/40 pointer-events-none"
+              />
+              <input
+                type="email"
+                name="email"
+                required
+                disabled={isLoading}
+                className="plp-input h-10 md:h-9 w-full pl-8 pr-2 text-sm md:text-base"
+              />
+            </div>
           </div>
 
-          <div className="flex flex-col gap-1.5 sm:gap-1">
-            <label className="text-black font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-plp-maroon font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              required
-              disabled={isLoading}
-              className="h-10 md:h-9 px-2 bg-white text-black text-sm md:text-base outline-none shadow-[inset_2px_2px_#808080,inset_-1px_-1px_#fff] focus:bg-plp-parchment disabled:opacity-70"
-            />
+            <div className="relative">
+              <Lock
+                size={15}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-plp-maroon/40 pointer-events-none"
+              />
+              <input
+                type="password"
+                name="password"
+                required
+                disabled={isLoading}
+                className="plp-input h-10 md:h-9 w-full pl-8 pr-2 text-sm md:text-base"
+              />
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="cursor-pointer mt-3 sm:mt-2 flex items-center justify-center h-12 md:h-10 px-4 bg-[#c0c0c0] text-black font-bodoni font-bold text-[13px] md:text-sm capitalize tracking-tighter shadow-[inset_2px_2px_#fff,inset_-2px_-2px_#808080] hover:brightness-105 active:shadow-[inset_-2px_-2px_#fff,inset_2px_2px_#808080] disabled:opacity-70 disabled:cursor-wait"
+            className="plp-btn-primary cursor-pointer mt-2 flex items-center justify-center h-12 md:h-10 px-4 font-bodoni font-bold text-[13px] md:text-sm capitalize tracking-tighter disabled:opacity-70 disabled:cursor-wait"
           >
             {isLoading ? (
               <Loader2 size={20} className="animate-spin" />
@@ -110,15 +132,15 @@ export default function AuthForm() {
           </button>
         </form>
 
-        <div className="mt-6 pt-5 border-t border-[#808080] flex items-center justify-center gap-1.5 text-[11px] sm:text-xs tracking-tighter">
-          <span className="text-black/70">
+        <div className="mt-6 pt-5 border-t border-plp-slate/50 flex items-center justify-center gap-1.5 text-[11px] sm:text-xs tracking-tighter">
+          <span className="text-plp-maroon/60">
             {isLogin ? "Don't have access?" : "Already have access?"}
           </span>
           <button
             type="button"
             onClick={() => setIsLogin(!isLogin)}
             disabled={isLoading}
-            className="cursor-pointer font-bold text-plp-maroon hover:underline capitalize disabled:opacity-50"
+            className="cursor-pointer font-bold text-plp-maroon hover:underline underline-offset-2 capitalize disabled:opacity-50"
           >
             {isLogin ? "Create Account" : "Return to Login"}
           </button>
