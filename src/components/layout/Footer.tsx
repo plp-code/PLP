@@ -38,7 +38,8 @@ export default function Footer() {
         </h2>
 
         <div className="flex flex-col items-center gap-10 md:gap-10">
-          <Link
+          {/* temporary disable  */}
+          {/* <Link
             href="/waitlist"
             className="inline-flex items-center gap-3 px-8 py-4 md:py-3 border border-plp-parchment/20 rounded-full hover:bg-plp-lime hover:text-plp-maroon hover:border-plp-lime transition-all duration-500 group active:scale-95"
           >
@@ -49,7 +50,7 @@ export default function Footer() {
               size={16}
               className="group-hover:rotate-45 transition-transform md:w-3.5 md:h-3.5"
             />
-          </Link>
+          </Link> */}
 
           <nav
             className="flex justify-center gap-x-6 sm:gap-x-10"
