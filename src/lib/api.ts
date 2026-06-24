@@ -1,6 +1,7 @@
 interface FetchOptions extends RequestInit {
   _retry?: boolean;
   skipRedirect?: boolean;
+  skipRefresh?: boolean;
 }
 
 let refreshPromise: Promise<boolean> | null = null;
@@ -43,7 +44,7 @@ async function fetcher<T>(
     credentials: "include",
   });
 
-  if (response.status === 401) {
+  if (response.status === 401 && !options.skipRefresh) {
     if (!options._retry) {
       options._retry = true;
       const refreshed = await refreshSession();

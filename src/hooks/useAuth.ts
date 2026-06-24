@@ -35,10 +35,14 @@ export function useAuthActions(returnTo?: string | null) {
       const password = formData.get("password");
 
      
-      await api.post<AuthResponse>("/auth/login", {
-        email: email,
-        password: password,
-      });
+      await api.post<AuthResponse>(
+        "/auth/login",
+        {
+          email: email,
+          password: password,
+        },
+        { skipRefresh: true },
+      );
 
       await checkSession();
       router.replace(targetPath);

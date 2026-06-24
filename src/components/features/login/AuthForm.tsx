@@ -32,7 +32,10 @@ export default function AuthForm() {
       <div className="px-4 sm:px-6 pb-5 sm:pb-6">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-4">
           {error && (
-            <div className="bg-red-500/10 border border-red-500 text-red-700 text-[11px] sm:text-xs font-bold capitalize p-2 text-center">
+            <div
+              className="bg-red-500/10 border border-red-500 text-red-700 text-[11px] sm:text-xs font-bold normal-case
+ p-2 text-center"
+            >
               {error}
             </div>
           )}
