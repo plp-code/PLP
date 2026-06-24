@@ -209,7 +209,6 @@ export default function MapDirectory() {
           </div>
         ) : (
           <div className="animate-in fade-in duration-500">
-            P
             <div
               className={
                 viewMode === "grid"
