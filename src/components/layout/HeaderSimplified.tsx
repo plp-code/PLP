@@ -1,13 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import AuthAction from "../features/login/AuthBtn";
 import BackButton from "@/components/ui/BackBtn";
 import { useAuthUser } from "@/context/AuthContext";
 
 export default function HeaderSimplified() {
-  const pathname = usePathname();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);  const pathname = usePathname();
+
   const { isAuthenticated, isLoading } = useAuthUser();
   const isMapsPage = pathname === "/maps";
 
@@ -21,9 +30,15 @@ export default function HeaderSimplified() {
             href="/"
             className="pointer-events-auto font-seventies text-white tracking-tight uppercase hover:opacity-90 transition-opacity truncate"
           >
-            <span className="text-xs min-[375px]:text-sm sm:text-lg md:text-xl whitespace-nowrap">
-              The Preloved Professional
-            </span>
+            {isMobile ? (
+              <span className="text-sm min-[375px]:text-base sm:text-lg md:text-xl whitespace-nowrap">
+                PLP
+              </span>
+            ) : (
+              <span className="text-xs min-[375px]:text-sm sm:text-lg md:text-xl whitespace-nowrap">
+                The Preloved Professional
+              </span>
+            )}
           </Link>
         </div>
 

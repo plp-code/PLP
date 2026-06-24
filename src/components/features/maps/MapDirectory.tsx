@@ -73,7 +73,7 @@ export default function MapDirectory() {
           <MapIcon size={20} className="text-plp-maroon animate-pulse" />
         </div>
         <p className="text-sm font-semibold text-gray-500 uppercase tracking-widest animate-pulse">
-          Loading Directory
+          Loading Maps
         </p>
       </div>
     );
@@ -125,7 +125,7 @@ export default function MapDirectory() {
           bgColor="bg-amber-50"
           textColor="text-amber-900"
           title="Browsing as Guest"
-          subtitle="You need to log in and buy items to view the maps."
+          subtitle="Log in or create an account to make any purchases."
           autoCloseMs={5000}
         />
       )}
