@@ -273,7 +273,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
         className={`absolute bg-white z-[1000] flex flex-col shadow-[0_-8px_30px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-in-out overflow-hidden border-t border-gray-200/50
           inset-x-0 bottom-0 h-[65vh] rounded-t-3xl
           ${isDrawerOpen ? "translate-y-0" : "translate-y-full"}
-          md:top-24 md:bottom-6 md:left-6 md:h-auto md:w-[400px] md:rounded-2xl md:border
+          md:top-36 md:bottom-6 md:left-6 md:h-auto md:w-[440px] lg:w-[500px] md:rounded-2xl md:border
           ${isDrawerOpen ? "md:translate-x-0 md:translate-y-0" : "md:-translate-x-[120%] md:translate-y-0"}
         `}
       >
@@ -332,7 +332,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
       <button
         onClick={() => setIsDrawerOpen(!isDrawerOpen)}
         className={`hidden md:flex absolute top-1/2 -translate-y-1/2 z-[1000] bg-white shadow-xl border border-gray-200 p-2 rounded-r-xl transition-all duration-300 hover:bg-gray-50 ${
-          isDrawerOpen ? "left-[424px]" : "left-0"
+          isDrawerOpen ? "left-[464px] lg:left-[524px]" : "left-0"
         }`}
       >
         {isDrawerOpen ? (

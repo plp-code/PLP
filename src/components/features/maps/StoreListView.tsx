@@ -1,5 +1,5 @@
-import { ChevronRight, Loader2, Navigation } from "lucide-react";
-import { getTodayHours } from "@/lib/utils";
+import { ChevronRight, Loader2, Navigation, DollarSign } from "lucide-react";
+import { getTodayHours, formatPriceLevel } from "@/lib/utils";
 
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 3958.8;
@@ -38,6 +38,8 @@ export function StoreListView({
         {stores.map((store: any) => {
           const timeData = getTodayHours(store.hours);
           const isSelected = store.id === activeId;
+
+          const priceLevel = formatPriceLevel(store.price_level);
 
           const distance = userLocation
             ? getDistance(
@@ -86,7 +88,15 @@ export function StoreListView({
                     </span>
                   )}
 
-                  <span className="truncate flex-1">{store.description}</span>
+                  {priceLevel ? (
+                    <span className="flex items-center gap-1 font-black text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full tracking-wide shrink-0">
+                      {priceLevel}
+                    </span>
+                  ) : (
+                    <span className="truncate flex-1 text-gray-400 italic">
+                      Price unavailable
+                    </span>
+                  )}
                 </div>
               </div>
 
