@@ -104,9 +104,23 @@ async function fetcher<T>(
 
   if (!response.ok) {
     const err = await response.json().catch(() => ({}));
-    throw new Error(
-      err.detail || `Request failed with status ${response.status}`,
-    );
+
+    let message: string;
+    if (typeof err.detail === "string") {
+      message = err.detail;
+    } else if (Array.isArray(err.detail)) {
+      // FastAPI validation errors: [{msg: "String should have at least 8 characters", loc: ["body", "password"]}]
+      message = err.detail
+        .map((e: any) => {
+          const field = e.loc?.slice(-1)[0]; // "password"
+          return field ? `${field}: ${e.msg}` : e.msg;
+        })
+        .join(". ");
+    } else {
+      message = `Request failed with status ${response.status}`;
+    }
+
+    throw new Error(message);
   }
 
   const text = await response.text();
