@@ -3,17 +3,18 @@
 import {
   createContext,
   useContext,
-  useEffect,
   useState,
+  useEffect,
+  useCallback,
   ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   api,
+  onAuthExpired,
   clearTokenExpiry,
   setTokenExpiry,
-  onAuthExpired,
 } from "@/lib/api";
 import { User } from "@/types";
 
@@ -42,6 +43,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [isAuthBusy, setAuthBusy] = useState(false);
 
+  useEffect(() => {
+    const cleanup = onAuthExpired(() => {
+      clearTokenExpiry();
+      queryClient.setQueryData(["session"], null);
+      queryClient.invalidateQueries({ queryKey: ["maps"] });
+    });
+
+    return cleanup;
+  }, [queryClient]);
+
   const { data: user = null, isLoading } = useQuery<User | null>({
     queryKey: ["session"],
     queryFn: async ({ signal }) => {
@@ -58,17 +69,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     staleTime: 5 * 60 * 1000,
   });
 
-  useEffect(() => {
-    return onAuthExpired(() => {
-      queryClient.setQueryData(["session"], null);
-    });
+  const checkSession = useCallback(async () => {
+    await queryClient.invalidateQueries({ queryKey: ["session"] });
   }, [queryClient]);
 
-  const checkSession = async () => {
-    await queryClient.invalidateQueries({ queryKey: ["session"] });
-  };
-
-  const logout = async () => {
+  const logout = useCallback(async () => {
     setAuthBusy(true);
     try {
       await api.post("/auth/logout");
@@ -82,7 +87,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       router.replace("/");
       setAuthBusy(false);
     }
-  };
+  }, [queryClient, router]);
+
   return (
     <AuthContext.Provider
       value={{

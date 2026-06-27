@@ -47,6 +47,52 @@ export const getTodayHours = (
   };
 };
 
+// Backend convention: day_of_week 0 = Monday ... 6 = Sunday
+export const DAY_LABELS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
+export const getCurrentApiDay = (): number => (new Date().getDay() + 6) % 7;
+
+const formatClock = (timeStr: string): string => {
+  const parts = timeStr.trim().split(":");
+  let h = parseInt(parts[0], 10);
+  const m = parts.length > 1 ? parseInt(parts[1], 10) : 0;
+  const ampm = h >= 12 ? "pm" : "am";
+  h = h % 12;
+  if (h === 0) h = 12;
+  return `${h}${m > 0 ? `:${m.toString().padStart(2, "0")}` : ""}${ampm}`;
+};
+
+export const formatDayHours = (hour?: LocationHours): string => {
+  if (!hour || hour.is_closed || !hour.open_time || !hour.close_time) {
+    return "Closed";
+  }
+  return `${formatClock(hour.open_time)} - ${formatClock(hour.close_time)}`;
+};
+
+// Returns hours for every day, ordered Monday -> Sunday, with today flagged.
+export const getWeekHours = (
+  hours?: LocationHours[],
+): { label: string; string: string; isToday: boolean; isClosed: boolean }[] => {
+  const today = getCurrentApiDay();
+  return DAY_LABELS.map((label, day) => {
+    const entry = hours?.find((h) => h.day_of_week === day);
+    return {
+      label,
+      string: formatDayHours(entry),
+      isToday: day === today,
+      isClosed: !entry || entry.is_closed || !entry.open_time,
+    };
+  });
+};
+
 export const formatPriceLevel = (level?: number | null): string => {
   if (!level || level < 1) return "";
   return "$".repeat(Math.min(level, 4));
