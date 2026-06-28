@@ -241,16 +241,16 @@ export default function MapDirectory() {
         )}
       </div>
 
-      <section className="relative mt-16 sm:mt-20 overflow-hidden rounded-[2rem] border border-plp-maroon/10 bg-gradient-to-br from-plp-maroon/[0.03] via-white to-amber-50/40 p-8 sm:p-12">
+      <section className="relative mt-12 sm:mt-20 overflow-hidden rounded-2xl sm:rounded-[2rem] border border-plp-maroon/10 bg-gradient-to-br from-plp-maroon/[0.03] via-white to-amber-50/40 p-5 sm:p-12">
         <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-plp-maroon/5 blur-2xl" />
         <div className="pointer-events-none absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-amber-200/20 blur-3xl" />
 
         <div className="relative">
-          <div className="inline-flex items-center gap-2 rounded-full bg-plp-maroon/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide text-plp-maroon">
+          <div className="inline-flex items-center gap-2 rounded-full bg-plp-maroon/10 px-3 py-1 sm:px-3.5 sm:py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wide text-plp-maroon">
             More on the way
           </div>
 
-          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
+          <h2 className="mt-3 sm:mt-4 text-xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
             New maps are coming soon
           </h2>
           <p className="mt-2 max-w-2xl text-sm sm:text-base leading-relaxed text-gray-500 font-medium">
@@ -259,18 +259,20 @@ export default function MapDirectory() {
             to see them go live.
           </p>
 
-          <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {upcomingLocations.map((location) => (
+          <ul className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
+            {upcomingLocations.map((location, index) => (
               <li
                 key={location.name}
-                className="group flex items-center gap-3 rounded-2xl border border-gray-200/70 bg-white/80 backdrop-blur-sm p-4 shadow-sm transition-all duration-300 hover:border-plp-maroon/20 hover:shadow-md"
+                className={`group items-center gap-3 rounded-xl sm:rounded-2xl border border-gray-200/70 bg-white/80 backdrop-blur-sm p-3 sm:p-4 shadow-sm transition-all duration-300 hover:border-plp-maroon/20 hover:shadow-md sm:flex ${
+                  index >= 3 ? "hidden sm:flex" : "flex"
+                }`}
               >
                 {location.region === "Stay tuned" ? (
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-plp-maroon/10 text-plp-maroon transition-colors group-hover:bg-plp-maroon group-hover:text-white">
+                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-plp-maroon/10 text-plp-maroon transition-colors group-hover:bg-plp-maroon group-hover:text-white">
                     <AlertCircle size={18} />
                   </div>
                 ) : (
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-plp-maroon/10 text-plp-maroon transition-colors group-hover:bg-plp-maroon group-hover:text-white">
+                  <span className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-plp-maroon/10 text-plp-maroon transition-colors group-hover:bg-plp-maroon group-hover:text-white">
                     <MapPin size={18} />
                   </span>
                 )}
@@ -286,8 +288,14 @@ export default function MapDirectory() {
             ))}
           </ul>
 
-          <p className="mt-8 inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-400">
-            <Clock size={14} className="text-plp-maroon/60" />
+          {upcomingLocations.length > 3 && (
+            <p className="mt-4 text-center text-sm font-semibold text-plp-maroon sm:hidden">
+              More to come!
+            </p>
+          )}
+
+          <p className="mt-6 sm:mt-8 inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-400">
+            <Clock size={14} className="text-plp-maroon/60 shrink-0" />
             Locations and release dates are subject to change.
           </p>
         </div>
