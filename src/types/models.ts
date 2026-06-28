@@ -41,6 +41,7 @@ export interface Location {
   max_price?: number | null;
   price_level?: number | null;
   description?: string | null;
+  google_place_id?: string | null;
   hours: LocationHours[];
   created_at?: string;
   updated_at?: string;

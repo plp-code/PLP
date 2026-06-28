@@ -2,24 +2,35 @@
 
 import { useState } from "react";
 import { ChevronLeft, ChevronDown, MapPin, Navigation } from "lucide-react";
-import { getTodayHours, getWeekHours, formatPriceLevel } from "@/lib/utils";
+import {
+  getTodayHours,
+  getWeekHours,
+  formatPriceLevel,
+  buildDirectionsUrl,
+} from "@/lib/utils";
 
-export function StoreDetailView({ store, onBack, distance }: any) {
+export function StoreDetailView({
+  store,
+  onBack,
+  distance,
+  userLocation,
+}: any) {
   const timeData = getTodayHours(store.hours);
   const week = getWeekHours(store.hours);
   const today = week.find((d) => d.isToday);
   const priceLevel = formatPriceLevel(store.price_level);
+  const gmapsUrl = buildDirectionsUrl(store, userLocation);
 
   const [hoursOpen, setHoursOpen] = useState(false);
 
   return (
     <div className="flex-1 overflow-y-auto flex flex-col bg-gray-50 pb-24 md:pb-0 relative animate-in slide-in-from-right-4 md:duration-300">
-      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 p-2 md:p-4 transition-all pt-6 md:pt-4">
+      <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 px-3 py-2">
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 md:gap-2 active:text-blue-600 hover:text-blue-700 px-3 py-2 md:py-1.5 rounded-xl active:bg-blue-50 hover:bg-gray-100 transition-colors"
+          className="flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 active:text-blue-600 py-1 rounded-lg transition-colors"
         >
-          <ChevronLeft size={20} className="md:w-5 md:h-5 -ml-1 shrink-0" />
+          <ChevronLeft size={18} className="-ml-0.5" />
         </button>
       </div>
 
@@ -33,19 +44,27 @@ export function StoreDetailView({ store, onBack, distance }: any) {
         <div className="absolute top-4 right-4">
           <div
             className={`flex items-center font-bodoni gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm ${
-              timeData.isOpen
-                ? "text-emerald-700 bg-white/90"
-                : "text-gray-600 bg-white/85"
+              !timeData.isOpen
+                ? "text-gray-600 bg-white/85"
+                : timeData.isClosingSoon
+                  ? "text-amber-700 bg-white/90"
+                  : "text-emerald-700 bg-white/90"
             }`}
           >
             <span
               className={`w-1.5 h-1.5 rounded-full ${
-                timeData.isOpen
-                  ? "bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.6)]"
-                  : "bg-gray-400"
+                !timeData.isOpen
+                  ? "bg-gray-400"
+                  : timeData.isClosingSoon
+                    ? "bg-amber-500 shadow-[0_0_5px_rgba(245,158,11,0.6)]"
+                    : "bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.6)]"
               }`}
             />
-            {timeData.isOpen ? "Open" : "Closed"}
+            {!timeData.isOpen
+              ? "Closed"
+              : timeData.isClosingSoon
+                ? "Closing Soon"
+                : "Open"}
           </div>
         </div>
       </div>
@@ -73,10 +92,10 @@ export function StoreDetailView({ store, onBack, distance }: any) {
           </div>
 
           <a
-            href={`https://www.google.com/maps/dir/?api=1&destination=${store.latitude},${store.longitude}`}
+            href={gmapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-fit flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-sm active:scale-[0.98] transition-all"
+            className="w-full sm:w-fit flex items-center font-prata justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-sm active:scale-[0.98] transition-all"
           >
             <Navigation size={14} />
             Get Directions
@@ -94,10 +113,22 @@ export function StoreDetailView({ store, onBack, distance }: any) {
               </span>
               <span
                 className={`text-[15px] font-prata truncate ${
-                  timeData.isOpen ? "text-emerald-700" : "text-gray-700"
+                  !timeData.isOpen
+                    ? "text-gray-700"
+                    : timeData.isClosingSoon
+                      ? "text-amber-600"
+                      : "text-emerald-700"
                 }`}
               >
-                {today ? today.string : timeData.string}
+                {!timeData.isOpen
+                  ? today
+                    ? today.string
+                    : timeData.string
+                  : timeData.isClosingSoon
+                    ? `Closes soon · ${today ? today.string : timeData.string}`
+                    : today
+                      ? today.string
+                      : timeData.string}
               </span>
             </div>
             <ChevronDown
@@ -114,7 +145,7 @@ export function StoreDetailView({ store, onBack, distance }: any) {
                 <div
                   key={d.label}
                   className={`flex items-center font-prata justify-between py-2 text-[14px] tracking-wide ${
-                    d.isToday ? "text-gray-900" : "text-gray-500"
+                    d.isToday ? "text-gray-900 font-semibold" : "text-gray-500"
                   }`}
                 >
                   <span>{d.label}</span>

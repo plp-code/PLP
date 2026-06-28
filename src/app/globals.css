@@ -236,7 +236,6 @@
     transform: translateY(1px);
   }
 }
- 
 
 /* 7. UTILITIES */
 @layer utilities {
@@ -258,8 +257,7 @@
   }
 }
 
-
-/* 8. THEMED MAP MARKERS */ 
+/* 8. THEMED MAP MARKERS */
 .plp-marker-wrapper {
   background: none;
   border: none;
@@ -320,4 +318,11 @@
     0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
+.plp-marker-wrapper {
+  background: none !important;
+  border: none !important;
+}
 
+.plp-marker-wrapper:hover div:first-child div:first-child {
+  transform: scale(1.1);
+}

@@ -103,17 +103,28 @@ export function StoreListView({
               <div className="flex flex-col items-end justify-center gap-2 md:gap-2.5 shrink-0 pl-2">
                 <div
                   className={`flex items-center font-bodoni gap-1.5 text-[11px] md:text-[12px] font-semibold uppercase tracking-[0.15em] px-2 py-1 rounded-full ${
-                    timeData.isOpen
-                      ? "text-emerald-700 bg-emerald-50 border border-emerald-100"
-                      : "text-gray-500 bg-gray-50 border border-gray-200"
+                    !timeData.isOpen
+                      ? "text-gray-500 bg-gray-50 border border-gray-200"
+                      : timeData.isClosingSoon
+                        ? "text-amber-700 bg-amber-50 border border-amber-100"
+                        : "text-emerald-700 bg-emerald-50 border border-emerald-100"
                   }`}
                 >
                   <span
-                    className={`w-1.5 h-1.5 rounded-full ${timeData.isOpen ? "bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.5)]" : "bg-gray-400"}`}
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      !timeData.isOpen
+                        ? "bg-gray-400"
+                        : timeData.isClosingSoon
+                          ? "bg-amber-500 shadow-[0_0_4px_rgba(245,158,11,0.5)]"
+                          : "bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.5)]"
+                    }`}
                   />
-                  {timeData.isOpen ? "Open" : "Closed"}
+                  {!timeData.isOpen
+                    ? "Closed"
+                    : timeData.isClosingSoon
+                      ? "Closing Soon"
+                      : "Open"}
                 </div>
-
                 <ChevronRight
                   size={18}
                   className={`transition-all duration-200 ${

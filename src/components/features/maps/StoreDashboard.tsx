@@ -277,8 +277,6 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
           ${isDrawerOpen ? "md:translate-x-0 md:translate-y-0" : "md:-translate-x-[120%] md:translate-y-0"}
         `}
       >
-       
-
         <StoreListView
           stores={filteredStores}
           activeId={activeId}
@@ -298,6 +296,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
           <StoreDetailView
             store={activeStore}
             onBack={() => setView("list")}
+            userLocation={userLocation}
             distance={
               userLocation
                 ? getDistance(

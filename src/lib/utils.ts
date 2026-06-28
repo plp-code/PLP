@@ -2,16 +2,16 @@ import { LocationHours } from "@/types";
 
 export const getTodayHours = (
   hours?: LocationHours[],
-): { isOpen: boolean; string: string } => {
+): { isOpen: boolean; isClosingSoon: boolean; string: string } => {
   if (!hours || hours.length === 0) {
-    return { isOpen: false, string: "Hours unavailable" };
+    return { isOpen: false, isClosingSoon: false, string: "Hours unavailable" };
   }
 
   const apiDay = (new Date().getDay() + 6) % 7;
   const today = hours.find((h) => h.day_of_week === apiDay);
 
   if (!today || today.is_closed || !today.open_time || !today.close_time) {
-    return { isOpen: false, string: "Closed Today" };
+    return { isOpen: false, isClosingSoon: false, string: "Closed Today" };
   }
 
   const parseToMinutes = (timeStr: string) => {
@@ -30,6 +30,9 @@ export const getTodayHours = (
   const currentMins = now.getHours() * 60 + now.getMinutes();
 
   const isOpen = currentMins >= openMins && currentMins < closeMins;
+  const minutesUntilClose = closeMins - currentMins;
+  const isClosingSoon =
+    isOpen && minutesUntilClose > 0 && minutesUntilClose <= 60;
 
   const formatTime = (mins: number) => {
     let h = Math.floor(mins / 60);
@@ -37,17 +40,16 @@ export const getTodayHours = (
     const ampm = h % 24 >= 12 ? "pm" : "am";
     h = h % 12;
     if (h === 0) h = 12;
-
     return `${h}${m > 0 ? `:${m.toString().padStart(2, "0")}` : ""}${ampm}`;
   };
 
   return {
     isOpen,
+    isClosingSoon,
     string: `${formatTime(openMins)} - ${formatTime(closeMins)}`,
   };
 };
 
-// Backend convention: day_of_week 0 = Monday ... 6 = Sunday
 export const DAY_LABELS = [
   "Monday",
   "Tuesday",
@@ -77,7 +79,6 @@ export const formatDayHours = (hour?: LocationHours): string => {
   return `${formatClock(hour.open_time)} - ${formatClock(hour.close_time)}`;
 };
 
-// Returns hours for every day, ordered Monday -> Sunday, with today flagged.
 export const getWeekHours = (
   hours?: LocationHours[],
 ): { label: string; string: string; isToday: boolean; isClosed: boolean }[] => {
@@ -108,3 +109,32 @@ export const formatPriceRange = (
   if (max != null) return `Up to ${fmt(max)}`;
   return "";
 };
+
+export function buildDirectionsUrl(
+  store: {
+    name?: string;
+    latitude: number;
+    longitude: number;
+    google_place_id?: string;
+  },
+  userLocation: { lat: number; lng: number } | null = null,
+) {
+  if (store.google_place_id) {
+    const params = new URLSearchParams({
+      api: "1",
+      travelmode: "driving",
+      destination: store.name || `${store.latitude},${store.longitude}`,
+      destination_place_id: store.google_place_id,
+    });
+    if (userLocation) {
+      params.set("origin", `${userLocation.lat},${userLocation.lng}`);
+    }
+    return `https://www.google.com/maps/dir/?${params.toString()}`;
+  }
+
+  if (store.name) {
+    return `https://maps.google.com/?q=${encodeURIComponent(store.name)}@${store.latitude},${store.longitude}`;
+  }
+
+  return `https://maps.google.com/?q=${store.latitude},${store.longitude}`;
+}
