@@ -28,12 +28,12 @@ export default function Footer() {
 
   return (
     <footer className="bg-plp-maroon text-plp-parchment border-t border-plp-maroon relative overflow-hidden">
-      <div className="absolute -top-4 -left-4 text-[25vw] md:-top-8 md:-left-6 md:text-[14vw] text-plp-parchment/3 font-plp pointer-events-none select-none leading-none">
+      <div className="absolute -top-6 -left-3 text-[22vw] md:-top-8 md:-left-6 md:text-[14vw] text-plp-parchment/3 font-plp pointer-events-none select-none leading-none">
         PLP
       </div>
 
-      <div className="relative z-10 pt-12 pb-10 md:pt-16 md:pb-12 text-center px-4">
-        <h2 className="text-[11vw] sm:text-[8vw] md:text-[4.5vw] font-seventies leading-[0.85] mb-8 md:mb-10 tracking-tight uppercase">
+      <div className="relative z-10 pt-14 pb-12 md:pt-16 md:pb-12 text-center px-6">
+        <h2 className="text-[10vw] sm:text-[6vw] md:text-[4vw] font-seventies leading-[0.9] md:leading-[0.85] mb-10 md:mb-10 tracking-tight uppercase">
           The Preloved <br className="md:hidden" /> Professional
         </h2>
 
@@ -53,7 +53,7 @@ export default function Footer() {
           </Link> */}
 
           <nav
-            className="flex justify-center gap-x-6 sm:gap-x-10"
+            className="flex justify-center gap-x-8 sm:gap-x-10"
             aria-label="Social links"
           >
             {SOCIAL_LINKS.map((social) => (
@@ -62,13 +62,13 @@ export default function Footer() {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col items-center gap-2 transition-all p-2"
+                className="group flex flex-col items-center gap-2.5 transition-all px-3 py-2 min-w-[64px] active:scale-95"
               >
                 <social.icon
-                  size={24}
-                  className="opacity-40 group-hover:opacity-100 group-hover:text-plp-lime transition-all duration-500 md:w-5 md:h-5"
+                  size={30}
+                  className="opacity-40 group-hover:opacity-100 group-hover:text-plp-lime transition-all duration-500 md:w-7 md:h-7"
                 />
-                <span className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-40 md:opacity-20 group-hover:opacity-100 transition-all">
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] opacity-40 md:opacity-30 group-hover:opacity-100 transition-all">
                   {social.name}
                 </span>
               </a>
@@ -77,13 +77,9 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="relative z-10 flex flex-col md:flex-row justify-between items-center px-4 py-6 md:px-6 md:py-4 border-t border-plp-parchment/10 gap-4 md:gap-0 text-center md:text-left">
-        <div className="flex flex-col md:flex-row gap-2 md:gap-8 opacity-35 text-[9px] uppercase tracking-[0.2em] font-black items-center">
-          <Label>text if we want</Label>
-        </div>
-
+      <div className="relative z-10 flex justify-center md:justify-end items-center px-4 py-6 md:px-6 md:py-4 border-t border-plp-parchment/10">
         <div className="opacity-50 text-[9px] uppercase tracking-[0.2em] font-black text-center md:text-right">
-              <span>The Preloved Professional&trade;</span>
+          <span>The Preloved Professional&trade;</span>
         </div>
       </div>
     </footer>
