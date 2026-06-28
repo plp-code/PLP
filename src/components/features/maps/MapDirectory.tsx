@@ -14,7 +14,7 @@ import {
   CheckCircle2,
   MapPin,
   Clock,
-  Compass,
+  Signpost,
 } from "lucide-react";
 import { useMapDirectory } from "@/hooks/useMapDirectory";
 import { useMapCheckout } from "@/hooks/useMapCheckout";
@@ -25,16 +25,16 @@ import { Snackbar } from "@/components/ui/Snackbar";
 import { Spinner } from "@/components/ui/Spinner";
 
 const upcomingLocations: { name: string; region: string }[] = [
-  { name: "Coastal Harbor Trail", region: "Pacific Northwest" },
-  { name: "Highland Ridge Pass", region: "Rocky Mountains" },
-  { name: "Old Town Heritage Walk", region: "New England" },
-  { name: "Desert Canyon Loop", region: "Southwest" },
-  { name: "Lakeside Forest Routes", region: "Great Lakes" },
-  { name: "Riverside Vineyard Path", region: "Central Valley" },
+  { name: "Los Angeles, CA", region: "California" },
+  { name: "NYC, NY", region: "New York" },
+  { name: "Chicago, IL", region: "Illinois" },
+  { name: "Phoenix, AZ", region: "Arizona" },
+  { name: "Boston, MA", region: "Massachusetts" },
+  { name: "And more to come!", region: "Stay tuned" },
 ];
 
 export default function MapDirectory() {
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showGuestBanner, setShowGuestBanner] = useState(true);
@@ -66,12 +66,7 @@ export default function MapDirectory() {
     if (!searchQuery) return maps;
 
     const lowerQuery = searchQuery.toLowerCase();
-    return maps.filter(
-      (map) =>
-        map.name.toLowerCase().includes(lowerQuery) ||
-        map.region?.toLowerCase().includes(lowerQuery) ||
-        map.description?.toLowerCase().includes(lowerQuery),
-    );
+    return maps.filter((map) => map.name.toLowerCase().includes(lowerQuery));
   }, [maps, searchQuery]);
 
   if (loading) return <Spinner text="Loading maps..." />;
@@ -94,7 +89,6 @@ export default function MapDirectory() {
 
   return (
     <div className="w-full max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
-      {/* Banners */}
       <Snackbar
         show={showSuccessMessage}
         onClose={() => setShowSuccessMessage(false)}
@@ -126,11 +120,10 @@ export default function MapDirectory() {
         />
       )}
 
-      {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5">
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex h-9 w-9 items-center justify-center rounded-xl bg-plp-maroon/10">
-            <Compass size={18} className="text-plp-maroon" />
+            <Signpost size={18} className="text-plp-maroon" />
           </div>
           <p className="text-sm sm:text-base text-gray-500 font-medium">
             Explore{" "}
@@ -149,12 +142,12 @@ export default function MapDirectory() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search maps..."
-              className="block w-full pl-9 pr-9 py-2 sm:py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-plp-maroon/15 focus:border-plp-maroon/30 focus:bg-white shadow-sm transition-all duration-200"
+              className="block w-full pl-9 pr-9 py-2 sm:py-2 font-bodoni tracking-wide bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-plp-maroon/15 focus:border-plp-maroon/30 focus:bg-white shadow-sm transition-all duration-200"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute inset-y-0 cursor-pointer right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                 aria-label="Clear search"
               >
                 <X size={14} />
@@ -163,17 +156,6 @@ export default function MapDirectory() {
           </div>
 
           <div className="hidden sm:flex items-center bg-gray-50 p-1 rounded-xl border border-gray-200">
-            <button
-              onClick={() => setViewMode("grid")}
-              aria-label="Grid View"
-              className={`p-1.5 rounded-lg transition-all duration-200 flex items-center justify-center ${
-                viewMode === "grid"
-                  ? "bg-white text-plp-maroon shadow-sm ring-1 ring-gray-200"
-                  : "text-gray-400 hover:text-gray-600"
-              }`}
-            >
-              <LayoutGrid size={16} />
-            </button>
             <button
               onClick={() => setViewMode("list")}
               aria-label="List View"
@@ -185,32 +167,42 @@ export default function MapDirectory() {
             >
               <List size={16} />
             </button>
+            <button
+              onClick={() => setViewMode("grid")}
+              aria-label="Grid View"
+              className={`p-1.5 rounded-lg transition-all duration-200 flex items-center justify-center ${
+                viewMode === "grid"
+                  ? "bg-white text-plp-maroon shadow-sm ring-1 ring-gray-200"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+            >
+              <LayoutGrid size={16} />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
-      {/* Map Cards */}
       <div aria-live="polite" className="mt-6">
         {filteredMaps.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-            <div className="bg-gray-50 p-5 rounded-2xl mb-5">
-              <MapIcon size={32} className="text-gray-300" />
+            <div className="bg-plp-secondary-light border border-plp-secondary-dark p-5 rounded-2xl mb-5">
+              <MapIcon size={32} className="text-plp-maroon" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-1.5 tracking-tight">
+
+            <h3 className="text-lg capitalize font-bold text-gray-900 mb-1.5 tracking-tight">
               No maps found
             </h3>
             <p className="text-gray-400 max-w-sm text-sm leading-relaxed">
               {searchQuery
-                ? `Nothing matching "${searchQuery}". Try different terms.`
+                ? `Nothing matching "${searchQuery}". Try searching for something else.`
                 : "No maps available yet. Check back soon."}
             </p>
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="mt-5 text-sm font-bold text-plp-maroon hover:text-red-800 transition-colors bg-plp-maroon/5 hover:bg-plp-maroon/10 px-5 py-2 rounded-full"
+                className="plp-btn mt-5 text-sm font-bold font-prata cursor-pointer text-plp-maroon px-5 py-2 rounded-full"
               >
                 Clear Search
               </button>
@@ -273,9 +265,15 @@ export default function MapDirectory() {
                 key={location.name}
                 className="group flex items-center gap-3 rounded-2xl border border-gray-200/70 bg-white/80 backdrop-blur-sm p-4 shadow-sm transition-all duration-300 hover:border-plp-maroon/20 hover:shadow-md"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-plp-maroon/10 text-plp-maroon transition-colors group-hover:bg-plp-maroon group-hover:text-white">
-                  <MapPin size={18} />
-                </span>
+                {location.region === "Stay tuned" ? (
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-plp-maroon/10 text-plp-maroon transition-colors group-hover:bg-plp-maroon group-hover:text-white">
+                    <AlertCircle size={18} />
+                  </div>
+                ) : (
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-plp-maroon/10 text-plp-maroon transition-colors group-hover:bg-plp-maroon group-hover:text-white">
+                    <MapPin size={18} />
+                  </span>
+                )}
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold text-gray-900">
                     {location.name}

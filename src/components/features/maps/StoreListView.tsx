@@ -1,4 +1,4 @@
-import { ChevronRight, Loader2, Navigation, DollarSign } from "lucide-react";
+import { ChevronRight, Loader2, Navigation } from "lucide-react";
 import { getTodayHours, formatPriceLevel } from "@/lib/utils";
 
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -29,7 +29,7 @@ export function StoreListView({
   return (
     <div className={`flex-1 overflow-y-auto flex flex-col ${className}`}>
       <div className="p-3 md:px-5 md:py-4 border-b border-gray-100 bg-white/95 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between shadow-sm">
-        <h2 className="font-prata text-[14px] md:text-[15px] font-bold text-gray-400 capitalize  tracking-wide">
+        <h2 className="font-bodoni text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.15em] text-gray-400">
           {stores.length} {stores.length === 1 ? "Location" : "Locations"} found
         </h2>
       </div>
@@ -68,7 +68,7 @@ export function StoreListView({
 
               <div className="pr-3 md:pr-4 min-w-0 flex flex-col justify-center gap-1.5 flex-1">
                 <h3
-                  className={`font-bold capitalize text-[17px] md:text-[18px] tracking-normal transition-colors ${
+                  className={`font-bodoni font-bold capitalize text-[17px] md:text-[18px] leading-tight tracking-[-0.01em] transition-colors ${
                     isSelected
                       ? "text-blue-800"
                       : "text-gray-900 group-hover:text-blue-600"
@@ -79,7 +79,7 @@ export function StoreListView({
 
                 <div className="flex items-center gap-2 text-[13px] md:text-[14px] text-gray-500 overflow-hidden w-full">
                   {distance !== null && (
-                    <span className="flex items-center gap-1 font-bold text-blue-700 bg-blue-100/50 px-2 py-0.5 rounded-md shrink-0">
+                    <span className="flex items-center gap-1 font-bodoni font-semibold tracking-wide text-blue-700 bg-blue-100/50 px-2 py-0.5 rounded-md shrink-0">
                       <Navigation
                         size={10}
                         className="fill-blue-200 text-blue-600"
@@ -89,7 +89,7 @@ export function StoreListView({
                   )}
 
                   {priceLevel ? (
-                    <span className="flex items-center gap-1 font-black text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full tracking-wide shrink-0">
+                    <span className="flex items-center gap-1 font-bodoni font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full tracking-wide shrink-0">
                       {priceLevel}
                     </span>
                   ) : (
@@ -102,7 +102,7 @@ export function StoreListView({
 
               <div className="flex flex-col items-end justify-center gap-2 md:gap-2.5 shrink-0 pl-2">
                 <div
-                  className={`flex items-center font-prata gap-1.5 text-[11px] md:text-[12px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${
+                  className={`flex items-center font-bodoni gap-1.5 text-[11px] md:text-[12px] font-semibold uppercase tracking-[0.15em] px-2 py-1 rounded-full ${
                     timeData.isOpen
                       ? "text-emerald-700 bg-emerald-50 border border-emerald-100"
                       : "text-gray-500 bg-gray-50 border border-gray-200"
@@ -138,7 +138,7 @@ export function StoreListView({
               !hasMore && (
                 <div className="flex items-center gap-2 text-gray-400">
                   <div className="w-8 h-px bg-gray-200" />
-                  <span className="text-[12px] font-bold uppercase tracking-widest">
+                  <span className="font-bodoni text-[12px] font-semibold uppercase tracking-[0.2em]">
                     End of results
                   </span>
                   <div className="w-8 h-px bg-gray-200" />

@@ -74,7 +74,7 @@ export function MapCardGrid({
             ) : (
               <>
                 {owned
-                  ? "View Tour"
+                  ? "View Map"
                   : isAuthenticated
                     ? "Buy Now"
                     : "Log In to Buy"}

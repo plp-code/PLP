@@ -210,14 +210,14 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
             placeholder="Search locations..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-transparent border-none outline-none flex-1 text-sm text-gray-900 placeholder-gray-400 font-medium"
+            className="bg-transparent border-none outline-none font-prata flex-1 tracking-wide text-base text-gray-900 placeholder-gray-400 font-medium"
           />
         </div>
 
         <div className="w-full max-w-md mx-auto pointer-events-auto flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
           <button
             onClick={() => setIsOpenNow(!isOpenNow)}
-            className={`flex items-center gap-1.5 px-4 py-2 md:py-1.5 rounded-full text-xs font-bold border whitespace-nowrap transition-all shadow-sm active:scale-95 ${
+            className={`flex font-prata items-center gap-1.5 px-4 py-2 md:py-1.5 rounded-full text-xs font-bold border whitespace-nowrap transition-all shadow-sm active:scale-95 ${
               isOpenNow
                 ? "bg-emerald-100 text-emerald-800 border-emerald-200"
                 : "bg-white/95 backdrop-blur-md text-gray-600 border-gray-200/50 hover:bg-gray-50"
@@ -231,7 +231,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
             <select
               value={activePrice || ""}
               onChange={(e) => setActivePrice(e.target.value || null)}
-              className={`appearance-none pl-4 pr-8 py-2 md:py-1.5 rounded-full text-xs font-bold border transition-all outline-none cursor-pointer ${
+              className={`appearance-none font-prata  pl-4 pr-8 py-2 md:py-1.5 rounded-full text-xs font-bold border transition-all outline-none cursor-pointer ${
                 activePrice
                   ? "bg-gray-900 text-white border-gray-900"
                   : "bg-white/95 backdrop-blur-md text-gray-600 border-gray-200/50 hover:bg-gray-50"
