@@ -39,7 +39,7 @@ export function StoreDetailView({ store, onBack, distance }: any) {
 
         <div className="absolute top-4 right-4">
           <div
-            className={`flex items-center gap-1.5 text-[11px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm ${
+            className={`flex items-center font-prata gap-1.5 text-[11px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm ${
               timeData.isOpen
                 ? "text-emerald-700 bg-white/90"
                 : "text-gray-600 bg-white/85"
@@ -134,10 +134,10 @@ export function StoreDetailView({ store, onBack, distance }: any) {
 
         {store.description && (
           <div className="flex flex-col">
-            <span className="font-bold text-[13px] uppercase tracking-wider text-gray-400 block mb-2">
+            <span className="font-bold font-prata text-[13px] uppercase tracking-wider text-gray-400 block mb-2">
               About
             </span>
-            <p className="text-gray-600 text-[16px] font-bodoni  md:text-base leading-relaxed whitespace-pre-wrap">
+            <p className="text-gray-600 font-prata text-[18px]  md:text-base leading-relaxed whitespace-pre-wrap">
               {store.description}
             </p>
           </div>

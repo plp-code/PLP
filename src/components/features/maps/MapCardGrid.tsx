@@ -43,7 +43,7 @@ export function MapCardGrid({
         </h3>
 
         <div className="mb-6 flex-1">
-          <p className="text-xs leading-relaxed text-gray-600">
+          <p className="text-sm leading-relaxed text-gray-600">
             {map.description || "No description available for this directory."}
           </p>
         </div>
@@ -63,7 +63,7 @@ export function MapCardGrid({
           <button
             onClick={onAction}
             disabled={isLoading}
-            className={`group/btn flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${
+            className={`group/btn font-prata flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${
               owned
                 ? "w-full bg-plp-maroon text-white hover:bg-red-800 hover:shadow-lg"
                 : "flex-1 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg sm:flex-none"

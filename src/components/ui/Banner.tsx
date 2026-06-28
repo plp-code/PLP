@@ -56,7 +56,7 @@ export default function Banner({
           ) : null}
 
           {description ? (
-            <p className="italic mt-4 max-w-2xl text-base md:text-large leading-relaxed text-plp-parchment/80">
+            <p className=" mt-4 max-w-2xl text-base md:text-large font-prata leading-relaxed text-plp-parchment/80">
               {description}
             </p>
           ) : null}

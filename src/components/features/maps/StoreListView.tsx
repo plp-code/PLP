@@ -29,8 +29,8 @@ export function StoreListView({
   return (
     <div className={`flex-1 overflow-y-auto flex flex-col ${className}`}>
       <div className="p-3 md:px-5 md:py-4 border-b border-gray-100 bg-white/95 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between shadow-sm">
-        <h2 className="font-bodoni text-[12px] md:text-[13px] font-bold text-gray-400 capitalize  tracking-wide">
-          {stores.length} {stores.length === 1 ? "Location" : "Locations"} Found
+        <h2 className="font-prata text-[14px] md:text-[15px] font-bold text-gray-400 capitalize  tracking-wide">
+          {stores.length} {stores.length === 1 ? "Location" : "Locations"} found
         </h2>
       </div>
 
@@ -68,7 +68,7 @@ export function StoreListView({
 
               <div className="pr-3 md:pr-4 min-w-0 flex flex-col justify-center gap-1.5 flex-1">
                 <h3
-                  className={`font-bold capitalize text-[15px] md:text-[16px] tracking-normal transition-colors ${
+                  className={`font-bold capitalize text-[17px] md:text-[18px] tracking-normal transition-colors ${
                     isSelected
                       ? "text-blue-800"
                       : "text-gray-900 group-hover:text-blue-600"
@@ -102,7 +102,7 @@ export function StoreListView({
 
               <div className="flex flex-col items-end justify-center gap-2 md:gap-2.5 shrink-0 pl-2">
                 <div
-                  className={`flex items-center gap-1.5 text-[10px] md:text-[11px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${
+                  className={`flex items-center font-prata gap-1.5 text-[11px] md:text-[12px] font-black uppercase tracking-widest px-2 py-1 rounded-full ${
                     timeData.isOpen
                       ? "text-emerald-700 bg-emerald-50 border border-emerald-100"
                       : "text-gray-500 bg-gray-50 border border-gray-200"
