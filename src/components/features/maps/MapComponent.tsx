@@ -14,38 +14,8 @@ import { useEffect, useRef, useState } from "react";
 const DEFAULT_PIN_COLOR = "#2563eb";
 const ACTIVE_PIN_COLOR = "#E4002B";
 
-function buildDirectionsUrl(
-  store: {
-    name?: string;
-    latitude: number;
-    longitude: number;
-    google_place_id?: string;
-  },
-  userLocation: { lat: number; lng: number } | null,
-) {
-  if (store.google_place_id) {
-    const params = new URLSearchParams({
-      api: "1",
-      travelmode: "driving",
-      destination: store.name || `${store.latitude},${store.longitude}`,
-      destination_place_id: store.google_place_id,
-    });
-    if (userLocation) {
-      params.set("origin", `${userLocation.lat},${userLocation.lng}`);
-    }
-    return `https://www.google.com/maps/dir/?${params.toString()}`;
-  }
-
-  // Use name + coordinates — Google searches for the business near those coords
-  if (store.name) {
-    return `https://maps.google.com/?q=${encodeURIComponent(store.name)}@${store.latitude},${store.longitude}`;
-  }
-
-  return `https://maps.google.com/?q=${store.latitude},${store.longitude}`;
-}
-
 function buildPinIcon(active: boolean) {
-  const color = active ? ACTIVE_PIN_COLOR :  DEFAULT_PIN_COLOR;
+  const color = active ? ACTIVE_PIN_COLOR : DEFAULT_PIN_COLOR;
 
   return L.divIcon({
     className: "plp-marker-wrapper",
@@ -131,7 +101,7 @@ export default function MapComponent({
       {!isMobile && <ZoomControl position="topright" />}
 
       {validStores.map((s: any) => {
-        const gmapsUrl = buildDirectionsUrl(s, userLocation ?? null);
+        // const gmapsUrl = buildDirectionsUrl(s, userLocation ?? null);
 
         return (
           <Marker
