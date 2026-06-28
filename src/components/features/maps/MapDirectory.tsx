@@ -12,6 +12,9 @@ import {
   AlertCircle,
   X,
   CheckCircle2,
+  MapPin,
+  Clock,
+  Compass,
 } from "lucide-react";
 import { useMapDirectory } from "@/hooks/useMapDirectory";
 import { useMapCheckout } from "@/hooks/useMapCheckout";
@@ -20,6 +23,15 @@ import { MapCardGrid } from "./MapCardGrid";
 import { MapListView } from "./MapListView";
 import { Snackbar } from "@/components/ui/Snackbar";
 import { Spinner } from "@/components/ui/Spinner";
+
+const upcomingLocations: { name: string; region: string }[] = [
+  { name: "Coastal Harbor Trail", region: "Pacific Northwest" },
+  { name: "Highland Ridge Pass", region: "Rocky Mountains" },
+  { name: "Old Town Heritage Walk", region: "New England" },
+  { name: "Desert Canyon Loop", region: "Southwest" },
+  { name: "Lakeside Forest Routes", region: "Great Lakes" },
+  { name: "Riverside Vineyard Path", region: "Central Valley" },
+];
 
 export default function MapDirectory() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -46,9 +58,6 @@ export default function MapDirectory() {
       queryClient.invalidateQueries({ queryKey: ["maps"] });
       setShowSuccessMessage(true);
       router.replace(pathname, { scroll: false });
-
-      const timer = setTimeout(() => setShowSuccessMessage(false), 5000);
-      return () => clearTimeout(timer);
     }
   }, [isSuccess, queryClient, router, pathname]);
 
@@ -65,9 +74,7 @@ export default function MapDirectory() {
     );
   }, [maps, searchQuery]);
 
-  if (loading) {
-    return <Spinner text="Loading maps..." />;
-  }
+  if (loading) return <Spinner text="Loading maps..." />;
 
   if (error) {
     return (
@@ -86,28 +93,27 @@ export default function MapDirectory() {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto py-6 sm:py-10 px-4 sm:px-6 lg:px-8">
-      {showSuccessMessage && (
+    <div className="w-full max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
+      {/* Banners */}
+      <Snackbar
+        show={showSuccessMessage}
+        onClose={() => setShowSuccessMessage(false)}
+        icon={CheckCircle2}
+        iconColor="text-green-600"
+        borderColor="border-green-200"
+        bgColor="bg-green-50"
+        textColor="text-green-900"
+        title="Transaction Successful!"
+        subtitle={
+          purchasedMapName
+            ? `You now have access to ${decodeURIComponent(purchasedMapName)}`
+            : undefined
+        }
+        autoCloseMs={3000}
+      />
+      {!authLoading && !isAuthenticated && (
         <Snackbar
-          show={showSuccessMessage}
-          onClose={() => setShowSuccessMessage(false)}
-          icon={CheckCircle2}
-          iconColor="text-green-600"
-          borderColor="border-green-200"
-          bgColor="bg-green-50"
-          textColor="text-green-900"
-          title="Transaction Successful!"
-          subtitle={
-            purchasedMapName
-              ? `You now have access to ${decodeURIComponent(purchasedMapName)}`
-              : undefined
-          }
-          autoCloseMs={3000}
-        />
-      )}
-      {!authLoading && !isAuthenticated && showGuestBanner && (
-        <Snackbar
-          show={!authLoading && !isAuthenticated && showGuestBanner}
+          show={showGuestBanner}
           onClose={() => setShowGuestBanner(false)}
           icon={Shield}
           iconColor="text-amber-700"
@@ -120,88 +126,91 @@ export default function MapDirectory() {
         />
       )}
 
-      <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between pb-6 mb-8 sm:mb-10 border-b border-gray-100 gap-y-6 lg:gap-y-0 gap-x-8">
-        <div className="w-full lg:w-auto">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">
-            Map Directories
-          </h1>
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5">
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex h-9 w-9 items-center justify-center rounded-xl bg-plp-maroon/10">
+            <Compass size={18} className="text-plp-maroon" />
+          </div>
           <p className="text-sm sm:text-base text-gray-500 font-medium">
             Explore{" "}
             <span className="text-gray-900 font-bold">{maps?.length || 0}</span>{" "}
-            available locations and routes.
+            curated locations and routes
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full lg:w-auto">
-          <div className="relative flex-1 sm:w-80 group">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none transition-colors group-focus-within:text-plp-maroon text-gray-400">
-              <Search size={18} />
+        <div className="flex items-center gap-2.5">
+          <div className="relative flex-1 sm:w-72 group">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors group-focus-within:text-plp-maroon text-gray-400">
+              <Search size={16} />
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by title, region, or keyword..."
-              className="block w-full pl-11 pr-10 py-3 sm:py-2.5 bg-white border border-gray-200 rounded-2xl leading-5 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-plp-maroon/10 focus:border-plp-maroon text-base sm:text-sm shadow-sm transition-all duration-300"
+              placeholder="Search maps..."
+              className="block w-full pl-9 pr-9 py-2 sm:py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-plp-maroon/15 focus:border-plp-maroon/30 focus:bg-white shadow-sm transition-all duration-200"
             />
-
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                 aria-label="Clear search"
               >
-                <X size={16} />
+                <X size={14} />
               </button>
             )}
           </div>
 
-          <div className="w-fit self-end sm:self-auto hidden sm:flex items-center bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200/50 shrink-0">
+          <div className="hidden sm:flex items-center bg-gray-50 p-1 rounded-xl border border-gray-200">
             <button
               onClick={() => setViewMode("grid")}
               aria-label="Grid View"
-              className={`p-2.5 sm:p-2 rounded-xl transition-all duration-300 flex items-center justify-center min-w-[44px] sm:min-w-0 ${
+              className={`p-1.5 rounded-lg transition-all duration-200 flex items-center justify-center ${
                 viewMode === "grid"
-                  ? "bg-white text-plp-maroon shadow-sm ring-1 ring-black/5 scale-100"
-                  : "text-gray-400 hover:text-gray-900 hover:bg-gray-200/50 scale-95 hover:scale-100"
+                  ? "bg-white text-plp-maroon shadow-sm ring-1 ring-gray-200"
+                  : "text-gray-400 hover:text-gray-600"
               }`}
             >
-              <LayoutGrid size={18} />
+              <LayoutGrid size={16} />
             </button>
-
             <button
               onClick={() => setViewMode("list")}
               aria-label="List View"
-              className={`p-2.5 sm:p-2 rounded-xl transition-all duration-300 flex items-center justify-center min-w-[44px] sm:min-w-0 ${
+              className={`p-1.5 rounded-lg transition-all duration-200 flex items-center justify-center ${
                 viewMode === "list"
-                  ? "bg-white text-plp-maroon shadow-sm ring-1 ring-black/5 scale-100"
-                  : "text-gray-400 hover:text-gray-900 hover:bg-gray-200/50 scale-95 hover:scale-100"
+                  ? "bg-white text-plp-maroon shadow-sm ring-1 ring-gray-200"
+                  : "text-gray-400 hover:text-gray-600"
               }`}
             >
-              <List size={18} />
+              <List size={16} />
             </button>
           </div>
         </div>
       </div>
 
-      <div aria-live="polite" className="w-full">
+      {/* Divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+
+      {/* Map Cards */}
+      <div aria-live="polite" className="mt-6">
         {filteredMaps.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 px-4 text-center bg-gray-50/50 rounded-[2rem] border-2 border-dashed border-gray-200 mt-4 transition-all">
-            <div className="bg-white p-5 rounded-full shadow-sm border border-gray-100 mb-5">
-              <MapIcon size={36} className="text-gray-300" />
+          <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
+            <div className="bg-gray-50 p-5 rounded-2xl mb-5">
+              <MapIcon size={32} className="text-gray-300" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2 tracking-tight">
+            <h3 className="text-lg font-bold text-gray-900 mb-1.5 tracking-tight">
               No maps found
             </h3>
-            <p className="text-gray-500 max-w-sm text-sm sm:text-base leading-relaxed">
+            <p className="text-gray-400 max-w-sm text-sm leading-relaxed">
               {searchQuery
-                ? `We couldn't find anything matching "${searchQuery}". Try adjusting your search terms.`
-                : "No maps are currently available in the directory. Please check back later."}
+                ? `Nothing matching "${searchQuery}". Try different terms.`
+                : "No maps available yet. Check back soon."}
             </p>
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="mt-6 text-sm font-bold text-plp-maroon hover:text-red-800 transition-colors bg-red-50 hover:bg-red-100 px-5 py-2 rounded-full"
+                className="mt-5 text-sm font-bold text-plp-maroon hover:text-red-800 transition-colors bg-plp-maroon/5 hover:bg-plp-maroon/10 px-5 py-2 rounded-full"
               >
                 Clear Search
               </button>
@@ -212,8 +221,8 @@ export default function MapDirectory() {
             <div
               className={
                 viewMode === "grid"
-                  ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6"
-                  : "grid grid-cols-1 gap-5 sm:hidden"
+                  ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5"
+                  : "grid grid-cols-1 gap-4 sm:hidden"
               }
             >
               {filteredMaps.map((map) => (
@@ -239,6 +248,52 @@ export default function MapDirectory() {
           </div>
         )}
       </div>
+
+      <section className="relative mt-16 sm:mt-20 overflow-hidden rounded-[2rem] border border-plp-maroon/10 bg-gradient-to-br from-plp-maroon/[0.03] via-white to-amber-50/40 p-8 sm:p-12">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-plp-maroon/5 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-amber-200/20 blur-3xl" />
+
+        <div className="relative">
+          <div className="inline-flex items-center gap-2 rounded-full bg-plp-maroon/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide text-plp-maroon">
+            More on the way
+          </div>
+
+          <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
+            New maps are coming soon
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm sm:text-base leading-relaxed text-gray-500 font-medium">
+            We&apos;re constantly charting new locations and routes. Here&apos;s
+            a preview of what we&apos;re working on next — check back regularly
+            to see them go live.
+          </p>
+
+          <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            {upcomingLocations.map((location) => (
+              <li
+                key={location.name}
+                className="group flex items-center gap-3 rounded-2xl border border-gray-200/70 bg-white/80 backdrop-blur-sm p-4 shadow-sm transition-all duration-300 hover:border-plp-maroon/20 hover:shadow-md"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-plp-maroon/10 text-plp-maroon transition-colors group-hover:bg-plp-maroon group-hover:text-white">
+                  <MapPin size={18} />
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-gray-900">
+                    {location.name}
+                  </p>
+                  <p className="truncate text-xs font-medium text-gray-400">
+                    {location.region}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-8 inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-400">
+            <Clock size={14} className="text-plp-maroon/60" />
+            Locations and release dates are subject to change.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

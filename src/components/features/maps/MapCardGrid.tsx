@@ -1,5 +1,6 @@
 import { MapPin, Lock, Unlock, ArrowRight, Loader2 } from "lucide-react";
 import { MapItem } from "@/types";
+import { useState } from "react";
 
 interface Props {
   map: MapItem;
@@ -41,9 +42,11 @@ export function MapCardGrid({
           {map.name}
         </h3>
 
-        <p className="mb-6 line-clamp-4 flex-1 text-sm leading-relaxed text-gray-600">
-          {map.description || "No description available for this directory."}
-        </p>
+        <div className="mb-6 flex-1">
+          <p className="text-xs leading-relaxed text-gray-600">
+            {map.description || "No description available for this directory."}
+          </p>
+        </div>
 
         <div className="mt-auto flex items-center justify-between gap-4 border-t border-gray-100 pt-4 sm:pt-5">
           {!owned && (

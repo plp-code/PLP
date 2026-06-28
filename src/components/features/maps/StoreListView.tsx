@@ -29,7 +29,7 @@ export function StoreListView({
   return (
     <div className={`flex-1 overflow-y-auto flex flex-col ${className}`}>
       <div className="p-3 md:px-5 md:py-4 border-b border-gray-100 bg-white/95 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between shadow-sm">
-        <h2 className="text-[12px] md:text-[13px] font-bold text-gray-400 uppercase tracking-widest">
+        <h2 className="font-bodoni text-[12px] md:text-[13px] font-bold text-gray-400 capitalize  tracking-wide">
           {stores.length} {stores.length === 1 ? "Location" : "Locations"} Found
         </h2>
       </div>
@@ -68,7 +68,7 @@ export function StoreListView({
 
               <div className="pr-3 md:pr-4 min-w-0 flex flex-col justify-center gap-1.5 flex-1">
                 <h3
-                  className={`font-bold text-[15px] md:text-[16px] truncate tracking-tight transition-colors ${
+                  className={`font-bold capitalize text-[15px] md:text-[16px] tracking-normal transition-colors ${
                     isSelected
                       ? "text-blue-800"
                       : "text-gray-900 group-hover:text-blue-600"

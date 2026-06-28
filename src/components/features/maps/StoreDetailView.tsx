@@ -23,10 +23,10 @@ export function StoreDetailView({ store, onBack, distance }: any) {
       <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 p-2 md:p-4 transition-all pt-6 md:pt-4">
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 md:gap-2 text-[14px] md:text-sm font-bold text-gray-600 active:text-blue-600 hover:text-blue-700 px-3 py-2 md:py-1.5 rounded-xl active:bg-blue-50 hover:bg-gray-100 transition-colors"
+          className="flex items-center gap-1.5 md:gap-2 active:text-blue-600 hover:text-blue-700 px-3 py-2 md:py-1.5 rounded-xl active:bg-blue-50 hover:bg-gray-100 transition-colors"
         >
           <ChevronLeft size={20} className="md:w-5 md:h-5 -ml-1 shrink-0" />
-          Back to list
+        
         </button>
       </div>
 
@@ -59,7 +59,7 @@ export function StoreDetailView({ store, onBack, distance }: any) {
 
       <div className="px-5 md:px-6 py-6 flex flex-col gap-6 w-full">
         <div className="flex flex-col">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-3 leading-tight tracking-tight">
+          <h2 className="font-bodoni capitalize text-2xl md:text-3xl font-extrabold text-gray-900 mb-3 leading-tight tracking-tight">
             {store.name}
           </h2>
 
@@ -137,7 +137,7 @@ export function StoreDetailView({ store, onBack, distance }: any) {
             <span className="font-bold text-[13px] uppercase tracking-wider text-gray-400 block mb-2">
               About
             </span>
-            <p className="text-gray-600 text-[15px] md:text-base leading-relaxed whitespace-pre-wrap">
+            <p className="text-gray-600 text-[16px] font-bodoni  md:text-base leading-relaxed whitespace-pre-wrap">
               {store.description}
             </p>
           </div>
