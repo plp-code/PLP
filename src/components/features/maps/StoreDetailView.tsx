@@ -95,7 +95,7 @@ export function StoreDetailView({
             href={gmapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-fit flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-sm active:scale-[0.98] transition-all"
+            className="w-full sm:w-fit flex items-center font-prata justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-sm active:scale-[0.98] transition-all"
           >
             <Navigation size={14} />
             Get Directions
