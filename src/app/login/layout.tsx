@@ -76,7 +76,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
               The Preloved <br /> Professional
             </h2>
             <p className="text-plp-parchment/70 font-bold text-[10px] lg:text-xs uppercase tracking-widest max-w-sm mb-8 leading-relaxed">
-              Power Never Goes Out of Style Now.
+              Power Never Goes Out of Style.
             </p>
           </div>
 

@@ -83,7 +83,7 @@ export default function Footer() {
         </div>
 
         <div className="opacity-50 text-[9px] uppercase tracking-[0.2em] font-black text-center md:text-right">
-          <span>{currentYear} The Preloved Professional</span>
+              <span>The Preloved Professional&trade;</span>
         </div>
       </div>
     </footer>

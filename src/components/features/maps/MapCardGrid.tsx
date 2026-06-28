@@ -1,5 +1,6 @@
 import { MapPin, Lock, Unlock, ArrowRight, Loader2 } from "lucide-react";
 import { MapItem } from "@/types";
+import { useState } from "react";
 
 interface Props {
   map: MapItem;
@@ -41,9 +42,11 @@ export function MapCardGrid({
           {map.name}
         </h3>
 
-        <p className="mb-6 line-clamp-4 flex-1 text-sm leading-relaxed text-gray-600">
-          {map.description || "No description available for this directory."}
-        </p>
+        <div className="mb-6 flex-1">
+          <p className="text-sm leading-relaxed text-gray-600">
+            {map.description || "No description available for this directory."}
+          </p>
+        </div>
 
         <div className="mt-auto flex items-center justify-between gap-4 border-t border-gray-100 pt-4 sm:pt-5">
           {!owned && (
@@ -60,7 +63,7 @@ export function MapCardGrid({
           <button
             onClick={onAction}
             disabled={isLoading}
-            className={`group/btn flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${
+            className={`group/btn font-prata flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${
               owned
                 ? "w-full bg-plp-maroon text-white hover:bg-red-800 hover:shadow-lg"
                 : "flex-1 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg sm:flex-none"

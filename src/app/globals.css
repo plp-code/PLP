@@ -120,12 +120,13 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-seventies);
+    font-family: var(--font-bodoni);
     text-transform: uppercase;
   }
 
   p {
     line-height: 1.6;
+    font-family: var(--font-prata);
   }
 
   .subtitle,

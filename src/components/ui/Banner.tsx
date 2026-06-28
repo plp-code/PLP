@@ -50,13 +50,13 @@ export default function Banner({
           ) : null}
 
           {title ? (
-            <h2 className="text-[10vw] md:text-[6vw] lg:text-[4.5vw] leading-[0.9] tracking-tighter text-plp-parchment">
+            <p className="font-bodoni text-[9vw] md:text-[5vw] lg:text-[3.5vw] leading-[0.9] tracking-tighter text-plp-parchment">
               {title}
-            </h2>
+            </p>
           ) : null}
 
           {description ? (
-            <p className="mt-4 max-w-2xl text-sm md:text-base leading-relaxed text-plp-parchment/80">
+            <p className=" mt-4 max-w-2xl text-base md:text-large font-prata leading-relaxed text-plp-parchment/80">
               {description}
             </p>
           ) : null}

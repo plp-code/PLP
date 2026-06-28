@@ -13,8 +13,8 @@ export default function MapsPage() {
   return (
     <section className="min-h-screen bg-plp-parchment flex flex-col font-text selection:bg-plp-lime selection:text-plp-maroon">
       <Banner
-        title="Maps"
-        description="A clean place to sketch the structure of the project before the content system expands."
+        title="PLP Thrift Maps"
+        description="Your path to power, store by store."
         contentClassName="py-14 md:py-20"
       />
 
