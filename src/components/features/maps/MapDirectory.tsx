@@ -251,7 +251,7 @@ export default function MapDirectory() {
           </div>
 
           <h2 className="mt-3 sm:mt-4 text-xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
-            New maps are coming soon
+            New maps coming soon
           </h2>
           <p className="mt-2 max-w-2xl text-sm sm:text-base leading-relaxed text-gray-500 font-medium">
             We&apos;re constantly charting new locations and routes. Here&apos;s
