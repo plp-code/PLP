@@ -6,7 +6,7 @@
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
   ],
   "start_url": "/maps",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#3d0b19",
   "theme_color": "#3d0b19"
 }
