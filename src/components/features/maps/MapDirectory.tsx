@@ -26,7 +26,7 @@ import { Spinner } from "@/components/ui/Spinner";
 
 const upcomingLocations: { name: string; region: string }[] = [
   { name: "Los Angeles, CA", region: "California" },
-  { name: "NYC, NY", region: "New York" },
+  { name: "New York City, NY", region: "New York" },
   { name: "Chicago, IL", region: "Illinois" },
   { name: "Phoenix, AZ", region: "Arizona" },
   { name: "Boston, MA", region: "Massachusetts" },
@@ -128,7 +128,7 @@ export default function MapDirectory() {
           <p className="text-sm sm:text-base text-gray-500 font-medium">
             Explore{" "}
             <span className="text-gray-900 font-bold">{maps?.length || 0}</span>{" "}
-            curated locations and routes
+            curated location and route
           </p>
         </div>
 
