@@ -126,8 +126,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     if (cleanSearch) {
       result = result.filter((s) => {
         const name = (s.name || "").toLowerCase();
-        const description = (s.description || "").toLowerCase();
-        return name.includes(cleanSearch) || description.includes(cleanSearch);
+        return name.includes(cleanSearch);
       });
     }
 
