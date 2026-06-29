@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     default: "The Preloved Professional",
     template: "%s | The Preloved Professional",
   },
-  // description:
-  // "Curated thrift and secondhand maps for professional workwear. Vetted in person with notes on pricing, standout finds, and what to look for.",
+  description:
+    "Professional identity through clothing. Preloved work wardrobes, career confidence, and community.",
   keywords: [
     "thrift store map",
     "secondhand workwear",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "The Preloved Professional",
     title: "The Preloved Professional",
     description:
-      "Curated thrift and secondhand maps for professional workwear.",
+      "Professional identity through clothing. Preloved work wardrobes, career confidence, and community.",
     images: [
       {
         url: "/og-image.png",
@@ -46,11 +46,6 @@ export const metadata: Metadata = {
         alt: "The Preloved Professional",
       },
     ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "The Preloved Professional",
-    images: ["/og-image.png"],
   },
   robots: {
     index: true,
