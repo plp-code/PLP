@@ -254,9 +254,8 @@ export default function MapDirectory() {
             New maps coming soon
           </h2>
           <p className="mt-2 max-w-2xl text-sm sm:text-base leading-relaxed text-gray-500 font-medium">
-            We&apos;re constantly charting new locations and routes. Here&apos;s
-            a preview of what we&apos;re working on next — check back regularly
-            to see them go live.
+            Here&apos;s a preview of what we&apos;re working on next — check
+            back regularly to see them go live.
           </p>
 
           <ul className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
