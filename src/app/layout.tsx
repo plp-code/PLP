@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     template: "%s | The Preloved Professional",
   },
   // description:
-    // "Curated thrift and secondhand maps for professional workwear. Vetted in person with notes on pricing, standout finds, and what to look for.",
+  // "Curated thrift and secondhand maps for professional workwear. Vetted in person with notes on pricing, standout finds, and what to look for.",
   keywords: [
     "thrift store map",
     "secondhand workwear",
@@ -55,11 +55,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-  },
-  appleWebApp: {
-    capable: true,
-    title: "PLP",
-    statusBarStyle: "black-translucent",
   },
 };
 
