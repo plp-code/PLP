@@ -29,7 +29,6 @@ const upcomingLocations: { name: string; region: string }[] = [
   { name: "Manhattan", region: "New York" },
   { name: "Chicago", region: "Illinois" },
   { name: "Phoenix", region: "Arizona" },
-  { name: "Brooklyn", region: "New York" },
   { name: "Boston", region: "Massachusetts" },
   { name: "And more to come!", region: "Stay tuned" },
 ];
