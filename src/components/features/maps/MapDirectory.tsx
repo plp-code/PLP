@@ -25,11 +25,12 @@ import { Snackbar } from "@/components/ui/Snackbar";
 import { Spinner } from "@/components/ui/Spinner";
 
 const upcomingLocations: { name: string; region: string }[] = [
-  { name: "Los Angeles, CA", region: "California" },
-  { name: "New York City, NY", region: "New York" },
-  { name: "Chicago, IL", region: "Illinois" },
-  { name: "Phoenix, AZ", region: "Arizona" },
-  { name: "Boston, MA", region: "Massachusetts" },
+  { name: "Los Angeles", region: "California" },
+  { name: "Manhattan", region: "New York" },
+  { name: "Chicago", region: "Illinois" },
+  { name: "Phoenix", region: "Arizona" },
+  { name: "Brooklyn", region: "New York" },
+  { name: "Boston", region: "Massachusetts" },
   { name: "And more to come!", region: "Stay tuned" },
 ];
 
