@@ -119,22 +119,30 @@ export function buildDirectionsUrl(
   },
   userLocation: { lat: number; lng: number } | null = null,
 ) {
+  if (!userLocation) {
+    if (store.google_place_id) {
+      return `https://www.google.com/maps/place/?q=place_id:${store.google_place_id}`;
+    }
+    if (store.name) {
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.name)}@${store.latitude},${store.longitude}`;
+    }
+    return `https://www.google.com/maps/@${store.latitude},${store.longitude},17z`;
+  }
+
   if (store.google_place_id) {
     const params = new URLSearchParams({
       api: "1",
       travelmode: "driving",
+      origin: `${userLocation.lat},${userLocation.lng}`,
       destination: store.name || `${store.latitude},${store.longitude}`,
       destination_place_id: store.google_place_id,
     });
-    if (userLocation) {
-      params.set("origin", `${userLocation.lat},${userLocation.lng}`);
-    }
     return `https://www.google.com/maps/dir/?${params.toString()}`;
   }
 
   if (store.name) {
-    return `https://maps.google.com/?q=${encodeURIComponent(store.name)}@${store.latitude},${store.longitude}`;
+    return `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${encodeURIComponent(store.name)}@${store.latitude},${store.longitude}`;
   }
 
-  return `https://maps.google.com/?q=${store.latitude},${store.longitude}`;
+  return `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${store.latitude},${store.longitude}`;
 }

@@ -1,4 +1,4 @@
-import { ChevronRight, Loader2, Navigation } from "lucide-react";
+import { ChevronRight, Loader2, Navigation, Clock } from "lucide-react";
 import { getTodayHours, formatPriceLevel } from "@/lib/utils";
 
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -17,6 +17,7 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
 
 export function StoreListView({
   stores,
+  totalCount,
   onSelect,
   hasMore,
   loadingMore,
@@ -30,15 +31,15 @@ export function StoreListView({
     <div className={`flex-1 overflow-y-auto flex flex-col ${className}`}>
       <div className="p-3 md:px-5 md:py-4 border-b border-gray-100 bg-white/95 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between shadow-sm">
         <h2 className="font-bodoni text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.15em] text-gray-400">
-          {stores.length} {stores.length === 1 ? "Location" : "Locations"} found
+          {stores.length} of {totalCount}{" "}
+          {totalCount === 1 ? "Location" : "Locations"}
         </h2>
       </div>
 
-      <div className="divide-y divide-gray-100/80 pb-20 md:pb-0">
-        {stores.map((store: any) => {
+      <div className="divide-y divide-gray-100/80 pb-[calc(5rem_+_env(safe-area-inset-bottom))] md:pb-0">
+        {stores.map((store: any, index: number) => {
           const timeData = getTodayHours(store.hours);
           const isSelected = store.id === activeId;
-
           const priceLevel = formatPriceLevel(store.price_level);
 
           const distance = userLocation
@@ -66,9 +67,19 @@ export function StoreListView({
                 }`}
               />
 
-              <div className="pr-3 md:pr-4 min-w-0 flex flex-col justify-center gap-1.5 flex-1">
+              <span
+                className={`shrink-0 mr-3 md:mr-4 font-bodoni text-[13px] md:text-[14px] font-semibold tabular-nums w-5 text-center transition-colors ${
+                  isSelected
+                    ? "text-blue-600"
+                    : "text-gray-400 group-hover:text-gray-600"
+                }`}
+              >
+                {index + 1}
+              </span>
+
+              <div className="pr-3 md:pr-4 min-w-0 flex flex-col justify-center gap-2 flex-1">
                 <h3
-                  className={`font-bodoni font-bold capitalize text-[17px] md:text-[18px] leading-tight tracking-[-0.01em] transition-colors ${
+                  className={`font-bodoni font-bold capitalize text-[17px] md:text-[18px] leading-tight tracking-[-0.01em] line-clamp-2 transition-colors ${
                     isSelected
                       ? "text-blue-800"
                       : "text-gray-900 group-hover:text-blue-600"
@@ -77,24 +88,24 @@ export function StoreListView({
                   {store.name}
                 </h3>
 
-                <div className="flex items-center gap-2 text-[13px] md:text-[14px] text-gray-500 overflow-hidden w-full">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   {distance !== null && (
-                    <span className="flex items-center gap-1 font-bodoni font-semibold tracking-wide text-blue-700 bg-blue-100/50 px-2 py-0.5 rounded-md shrink-0">
-                      <Navigation
-                        size={10}
-                        className="fill-blue-200 text-blue-600"
-                      />
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
+                      <Navigation size={10} className="fill-blue-200" />
                       {distance.toFixed(1)} mi
                     </span>
                   )}
 
-                  {priceLevel ? (
-                    <span className="flex items-center gap-1 font-bodoni font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full tracking-wide shrink-0">
+                  {priceLevel && (
+                    <span className="inline-flex items-center text-[11px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
                       {priceLevel}
                     </span>
-                  ) : (
-                    <span className="truncate flex-1 text-gray-400 italic">
-                      Price unavailable
+                  )}
+
+                  {timeData.string && (
+                    <span className="inline-flex items-center font-prata gap-1 text-[13px] font-medium text-gray-400 px-2 py-0.5">
+                      <Clock size={10} />
+                      {timeData.string}
                     </span>
                   )}
                 </div>

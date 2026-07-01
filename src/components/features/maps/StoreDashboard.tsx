@@ -56,6 +56,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     lng: number;
   } | null>(null);
   const [isLocating, setIsLocating] = useState(false);
+  const [locationDismissed, setLocationDismissed] = useState(false);
 
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -64,7 +65,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   }, []);
 
   useEffect(() => {
-    if ("geolocation" in navigator && !userLocation) {
+    if ("geolocation" in navigator && !userLocation && !locationDismissed) {
       navigator.geolocation.getCurrentPosition(
         (position) =>
           setUserLocation({
@@ -74,7 +75,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
         (error) => console.log("Auto-location failed:", error.message),
       );
     }
-  }, [userLocation]);
+  }, [userLocation, locationDismissed]);
 
   const lastElementRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -208,14 +209,52 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
             type="text"
             placeholder="Search locations..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (view === "detail") {
+                setView("list");
+                setActiveId(null);
+              }
+            }}
             className="bg-transparent border-none outline-none font-prata flex-1 tracking-wide text-base text-gray-900 placeholder-gray-400 font-medium"
           />
         </div>
 
         <div className="w-full max-w-md mx-auto pointer-events-auto flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
           <button
-            onClick={() => setIsOpenNow(!isOpenNow)}
+            onClick={() => {
+              if (userLocation) {
+                setUserLocation(null);
+                setLocationDismissed(true);
+              } else {
+                setLocationDismissed(false);
+                handleLocateMe();
+              }
+              setIsDrawerOpen(true);
+            }}
+            disabled={isLocating}
+            className={`flex font-prata items-center gap-1.5 px-4 py-2 md:py-1.5 rounded-full text-xs font-bold border whitespace-nowrap transition-all shadow-sm active:scale-95 ${
+              userLocation
+                ? "bg-blue-100 text-blue-800 border-blue-200"
+                : "bg-white/95 backdrop-blur-md text-gray-600 border-gray-200/50 hover:bg-gray-50"
+            }`}
+          >
+            {isLocating ? (
+              <Loader2 size={12} className="animate-spin" />
+            ) : (
+              <Navigation
+                size={12}
+                className={userLocation ? "text-blue-600" : ""}
+              />
+            )}
+            Nearest
+          </button>
+
+          <button
+            onClick={() => {
+              setIsOpenNow(!isOpenNow);
+              setIsDrawerOpen(true);
+            }}
             className={`flex font-prata items-center gap-1.5 px-4 py-2 md:py-1.5 rounded-full text-xs font-bold border whitespace-nowrap transition-all shadow-sm active:scale-95 ${
               isOpenNow
                 ? "bg-emerald-100 text-emerald-800 border-emerald-200"
@@ -229,8 +268,11 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
           <div className="relative flex items-center shadow-sm rounded-full">
             <select
               value={activePrice || ""}
-              onChange={(e) => setActivePrice(e.target.value || null)}
-              className={`appearance-none font-prata  pl-4 pr-8 py-2 md:py-1.5 rounded-full text-xs font-bold border transition-all outline-none cursor-pointer ${
+              onChange={(e) => {
+                setActivePrice(e.target.value || null);
+                setIsDrawerOpen(true);
+              }}
+              className={`appearance-none font-prata pl-4 pr-8 py-2 md:py-1.5 rounded-full text-xs font-bold border transition-all outline-none cursor-pointer ${
                 activePrice
                   ? "bg-gray-900 text-white border-gray-900"
                   : "bg-white/95 backdrop-blur-md text-gray-600 border-gray-200/50 hover:bg-gray-50"
@@ -249,13 +291,22 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
         </div>
       </div>
 
-      <button
-        onClick={handleLocateMe}
+      {/* removed locate button  */}
+      {/* <button
+        onClick={() => {
+          if (userLocation) {
+            setUserLocation(null);
+            setLocationDismissed(true);
+          } else {
+            setLocationDismissed(false);
+            handleLocateMe();
+          }
+        }}
         disabled={isLocating}
         className={`absolute right-4 md:right-6 z-[1000] pointer-events-auto bg-white/95 backdrop-blur-md p-3.5 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.1)] border border-gray-200/50 text-gray-700 hover:text-blue-600 transition-all duration-300 active:scale-95 disabled:opacity-70 flex items-center justify-center
-          ${isDrawerOpen ? "bottom-[calc(65vh+1.5rem)]" : "bottom-24"}
-          md:top-auto md:bottom-6
-        `}
+    ${isDrawerOpen ? "bottom-[calc(65vh+1.5rem)]" : "bottom-24"}
+    md:top-auto md:bottom-6
+  `}
         title="Find My Location"
       >
         {isLocating ? (
@@ -266,11 +317,10 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
             className={userLocation ? "text-blue-600 fill-blue-100" : ""}
           />
         )}
-      </button>
-
+      </button> */}
       <aside
         className={`absolute bg-white z-[1000] flex flex-col shadow-[0_-8px_30px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-in-out overflow-hidden border-t border-gray-200/50
-          inset-x-0 bottom-0 h-[65vh] rounded-t-3xl
+          inset-x-0 bottom-0 h-[65dvh] rounded-t-3xl
           ${isDrawerOpen ? "translate-y-0" : "translate-y-full"}
           md:top-36 md:bottom-6 md:left-6 md:h-auto md:w-[440px] lg:w-[500px] md:rounded-2xl md:border
           ${isDrawerOpen ? "md:translate-x-0 md:translate-y-0" : "md:-translate-x-[120%] md:translate-y-0"}
@@ -278,6 +328,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
       >
         <StoreListView
           stores={filteredStores}
+          totalCount={pins.length}
           activeId={activeId}
           onSelect={(id: number) => {
             setActiveId(id);
@@ -310,7 +361,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
         )}
       </aside>
 
-      <div className="md:hidden absolute bottom-6 inset-x-0 flex justify-center z-[1010] pointer-events-none">
+      <div className="md:hidden absolute bottom-[calc(1.5rem_+_env(safe-area-inset-bottom))] inset-x-0 flex justify-center z-[1010] pointer-events-none">
         <button
           onClick={() => setIsDrawerOpen(!isDrawerOpen)}
           className="pointer-events-auto bg-gray-900/95 backdrop-blur-md text-white px-6 py-3.5 rounded-full font-bold shadow-[0_8px_20px_rgba(0,0,0,0.2)] flex items-center gap-2.5 text-sm active:scale-95 transition-all"

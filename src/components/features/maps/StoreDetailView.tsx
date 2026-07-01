@@ -24,13 +24,15 @@ export function StoreDetailView({
   const [hoursOpen, setHoursOpen] = useState(false);
 
   return (
-    <div className="flex-1 overflow-y-auto flex flex-col bg-gray-50 pb-24 md:pb-0 relative animate-in slide-in-from-right-4 md:duration-300">
+    <div className="flex-1 overflow-y-auto flex flex-col bg-gray-50 pb-[calc(6rem_+_env(safe-area-inset-bottom))] md:pb-0 relative animate-in slide-in-from-right-4 md:duration-300">
       <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-100 px-3 py-2">
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-900 active:text-blue-600 py-1 rounded-lg transition-colors"
+          aria-label="Back to list"
+          className="flex items-center gap-1 -ml-1 p-2 text-sm font-medium text-gray-500 hover:text-gray-900 active:text-blue-600 rounded-lg transition-colors"
         >
-          <ChevronLeft size={18} className="-ml-0.5" />
+          <ChevronLeft size={20} />
+          <span>Back</span>
         </button>
       </div>
 
@@ -95,10 +97,10 @@ export function StoreDetailView({
             href={gmapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-fit flex items-center font-prata justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-sm active:scale-[0.98] transition-all"
+            className="w-full sm:w-fit flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-sm active:scale-[0.98] transition-all"
           >
             <Navigation size={14} />
-            Get Directions
+            {userLocation ? "Get Directions" : "View on Map"}
           </a>
         </div>
 

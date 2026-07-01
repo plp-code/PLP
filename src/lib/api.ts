@@ -46,7 +46,11 @@ function scheduleRefresh(expiresInSeconds: number) {
   refreshTimer = setTimeout(() => refreshSession(), refreshIn);
 }
 
-async function refreshSession(): Promise<boolean> {
+async function refreshSession(force = false): Promise<boolean> {
+  if (!force && !sessionStorage.getItem(TOKEN_EXPIRY_KEY)) {
+    return false;
+  }
+
   if (!refreshPromise) {
     refreshPromise = fetch("/api/v1/auth/refresh", {
       method: "POST",
@@ -72,7 +76,6 @@ async function refreshSession(): Promise<boolean> {
   }
   return refreshPromise;
 }
-
 async function fetcher<T>(
   endpoint: string,
   options: FetchOptions = {},
@@ -97,7 +100,7 @@ async function fetcher<T>(
 
   if (response.status === 401 && !options._retry && !options.skipRefresh) {
     options._retry = true;
-    const refreshed = await refreshSession();
+    const refreshed = await refreshSession(true);
     if (refreshed) return fetcher<T>(endpoint, options);
     throw new Error("Session expired or unauthorized.");
   }
