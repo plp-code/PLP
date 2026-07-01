@@ -231,6 +231,10 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
                 handleLocateMe();
               }
               setIsDrawerOpen(true);
+              if (view === "detail") {
+                setView("list");
+                setActiveId(null);
+              }
             }}
             disabled={isLocating}
             className={`flex font-prata items-center gap-1.5 px-4 py-2 md:py-1.5 rounded-full text-xs font-bold border whitespace-nowrap transition-all shadow-sm active:scale-95 ${
@@ -254,6 +258,10 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
             onClick={() => {
               setIsOpenNow(!isOpenNow);
               setIsDrawerOpen(true);
+              if (view === "detail") {
+                setView("list");
+                setActiveId(null);
+              }
             }}
             className={`flex font-prata items-center gap-1.5 px-4 py-2 md:py-1.5 rounded-full text-xs font-bold border whitespace-nowrap transition-all shadow-sm active:scale-95 ${
               isOpenNow

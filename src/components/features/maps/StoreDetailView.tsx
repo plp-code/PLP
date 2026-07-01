@@ -29,7 +29,7 @@ export function StoreDetailView({
         <button
           onClick={onBack}
           aria-label="Back to list"
-          className="flex items-center gap-1 -ml-1 p-2 text-sm font-medium text-gray-500 hover:text-gray-900 active:text-blue-600 rounded-lg transition-colors"
+          className="flex items-center gap-1 -ml-1 p-2 text-sm font-medium font-prata text-gray-500 hover:text-gray-900 active:text-blue-600 rounded-lg transition-colors"
         >
           <ChevronLeft size={20} />
           <span>Back</span>
