@@ -8,10 +8,6 @@ const REFRESH_BUFFER = 2 * 60;
 const TOKEN_EXPIRY_KEY = "token_expires_at";
 const SESSION_HINT_KEY = "had_session";
 
-// Cross-tab hint that this browser holds (possibly refreshable) credentials.
-// Unlike TOKEN_EXPIRY_KEY (sessionStorage, per-tab), this survives new tabs and
-// restarts, so a returning user with an expired access token still attempts a
-// refresh, while a true guest skips it.
 export function markSession() {
   if (typeof window !== "undefined") localStorage.setItem(SESSION_HINT_KEY, "1");
 }
