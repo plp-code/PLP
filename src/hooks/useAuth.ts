@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthUser } from "@/context/AuthContext";
-import { api, setTokenExpiry } from "@/lib/api";
+import { api, setTokenExpiry, markSession } from "@/lib/api";
 import { AuthResponse } from "@/types/api";
 
 const DEFAULT_RETURN_PATH = "/maps";
@@ -44,6 +44,7 @@ export function useAuthActions(returnTo?: string | null) {
         { skipRefresh: true },
       );
       setTokenExpiry(30 * 60);
+      markSession();
       await checkSession();
       router.replace(targetPath);
     } catch (err: any) {
@@ -63,6 +64,7 @@ export function useAuthActions(returnTo?: string | null) {
       const payload = Object.fromEntries(formData.entries());
       await api.post("/auth/register", payload, { skipRefresh: true });
       setTokenExpiry(30 * 60);
+      markSession();
       await checkSession();
       router.replace(targetPath);
     } catch (err: any) {

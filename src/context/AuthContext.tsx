@@ -15,6 +15,9 @@ import {
   onAuthExpired,
   clearTokenExpiry,
   setTokenExpiry,
+  markSession,
+  clearSession,
+  hadSession,
 } from "@/lib/api";
 import { User } from "@/types";
 
@@ -46,8 +49,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const cleanup = onAuthExpired(() => {
       clearTokenExpiry();
+      clearSession();
       queryClient.setQueryData(["session"], null);
-      queryClient.invalidateQueries({ queryKey: ["maps"] });
+      queryClient.removeQueries({ queryKey: ["maps"] });
     });
 
     return cleanup;
@@ -57,8 +61,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryKey: ["session"],
     queryFn: async ({ signal }) => {
       try {
-        const data = await api.get<User>("/users/me", { signal });
+        // Guests (no prior session) skip the refresh-on-401 round trip; returning
+        // users with an expired access token still get a refresh attempt.
+        const data = await api.get<User>("/users/me", {
+          signal,
+          skipRefresh: !hadSession(),
+        });
         setTokenExpiry(30 * 60);
+        markSession();
         return data;
       } catch {
         clearTokenExpiry();
@@ -81,8 +91,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Logout failed", error);
     } finally {
       clearTokenExpiry();
+      clearSession();
       queryClient.setQueryData(["session"], null);
-      queryClient.invalidateQueries({ queryKey: ["maps"] });
+      queryClient.removeQueries({ queryKey: ["maps"] });
       queryClient.removeQueries({ queryKey: ["locations"] });
       router.replace("/");
       setAuthBusy(false);
