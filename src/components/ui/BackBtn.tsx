@@ -1,19 +1,26 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 export default function BackButton() {
   const router = useRouter();
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <button
-      onClick={() => router.back()}
-      className="plp-btn cursor-pointer uppercase flex items-center gap-1.5 h-10 md:h-9 px-3 sm:px-4 font-bodoni font-bold text-[11px] md:text-[13px] capitalize tracking-tighter disabled:opacity-70 disabled:cursor-wait"
-      aria-label="Go back to previous page"
+      onClick={handleBack}
+      aria-label="Go back"
+      className="cursor-pointer flex items-center justify-center w-9 h-9 bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080] text-plp-navy"
     >
-      <ArrowLeft size={14} />
-      <span className="hidden sm:inline">Back</span>
+      <ChevronLeft size={18} />
     </button>
   );
 }

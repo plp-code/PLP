@@ -1,11 +1,16 @@
 import { MapPin, Lock, Unlock, ArrowRight, Loader2 } from "lucide-react";
 import { MapItem } from "@/types";
+import { ComingSoonRow, UpcomingLocation } from "./ComingSoonCard";
 
 interface Props {
   maps: MapItem[];
   onAction: (map: MapItem) => void;
   loadingId: number | null;
   isAuthenticated: boolean;
+  upcoming?: UpcomingLocation[];
+  joinedWaitlist?: boolean;
+  waitlistDisabled?: boolean;
+  onJoinWaitlist?: () => void;
 }
 
 export function MapListView({
@@ -13,6 +18,10 @@ export function MapListView({
   onAction,
   loadingId,
   isAuthenticated,
+  upcoming = [],
+  joinedWaitlist = false,
+  waitlistDisabled = false,
+  onJoinWaitlist = () => {},
 }: Props) {
   return (
     <div className="flex flex-col gap-3">
@@ -90,6 +99,17 @@ export function MapListView({
           </div>
         );
       })}
+
+      {upcoming.map((location) => (
+        <ComingSoonRow
+          key={`coming-soon-${location.name}`}
+          location={location}
+          isAuthenticated={isAuthenticated}
+          joined={joinedWaitlist}
+          disabled={waitlistDisabled}
+          onJoin={onJoinWaitlist}
+        />
+      ))}
     </div>
   );
 }

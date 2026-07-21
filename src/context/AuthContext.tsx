@@ -51,7 +51,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       clearTokenExpiry();
       clearSession();
       queryClient.setQueryData(["session"], null);
-      queryClient.removeQueries({ queryKey: ["maps"] });
+      // Don't wipe the public maps cache here: the query is keyed by
+      // isAuthenticated, so flipping to the guest view refetches on its own.
+      // Removing it can cancel an in-flight guest maps request mid-load.
     });
 
     return cleanup;

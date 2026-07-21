@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Hero from "@/components/features/main/Hero";
 import QuoteCarousel from "@/components/features/main/QuoteCarousel";
-import PhilosophyGrid from "@/components/features/main/PhilosophyGrid";
 import Manifesto from "@/components/features/main/Manifesto";
+import MapsSection from "@/components/features/main/MapsSection";
 import EmailCapture from "@/components/features/marketing/EmailCapture";
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function LandingPage() {
       <EmailCapture />
       <Manifesto />
       <QuoteCarousel />
-      <PhilosophyGrid />
+      <MapsSection />
     </div>
   );
 }

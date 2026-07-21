@@ -4,20 +4,24 @@ import { MapListResponse } from "@/types";
 import { useAuthUser } from "@/context/AuthContext";
 
 export function useMapDirectory() {
-  const { isAuthenticated, isLoading: authLoading } = useAuthUser();
+  const { isAuthenticated } = useAuthUser();
 
   const query = useQuery({
     queryKey: ["maps", { isAuthenticated }],
     queryFn: async ({ signal }) => {
-      const data = await api.get<MapListResponse>("/maps", { signal });
+      const data = await api.get<MapListResponse>("/maps", {
+        signal,
+        skipRefresh: true,
+      });
       return data.maps ?? [];
     },
-    enabled: !authLoading,
+
+    enabled: true,
   });
 
   return {
     maps: query.data ?? [],
-    loading: authLoading || query.isLoading,
+    loading: query.isLoading,
     error: query.error ? (query.error as Error).message : null,
     refetch: query.refetch,
   };

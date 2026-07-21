@@ -12,8 +12,6 @@ import {
   AlertCircle,
   X,
   CheckCircle2,
-  MapPin,
-  Clock,
   Signpost,
 } from "lucide-react";
 import { useMapDirectory } from "@/hooks/useMapDirectory";
@@ -21,16 +19,16 @@ import { useMapCheckout } from "@/hooks/useMapCheckout";
 import { useAuthUser } from "@/context/AuthContext";
 import { MapCardGrid } from "./MapCardGrid";
 import { MapListView } from "./MapListView";
+import { ComingSoonCard, UpcomingLocation } from "./ComingSoonCard";
 import { Snackbar } from "@/components/ui/Snackbar";
 import { Spinner } from "@/components/ui/Spinner";
 
-const upcomingLocations: { name: string; region: string }[] = [
+const upcomingLocations: UpcomingLocation[] = [
   { name: "Los Angeles", region: "California" },
   { name: "Manhattan", region: "New York" },
   { name: "Chicago", region: "Illinois" },
   { name: "Phoenix", region: "Arizona" },
   { name: "Boston", region: "Massachusetts" },
-  { name: "And more to come!", region: "Stay tuned" },
 ];
 
 export default function MapDirectory() {
@@ -38,6 +36,8 @@ export default function MapDirectory() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showGuestBanner, setShowGuestBanner] = useState(true);
+  const [joinedWaitlist, setJoinedWaitlist] = useState(false);
+  const [showWaitlistSuccess, setShowWaitlistSuccess] = useState(false);
   const hasHandledSuccess = useRef(false);
 
   const searchParams = useSearchParams();
@@ -68,6 +68,29 @@ export default function MapDirectory() {
     const lowerQuery = searchQuery.toLowerCase();
     return maps.filter((map) => map.name.toLowerCase().includes(lowerQuery));
   }, [maps, searchQuery]);
+
+  const filteredUpcoming = useMemo(() => {
+    if (!searchQuery) return upcomingLocations;
+
+    const lowerQuery = searchQuery.toLowerCase();
+    return upcomingLocations.filter(
+      (location) =>
+        location.name.toLowerCase().includes(lowerQuery) ||
+        location.region.toLowerCase().includes(lowerQuery),
+    );
+  }, [searchQuery]);
+
+  const handleJoinWaitlist = () => {
+    if (authLoading) return;
+
+    if (!isAuthenticated) {
+      router.push(`/login?returnTo=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
+    setJoinedWaitlist(true);
+    setShowWaitlistSuccess(true);
+  };
 
   if (loading) return <Spinner text="Loading maps..." />;
 
@@ -104,6 +127,18 @@ export default function MapDirectory() {
             : undefined
         }
         autoCloseMs={3000}
+      />
+      <Snackbar
+        show={showWaitlistSuccess}
+        onClose={() => setShowWaitlistSuccess(false)}
+        icon={CheckCircle2}
+        iconColor="text-green-600"
+        borderColor="border-green-200"
+        bgColor="bg-green-50"
+        textColor="text-green-900"
+        title="You're on the waitlist!"
+        subtitle="We'll email you as soon as new maps go live."
+        autoCloseMs={4000}
       />
       {!authLoading && !isAuthenticated && (
         <Snackbar
@@ -185,7 +220,7 @@ export default function MapDirectory() {
       <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
       <div aria-live="polite" className="mt-6">
-        {filteredMaps.length === 0 ? (
+        {filteredMaps.length === 0 && filteredUpcoming.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
             <div className="bg-plp-secondary-light border border-plp-secondary-dark p-5 rounded-2xl mb-5">
               <MapIcon size={32} className="text-plp-maroon" />
@@ -226,6 +261,16 @@ export default function MapDirectory() {
                   isAuthenticated={isAuthenticated}
                 />
               ))}
+              {filteredUpcoming.map((location) => (
+                <ComingSoonCard
+                  key={`coming-soon-${location.name}`}
+                  location={location}
+                  isAuthenticated={isAuthenticated}
+                  joined={joinedWaitlist}
+                  disabled={authLoading}
+                  onJoin={handleJoinWaitlist}
+                />
+              ))}
             </div>
             {viewMode === "list" && (
               <div className="hidden sm:block">
@@ -234,71 +279,16 @@ export default function MapDirectory() {
                   onAction={handleMapAction}
                   loadingId={checkoutLoadingId}
                   isAuthenticated={isAuthenticated}
+                  upcoming={filteredUpcoming}
+                  joinedWaitlist={joinedWaitlist}
+                  waitlistDisabled={authLoading}
+                  onJoinWaitlist={handleJoinWaitlist}
                 />
               </div>
             )}
           </div>
         )}
       </div>
-
-      <section className="relative mt-12 sm:mt-20 overflow-hidden rounded-2xl sm:rounded-[2rem] border border-plp-maroon/10 bg-gradient-to-br from-plp-maroon/[0.03] via-white to-amber-50/40 p-5 sm:p-12">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-plp-maroon/5 blur-2xl" />
-        <div className="pointer-events-none absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-amber-200/20 blur-3xl" />
-
-        <div className="relative">
-          <div className="inline-flex items-center gap-2 rounded-full bg-plp-maroon/10 px-3 py-1 sm:px-3.5 sm:py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wide text-plp-maroon">
-            More on the way
-          </div>
-
-          <h2 className="mt-3 sm:mt-4 text-xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
-            New maps coming soon
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm sm:text-base leading-relaxed text-gray-500 font-medium">
-            Here&apos;s a preview of what we&apos;re working on next — check
-            back regularly to see them go live.
-          </p>
-
-          <ul className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
-            {upcomingLocations.map((location, index) => (
-              <li
-                key={location.name}
-                className={`group items-center gap-3 rounded-xl sm:rounded-2xl border border-gray-200/70 bg-white/80 backdrop-blur-sm p-3 sm:p-4 shadow-sm transition-all duration-300 hover:border-plp-maroon/20 hover:shadow-md sm:flex ${
-                  index >= 3 ? "hidden sm:flex" : "flex"
-                }`}
-              >
-                {location.region === "Stay tuned" ? (
-                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-plp-maroon/10 text-plp-maroon transition-colors group-hover:bg-plp-maroon group-hover:text-white">
-                    <AlertCircle size={18} />
-                  </div>
-                ) : (
-                  <span className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-plp-maroon/10 text-plp-maroon transition-colors group-hover:bg-plp-maroon group-hover:text-white">
-                    <MapPin size={18} />
-                  </span>
-                )}
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-bold text-gray-900">
-                    {location.name}
-                  </p>
-                  <p className="truncate text-xs font-medium text-gray-400">
-                    {location.region}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          {upcomingLocations.length > 3 && (
-            <p className="mt-4 text-center text-sm font-semibold text-plp-maroon sm:hidden">
-              More to come!
-            </p>
-          )}
-
-          <p className="mt-6 sm:mt-8 inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-400">
-            <Clock size={14} className="text-plp-maroon/60 shrink-0" />
-            Locations and release dates are subject to change.
-          </p>
-        </div>
-      </section>
     </div>
   );
 }

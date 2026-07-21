@@ -33,11 +33,11 @@ export default function EmailCapture() {
 
           <div className="w-full lg:w-auto">
             <Link
-              href="/waitlist"
+              href="/login"
               className="group flex items-center justify-between gap-10 px-8 py-5 bg-plp-parchment text-plp-maroon hover:bg-plp-lime transition-all duration-500 rounded-none shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
             >
               <span className="font-seventies text-xl md:text-2xl uppercase tracking-tighter leading-none">
-                Join the Waitlist
+                Join Now
               </span>
               <ArrowRight
                 className="transition-transform duration-500 group-hover:translate-x-2"

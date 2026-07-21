@@ -16,13 +16,19 @@ import {
   Navigation,
   List as ListIcon,
   Map as MapIcon,
-  ChevronDown,
   Clock,
 } from "lucide-react";
 import { getTodayHours } from "@/lib/utils";
 import { StoreListView } from "./StoreListView";
 import { StoreDetailView } from "./StoreDetailView";
 import { Spinner } from "@/components/ui/Spinner";
+
+const PRICE_LEVELS: { level: number; label: string }[] = [
+  { level: 1, label: "Unpaid Internship — $0-20" },
+  { level: 2, label: "Entry-Level — $10-35" },
+  { level: 3, label: "Promoted — $15-45" },
+  { level: 4, label: "Corner Office — $18-70" },
+];
 
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 3958.8;
@@ -237,7 +243,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
               }
             }}
             disabled={isLocating}
-            className={`flex font-prata items-center gap-1.5 px-4 py-2 md:py-1.5 rounded-full text-xs font-bold border whitespace-nowrap transition-all shadow-sm active:scale-95 ${
+            className={`flex font-prata items-center gap-1.5 px-4 py-2 md:py-1.5 rounded-full text-xs font-bold border whitespace-nowrap shrink-0 transition-all shadow-sm active:scale-95 ${
               userLocation
                 ? "bg-blue-100 text-blue-800 border-blue-200"
                 : "bg-white/95 backdrop-blur-md text-gray-600 border-gray-200/50 hover:bg-gray-50"
@@ -263,7 +269,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
                 setActiveId(null);
               }
             }}
-            className={`flex font-prata items-center gap-1.5 px-4 py-2 md:py-1.5 rounded-full text-xs font-bold border whitespace-nowrap transition-all shadow-sm active:scale-95 ${
+            className={`flex font-prata items-center gap-1.5 px-4 py-2 md:py-1.5 rounded-full text-xs font-bold border whitespace-nowrap shrink-0 transition-all shadow-sm active:scale-95 ${
               isOpenNow
                 ? "bg-emerald-100 text-emerald-800 border-emerald-200"
                 : "bg-white/95 backdrop-blur-md text-gray-600 border-gray-200/50 hover:bg-gray-50"
@@ -273,28 +279,35 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
             Open Now
           </button>
 
-          <div className="relative flex items-center shadow-sm rounded-full">
-            <select
-              value={activePrice || ""}
-              onChange={(e) => {
-                setActivePrice(e.target.value || null);
-                setIsDrawerOpen(true);
-              }}
-              className={`appearance-none font-prata pl-4 pr-8 py-2 md:py-1.5 rounded-full text-xs font-bold border transition-all outline-none cursor-pointer ${
-                activePrice
-                  ? "bg-gray-900 text-white border-gray-900"
-                  : "bg-white/95 backdrop-blur-md text-gray-600 border-gray-200/50 hover:bg-gray-50"
-              }`}
-            >
-              <option value="">Price: All</option>
-              <option value="1">$ (Cheap)</option>
-              <option value="2">$$ (Moderate)</option>
-              <option value="3">$$$ (Expensive)</option>
-            </select>
-            <ChevronDown
-              size={12}
-              className={`absolute right-3 pointer-events-none ${activePrice ? "text-white" : "text-gray-500"}`}
-            />
+          <div className="flex shrink-0 items-center gap-0.5 rounded-full border border-gray-200/50 bg-white/95 p-0.5 shadow-sm backdrop-blur-md">
+            {PRICE_LEVELS.map(({ level, label }) => {
+              const value = String(level);
+              const active = activePrice === value;
+              return (
+                <button
+                  key={level}
+                  type="button"
+                  title={label}
+                  aria-label={label}
+                  aria-pressed={active}
+                  onClick={() => {
+                    setActivePrice(active ? null : value);
+                    setIsDrawerOpen(true);
+                    if (view === "detail") {
+                      setView("list");
+                      setActiveId(null);
+                    }
+                  }}
+                  className={`rounded-full px-2.5 py-1.5 font-prata text-xs font-bold transition-all active:scale-95 md:py-1 ${
+                    active
+                      ? "bg-gray-900 text-white shadow-sm"
+                      : "text-gray-500 hover:text-gray-900"
+                  }`}
+                >
+                  {"$".repeat(level)}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
