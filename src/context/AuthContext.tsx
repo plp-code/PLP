@@ -8,7 +8,7 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   api,
@@ -31,6 +31,10 @@ interface AuthContextType {
   checkSession: () => Promise<void>;
 }
 
+function isProtectedRoute(pathname: string): boolean {
+  return /^\/maps\/[^/]+/.test(pathname);
+}
+
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
@@ -43,6 +47,7 @@ const AuthContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
   const [isAuthBusy, setAuthBusy] = useState(false);
 
@@ -51,9 +56,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       clearTokenExpiry();
       clearSession();
       queryClient.setQueryData(["session"], null);
-      // Don't wipe the public maps cache here: the query is keyed by
-      // isAuthenticated, so flipping to the guest view refetches on its own.
-      // Removing it can cancel an in-flight guest maps request mid-load.
     });
 
     return cleanup;
@@ -63,8 +65,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryKey: ["session"],
     queryFn: async ({ signal }) => {
       try {
-        // Guests (no prior session) skip the refresh-on-401 round trip; returning
-        // users with an expired access token still get a refresh attempt.
         const data = await api.get<User>("/users/me", {
           signal,
           skipRefresh: !hadSession(),
@@ -87,6 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     setAuthBusy(true);
+    const wasProtected = isProtectedRoute(pathname);
     try {
       await api.post("/auth/logout");
     } catch (error) {
@@ -94,13 +95,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       clearTokenExpiry();
       clearSession();
-      queryClient.setQueryData(["session"], null);
       queryClient.removeQueries({ queryKey: ["maps"] });
       queryClient.removeQueries({ queryKey: ["locations"] });
-      router.replace("/");
-      setAuthBusy(false);
+      if (wasProtected) router.replace("/");
+      queryClient.setQueryData(["session"], null);
+      setTimeout(() => setAuthBusy(false), 0);
     }
-  }, [queryClient, router]);
+  }, [queryClient, router, pathname]);
 
   return (
     <AuthContext.Provider

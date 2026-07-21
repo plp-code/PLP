@@ -56,7 +56,7 @@ export default function MapsSection() {
   return (
     <section
       id="maps"
-      className="relative w-full overflow-hidden bg-plp-parchment text-plp-maroon px-6 py-20 md:px-12 md:py-28"
+      className="relative w-full overflow-hidden bg-plp-parchment text-plp-maroon py-20 md:py-28"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_25%,rgba(0,0,0,0.07))] pointer-events-none z-0" />
       <div
@@ -79,22 +79,16 @@ export default function MapsSection() {
 
       <Container className="relative z-10">
         <header className="max-w-3xl mb-14 md:mb-20">
-          <div className="flex items-center gap-3 mb-5 md:mb-6">
+          <div className="flex items-center gap-3 md:gap-4 mb-6">
             <Compass
-              className="w-5 h-5 md:w-6 md:h-6 shrink-0 text-plp-olive"
+              className="w-6 h-6 md:w-10 md:h-10 shrink-0 text-plp-olive"
               strokeWidth={1.5}
             />
-            <span className="inline-block h-px w-8 bg-plp-maroon/40" />
-            <p className="font-mono uppercase tracking-[0.3em] text-xs text-plp-navy/50">
-              [kicker]
-            </p>
-          </div>
-          <Display className="text-4xl md:text-7xl lowercase tracking-tight leading-[0.9] text-plp-maroon">
-            <span className="relative inline-block">
+            <Display className="text-4xl md:text-7xl lowercase text-plp-maroon tracking-tight leading-none">
               [what the map is]
-              <span className="absolute left-0 h-3 md:h-4 w-full mix-blend-multiply -rotate-1 -z-10" />
-            </span>
-          </Display>
+            </Display>
+          </div>
+
           <Subtitle className="font-bodoni italic text-lg md:text-3xl text-plp-clay leading-snug mt-6 md:mt-8">
             [a single line on the purpose of the map]
           </Subtitle>
@@ -290,7 +284,9 @@ export default function MapsSection() {
                             : "w-6 h-6 text-plp-maroon/50"
                         }`}
                         strokeWidth={1.5}
-                        fill={isActive ? "var(--color-plp-lime)" : "transparent"}
+                        fill={
+                          isActive ? "var(--color-plp-lime)" : "transparent"
+                        }
                       />
                     </div>
                   );

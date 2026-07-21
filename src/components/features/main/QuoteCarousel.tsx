@@ -71,7 +71,7 @@ export default function QuoteCarousel({
                 }`}
               >
                 <blockquote className="font-handwriting text-lg md:text-2xl lg:text-3xl leading-relaxed tracking-tight mb-6 text-balance">
-                  "{quote}"
+                  &ldquo;{quote}&rdquo;
                 </blockquote>
 
                 <cite className="flex not-italic flex-col flex-wrap gap-2 justify-center">

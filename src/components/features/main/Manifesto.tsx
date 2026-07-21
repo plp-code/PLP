@@ -43,7 +43,7 @@ export default function Manifesto() {
   return (
     <section
       id="manifesto"
-      className="relative w-full overflow-hidden bg-plp-parchment px-6 py-20 md:px-12 md:py-28"
+      className="relative w-full overflow-hidden bg-plp-parchment py-20 md:py-28"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.08))] pointer-events-none z-0" />
       <div

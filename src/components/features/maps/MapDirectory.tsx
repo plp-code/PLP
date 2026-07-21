@@ -84,7 +84,9 @@ export default function MapDirectory() {
     if (authLoading) return;
 
     if (!isAuthenticated) {
-      router.push(`/login?returnTo=${encodeURIComponent(pathname)}`);
+      // replace (not push) so login doesn't leave a duplicate of this page in
+      // history — otherwise Back after login is a no-op.
+      router.replace(`/login?returnTo=${encodeURIComponent(pathname)}`);
       return;
     }
 
