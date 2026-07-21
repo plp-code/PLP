@@ -56,7 +56,7 @@ export default function MapsSection() {
   return (
     <section
       id="maps"
-      className="relative w-full overflow-hidden bg-plp-parchment text-plp-maroon py-20 md:py-28"
+      className="relative w-full overflow-hidden bg-plp-parchment text-plp-maroon py-14 md:py-20"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_25%,rgba(0,0,0,0.07))] pointer-events-none z-0" />
       <div
@@ -78,8 +78,8 @@ export default function MapsSection() {
       />
 
       <Container className="relative z-10">
-        <header className="max-w-3xl mb-14 md:mb-20">
-          <div className="flex items-center gap-3 md:gap-4 mb-6">
+        <header className="max-w-3xl mb-10 md:mb-14">
+          <div className="flex items-center gap-3 md:gap-4 mb-5">
             <Compass
               className="w-6 h-6 md:w-10 md:h-10 shrink-0 text-plp-olive"
               strokeWidth={1.5}
@@ -89,18 +89,18 @@ export default function MapsSection() {
             </Display>
           </div>
 
-          <Subtitle className="font-bodoni italic text-lg md:text-3xl text-plp-clay leading-snug mt-6 md:mt-8">
+          <Subtitle className="font-bodoni italic text-lg md:text-3xl text-plp-clay leading-snug mt-4 md:mt-6">
             [a single line on the purpose of the map]
           </Subtitle>
         </header>
 
         <div
-          className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 md:gap-16 items-start"
+          className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 md:gap-12 items-start"
           onMouseEnter={() => setIsAutoPlaying(false)}
           onMouseLeave={() => setIsAutoPlaying(true)}
         >
           <div>
-            <div className="border-l-2 border-plp-maroon pl-5 md:pl-6 mb-8 md:mb-10">
+            <div className="border-l-2 border-plp-maroon pl-5 md:pl-6 mb-6 md:mb-8">
               <p className="font-mono uppercase tracking-[0.3em] text-xs text-plp-navy/50 mb-4">
                 [the purpose]
               </p>
@@ -109,7 +109,7 @@ export default function MapsSection() {
               </p>
             </div>
 
-            <p className="font-prata not-italic text-sm md:text-base text-plp-olive tracking-wide uppercase mb-6 md:mb-8">
+            <p className="font-prata not-italic text-sm md:text-base text-plp-olive tracking-wide uppercase mb-5 md:mb-6">
               [how we build it]
             </p>
 
@@ -131,7 +131,7 @@ export default function MapsSection() {
                       }`}
                     />
                     <div
-                      className={`flex items-center gap-3 md:gap-4 py-5 transition-all duration-300 ${
+                      className={`flex items-center gap-3 md:gap-4 py-4 transition-all duration-300 ${
                         isActive
                           ? "pl-4 bg-plp-lime/10"
                           : "pl-0 opacity-45 hover:opacity-100 hover:pl-2"
@@ -192,10 +192,8 @@ export default function MapsSection() {
           </div>
 
           <div className="lg:sticky lg:top-24">
-            {/* Framed cartographic "print" */}
             <div className="relative bg-plp-parchment border border-plp-maroon/25 p-2 md:p-2.5 shadow-[0_30px_70px_rgba(0,0,0,0.16)]">
               <div className="relative aspect-[16/11] w-full border border-plp-maroon/30 bg-plp-parchment overflow-hidden">
-                {/* fine grid */}
                 <div
                   className="absolute inset-0 opacity-[0.16]"
                   style={{
@@ -206,11 +204,10 @@ export default function MapsSection() {
                     backgroundSize: "40px 40px",
                   }}
                 />
-                {/* subtle terrain wash */}
+
                 <div className="absolute -top-1/4 -right-1/4 h-2/3 w-2/3 rounded-full bg-plp-lime/10 blur-3xl" />
                 <div className="absolute -bottom-1/4 -left-1/4 h-2/3 w-2/3 rounded-full bg-plp-olive/10 blur-3xl" />
 
-                {/* edge ticks */}
                 <div className="absolute inset-x-6 top-1.5 flex justify-between">
                   {EDGE_TICKS.map((_, i) => (
                     <span
@@ -228,7 +225,6 @@ export default function MapsSection() {
                   ))}
                 </div>
 
-                {/* route connecting the steps */}
                 <svg
                   className="absolute inset-0 w-full h-full"
                   viewBox="0 0 100 68.75"
@@ -292,7 +288,6 @@ export default function MapsSection() {
                   );
                 })}
 
-                {/* title plate */}
                 <div className="absolute top-3 left-3 flex items-center gap-2 bg-plp-parchment/80 backdrop-blur-sm border border-plp-maroon/20 px-2.5 py-1.5">
                   <Compass
                     className="w-3.5 h-3.5 text-plp-olive"
@@ -303,14 +298,12 @@ export default function MapsSection() {
                   </span>
                 </div>
 
-                {/* live coordinate readout */}
                 <span className="absolute bottom-3 right-3 font-mono text-[10px] tracking-widest text-plp-maroon/50 transition-opacity duration-500">
                   {active.coord.lat} · {active.coord.long}
                 </span>
               </div>
             </div>
 
-            {/* legend caption */}
             <div className="mt-3 flex items-center justify-between gap-4 px-1">
               <div className="flex items-center gap-2">
                 <MapPin
@@ -329,7 +322,7 @@ export default function MapsSection() {
           </div>
         </div>
 
-        <div className="mt-14 md:mt-20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-plp-maroon/20 pt-10">
+        <div className="mt-10 md:mt-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-plp-maroon/20 pt-8">
           <p className="text-plp-maroon/80 leading-relaxed text-lg md:text-2xl font-light max-w-xl font-bodoni italic">
             [a closing line inviting people onto the map]
           </p>

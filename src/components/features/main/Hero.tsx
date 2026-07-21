@@ -9,13 +9,13 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-fit md:min-h-[calc(100dvh-94px)] w-full flex-col items-center justify-start md:justify-center overflow-hidden bg-plp-parchment px-6 pb-16 md:pb-20"
+      className="relative flex min-h-fit md:min-h-[calc(100dvh-94px)] w-full flex-col items-center justify-start md:justify-center overflow-visible bg-plp-parchment px-6 pt-6 pb-16 md:pt-0 md:pb-20"
     >
       <div className="relative z-10 flex w-full max-w-[95vw] xl:max-w-7xl flex-col items-center transition-all duration-700">
         <div className="w-full text-center">
-          <Display className="inline-block capitalize text-balance whitespace-normal md:whitespace-nowrap text-[15vw] md:text-[8.25vw] xl:text-[105px] leading-[0.9] md:leading-[0.85] tracking-tighter mb-4 text-plp-maroon">
-            the preloved professional
-          </Display>
+         <Display className="inline-block capitalize text-balance whitespace-normal md:whitespace-nowrap text-[15vw] md:text-[8.25vw] xl:text-[105px] leading-[1.05] md:leading-[1] tracking-tighter mb-4 text-plp-maroon">
+  the preloved professional
+</Display>
         </div>
 
         <div className="w-full text-center mb-6">

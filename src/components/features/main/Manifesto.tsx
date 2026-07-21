@@ -61,12 +61,6 @@ export default function Manifesto() {
 
       <Container className="relative z-10">
         <header className="max-w-3xl mb-14 md:mb-20">
-          <div className="flex items-center gap-3 mb-4 md:mb-5">
-            <span className="inline-block h-px w-8 bg-plp-maroon/40" />
-            <p className="font-mono uppercase tracking-[0.3em] text-xs text-plp-navy/50">
-              [kicker]
-            </p>
-          </div>
           <Display className="text-5xl md:text-8xl lowercase tracking-tight leading-[0.85] text-plp-maroon">
             <span className="relative inline-block">
               [who we are]
