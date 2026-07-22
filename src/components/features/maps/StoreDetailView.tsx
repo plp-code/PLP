@@ -13,11 +13,28 @@ import { AddReviewModal } from "./AddReviewModal";
 import { StoreStatusBadge } from "./StoreStatusBadge";
 import { StoreHours } from "./StoreHours";
 import { StoreReviews } from "./StoreReviews";
+import type { Location, LocationPin } from "@/types";
+import type { UserLocation } from "@/hooks/useGeolocation";
 
-export function StoreDetailView({ store, onBack, distance, userLocation }: any) {
-  const timeData = getTodayHours(store.hours);
-  const week = getWeekHours(store.hours);
-  const priceLevel = formatPriceLevel(store.price_level);
+interface StoreDetailViewProps {
+  store: Location | LocationPin;
+  onBack: () => void;
+  distance: number | null;
+  userLocation: UserLocation | null;
+}
+
+export function StoreDetailView({
+  store,
+  onBack,
+  distance,
+  userLocation,
+}: StoreDetailViewProps) {
+  // `store` may be a lightweight pin (from a map marker) that lacks the
+  // full detail fields; narrow to the full Location when they're present.
+  const details = "hours" in store ? store : null;
+  const timeData = getTodayHours(details?.hours);
+  const week = getWeekHours(details?.hours);
+  const priceLevel = formatPriceLevel(details?.price_level);
   const gmapsUrl = buildDirectionsUrl(store, userLocation);
 
   const {
@@ -95,13 +112,13 @@ export function StoreDetailView({ store, onBack, distance, userLocation }: any) 
 
         <StoreHours timeData={timeData} week={week} />
 
-        {store.description && (
+        {details?.description && (
           <div className="flex flex-col">
             <span className="font-bodoni text-[12px] font-semibold uppercase tracking-[0.15em] text-gray-400 block mb-2.5">
               About
             </span>
             <p className="text-gray-600 font-prata text-[15px] md:text-[16px] leading-[1.8] whitespace-pre-wrap">
-              {store.description}
+              {details.description}
             </p>
           </div>
         )}

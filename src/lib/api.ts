@@ -1,3 +1,5 @@
+import type { ApiValidationError } from "@/types/api";
+
 interface FetchOptions extends RequestInit {
   _retry?: boolean;
   skipRefresh?: boolean;
@@ -122,14 +124,16 @@ async function fetcher<T>(
   }
 
   if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
+    const err: { detail?: string | ApiValidationError[] } = await response
+      .json()
+      .catch(() => ({}));
 
     let message: string;
     if (typeof err.detail === "string") {
       message = err.detail;
     } else if (Array.isArray(err.detail)) {
       message = err.detail
-        .map((e: any) => {
+        .map((e) => {
           const field = e.loc?.slice(-1)[0]; // "password"
           return field ? `${field}: ${e.msg}` : e.msg;
         })
@@ -147,23 +151,23 @@ async function fetcher<T>(
 }
 
 export const api = {
-  get: <T = any>(url: string, options?: FetchOptions) =>
+  get: <T = unknown>(url: string, options?: FetchOptions) =>
     fetcher<T>(url, { ...options, method: "GET" }),
 
-  post: <T = any>(url: string, body?: any, options?: FetchOptions) =>
+  post: <T = unknown>(url: string, body?: unknown, options?: FetchOptions) =>
     fetcher<T>(url, {
       ...options,
       method: "POST",
       body: body ? JSON.stringify(body) : undefined,
     }),
 
-  put: <T = any>(url: string, body?: any, options?: FetchOptions) =>
+  put: <T = unknown>(url: string, body?: unknown, options?: FetchOptions) =>
     fetcher<T>(url, {
       ...options,
       method: "PUT",
       body: body ? JSON.stringify(body) : undefined,
     }),
 
-  delete: <T = any>(url: string, options?: FetchOptions) =>
+  delete: <T = unknown>(url: string, options?: FetchOptions) =>
     fetcher<T>(url, { ...options, method: "DELETE" }),
 };

@@ -134,7 +134,7 @@ export function buildDirectionsUrl(
     name?: string;
     latitude: number;
     longitude: number;
-    google_place_id?: string;
+    google_place_id?: string | null;
   },
   userLocation: { lat: number; lng: number } | null = null,
 ) {

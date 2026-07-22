@@ -10,23 +10,16 @@ import {
 import { getDistance } from "@/lib/utils";
 import { Location, LocationPin } from "@/types";
 import { useMapData } from "@/hooks/useMapData";
-import { useGeolocation, type UserLocation } from "@/hooks/useGeolocation";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import { useStoreFilters } from "@/hooks/useStoreFilters";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { StoreListView } from "./StoreListView";
 import { StoreDetailView } from "./StoreDetailView";
 import { MapFilterBar } from "./MapFilterBar";
 import { Spinner } from "@/components/ui/Spinner";
+import type { MapComponentProps } from "./MapComponent";
 
 type MapStore = Location | LocationPin;
-
-interface MapViewProps {
-  stores: LocationPin[];
-  activeId: number | null;
-  setActiveId: (id: number) => void;
-  activeStore: MapStore | null;
-  userLocation: UserLocation | null;
-}
 
 export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   const { pins, stores, loading, loadMore, hasMore, loadingMore } =
@@ -50,11 +43,11 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   const [view, setView] = useState<"list" | "detail">("list");
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
   const [MapComponent, setMapComponent] =
-    useState<ComponentType<MapViewProps> | null>(null);
+    useState<ComponentType<MapComponentProps> | null>(null);
 
   useEffect(() => {
     import("./MapComponent").then((mod) =>
-      setMapComponent(() => mod.default as ComponentType<MapViewProps>),
+      setMapComponent(() => mod.default as ComponentType<MapComponentProps>),
     );
   }, []);
 
