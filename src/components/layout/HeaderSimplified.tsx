@@ -13,7 +13,7 @@ export default function HeaderSimplified() {
   const isMapsPage = pathname === "/maps";
 
   return (
-    <header className="fixed top-0 left-0 w-full z-[100] flex flex-col bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] border-b-2 border-black">
+    <header className="fixed top-0 left-0 w-full z-[100] flex flex-col bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] border-b-2 border-plp-navy">
       <div className="relative flex items-center justify-between h-14 bg-plp-maroon p-2 mx-1 my-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
         <div className="z-10 flex items-center shrink-0">
           <BackButton />

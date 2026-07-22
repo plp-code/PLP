@@ -3,7 +3,7 @@ import Hero from "@/components/features/main/Hero";
 import QuoteCarousel from "@/components/features/main/QuoteCarousel";
 import Manifesto from "@/components/features/main/Manifesto";
 import MapsSection from "@/components/features/main/MapsSection";
-import EmailCapture from "@/components/features/marketing/EmailCapture";
+import JoinBanner from "@/components/features/marketing/JoinBanner";
 
 export const metadata: Metadata = {
   title: "The Preloved Professional",
@@ -21,7 +21,7 @@ export default function LandingPage() {
   return (
     <div>
       <Hero />
-      <EmailCapture />
+      <JoinBanner />
       <Manifesto />
       <QuoteCarousel />
       <MapsSection />

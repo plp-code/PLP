@@ -1,84 +1,42 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutGrid,
-  List,
-  Search,
   Map as MapIcon,
   Shield,
   AlertCircle,
-  X,
   CheckCircle2,
-  Signpost,
 } from "lucide-react";
 import { useMapDirectory } from "@/hooks/useMapDirectory";
 import { useMapCheckout } from "@/hooks/useMapCheckout";
+import { useMapSearch } from "@/hooks/useMapSearch";
+import { useCheckoutSuccessToast } from "@/hooks/useCheckoutSuccessToast";
 import { useAuthUser } from "@/context/AuthContext";
 import { MapCardGrid } from "./MapCardGrid";
 import { MapListView } from "./MapListView";
-import { ComingSoonCard, UpcomingLocation } from "./ComingSoonCard";
+import { ComingSoonCard } from "./ComingSoonCard";
+import { DirectoryToolbar } from "./DirectoryToolbar";
 import { Snackbar } from "@/components/ui/Snackbar";
 import { Spinner } from "@/components/ui/Spinner";
 
-const upcomingLocations: UpcomingLocation[] = [
-  { name: "Los Angeles", region: "California" },
-  { name: "Manhattan", region: "New York" },
-  { name: "Chicago", region: "Illinois" },
-  { name: "Phoenix", region: "Arizona" },
-  { name: "Boston", region: "Massachusetts" },
-];
-
 export default function MapDirectory() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showGuestBanner, setShowGuestBanner] = useState(true);
   const [joinedWaitlist, setJoinedWaitlist] = useState(false);
   const [showWaitlistSuccess, setShowWaitlistSuccess] = useState(false);
-  const hasHandledSuccess = useRef(false);
 
-  const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const isSuccess = searchParams.get("success") === "true";
 
   const { isAuthenticated, isLoading: authLoading } = useAuthUser();
   const { maps, loading, error } = useMapDirectory();
   const { handleMapAction, checkoutLoadingId } = useMapCheckout();
-  const queryClient = useQueryClient();
 
-  const purchasedMapName = searchParams.get("map");
-
-  useEffect(() => {
-    if (isSuccess && !hasHandledSuccess.current) {
-      hasHandledSuccess.current = true;
-      queryClient.invalidateQueries({ queryKey: ["maps"] });
-      setShowSuccessMessage(true);
-      router.replace(pathname, { scroll: false });
-    }
-  }, [isSuccess, queryClient, router, pathname]);
-
-  const filteredMaps = useMemo(() => {
-    if (!maps) return [];
-    if (!searchQuery) return maps;
-
-    const lowerQuery = searchQuery.toLowerCase();
-    return maps.filter((map) => map.name.toLowerCase().includes(lowerQuery));
-  }, [maps, searchQuery]);
-
-  const filteredUpcoming = useMemo(() => {
-    if (!searchQuery) return upcomingLocations;
-
-    const lowerQuery = searchQuery.toLowerCase();
-    return upcomingLocations.filter(
-      (location) =>
-        location.name.toLowerCase().includes(lowerQuery) ||
-        location.region.toLowerCase().includes(lowerQuery),
-    );
-  }, [searchQuery]);
+  const { searchQuery, setSearchQuery, filteredMaps, filteredUpcoming } =
+    useMapSearch(maps);
+  const { showSuccessMessage, setShowSuccessMessage, purchasedMapName } =
+    useCheckoutSuccessToast();
 
   const handleJoinWaitlist = () => {
     if (authLoading) return;
@@ -157,67 +115,13 @@ export default function MapDirectory() {
         />
       )}
 
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5">
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex h-9 w-9 items-center justify-center rounded-xl bg-plp-maroon/10">
-            <Signpost size={18} className="text-plp-maroon" />
-          </div>
-          <p className="text-sm sm:text-base text-gray-500 font-medium">
-            Explore{" "}
-            <span className="text-gray-900 font-bold">{maps?.length || 0}</span>{" "}
-            curated location and route
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2.5">
-          <div className="relative flex-1 sm:w-72 group">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors group-focus-within:text-plp-maroon text-gray-400">
-              <Search size={16} />
-            </div>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search maps..."
-              className="block w-full pl-9 pr-9 py-2 sm:py-2 font-bodoni tracking-wide bg-gray-50 border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-plp-maroon/15 focus:border-plp-maroon/30 focus:bg-white shadow-sm transition-all duration-200"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute inset-y-0 cursor-pointer right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label="Clear search"
-              >
-                <X size={14} />
-              </button>
-            )}
-          </div>
-
-          <div className="hidden sm:flex items-center bg-gray-50 p-1 rounded-xl border border-gray-200">
-            <button
-              onClick={() => setViewMode("list")}
-              aria-label="List View"
-              className={`p-1.5 rounded-lg transition-all duration-200 flex items-center justify-center ${
-                viewMode === "list"
-                  ? "bg-white text-plp-maroon shadow-sm ring-1 ring-gray-200"
-                  : "text-gray-400 hover:text-gray-600"
-              }`}
-            >
-              <List size={16} />
-            </button>
-            <button
-              onClick={() => setViewMode("grid")}
-              aria-label="Grid View"
-              className={`p-1.5 rounded-lg transition-all duration-200 flex items-center justify-center ${
-                viewMode === "grid"
-                  ? "bg-white text-plp-maroon shadow-sm ring-1 ring-gray-200"
-                  : "text-gray-400 hover:text-gray-600"
-              }`}
-            >
-              <LayoutGrid size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
+      <DirectoryToolbar
+        totalCount={maps.length}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+      />
 
       <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 

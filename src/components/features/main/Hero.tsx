@@ -13,9 +13,9 @@ export default function Hero() {
     >
       <div className="relative z-10 flex w-full max-w-[95vw] xl:max-w-7xl flex-col items-center transition-all duration-700">
         <div className="w-full text-center">
-         <Display className="inline-block capitalize text-balance whitespace-normal md:whitespace-nowrap text-[15vw] md:text-[8.25vw] xl:text-[105px] leading-[1.05] md:leading-[1] tracking-tighter mb-4 text-plp-maroon">
-  the preloved professional
-</Display>
+          <Display className="inline-block capitalize text-balance whitespace-normal md:whitespace-nowrap text-[15vw] md:text-[8.25vw] xl:text-[105px] leading-[1.05] md:leading-[1] tracking-tighter mb-4 text-plp-maroon">
+            the preloved professional
+          </Display>
         </div>
 
         <div className="w-full text-center mb-6">

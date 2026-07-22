@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Label } from "../../ui/Typography";
 import { ArrowRight } from "lucide-react";
 
-export default function EmailCapture() {
+export default function JoinBanner() {
   return (
     <Banner
       className="relative overflow-hidden bg-plp-maroon text-plp-parchment"
