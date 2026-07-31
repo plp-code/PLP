@@ -19,13 +19,20 @@ export default function Hero() {
         </div>
 
         <div className="w-full text-center mb-6">
-          <Label className="text-xs md:text-[2vw] lg:text-[1.5vw] xl:text-[19px] tracking-widest font-black opacity-90 uppercase text-plp-maroon">
+          <Label className="font-[word-spacing:0.125rem] md:[word-spacing:0.2rem] whitespace-normal md:whitespace-nowrap text-[3.75vw] md:text-[2.0625vw] xl:text-[26.25px] leading-[1.05] md:leading-[1] tracking-wide mb-4 text-plp-maroon">
             Power never goes out of style.
           </Label>
         </div>
 
+        <div className="w-full text-center mb-6">
+          <p className="font-cormorant text-[3vw] md:text-[1.65vw] xl:text-[21px] leading-[1.2] tracking-normal opacity-90 text-plp-maroon">
+            A women&apos;s networking company. Secondhand is the mechanism.
+            Community is the point.
+          </p>
+        </div>
+
         <div className="w-full">
-          <div className="relative border-2 border-plp-navy bg-white overflow-hidden">
+          <div className="relative border rounded-lg border-plp-navy bg-white overflow-hidden">
             <div className="relative w-full aspect-4/3 md:hidden bg-stone-100">
               <Image
                 src={heroImageMobile}

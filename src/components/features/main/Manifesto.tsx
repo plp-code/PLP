@@ -45,6 +45,7 @@ export default function Manifesto() {
       id="manifesto"
       className="relative w-full overflow-hidden bg-plp-parchment py-20 md:py-28"
     >
+      subject, agenda, deliverables, next step
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.08))] pointer-events-none z-0" />
       <div
         className="absolute inset-0 opacity-[0.05] mix-blend-multiply pointer-events-none"

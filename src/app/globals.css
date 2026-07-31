@@ -1,11 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100..900&family=Almendra:wght@400;700&family=Josefin+Slab:wght@100..700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Alike+Angular&family=Architects+Daughter&family=Rock+Salt&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Prata&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Advent+Pro:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Almendra:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@100..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Alike+Angular&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Prata&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap');
 
-/* 2. TAILWIND CORE */
+/* TAILWIND CORE  */
 @import "tailwindcss";
 
-/* 3. CUSTOM ASSETS */
+/*  CUSTOM ASSETS */
 @font-face {
   font-family: "seventies";
   src: url("../assets/fonts/seventies.ttf") format("truetype");
@@ -22,7 +29,7 @@
   font-display: swap;
 }
 
-/* 4. THEME CONFIGURATION */
+/* THEME CONFIGURATION */
 @theme {
   /* Fonts */
   --font-plp: "PLP", sans-serif;
@@ -33,6 +40,7 @@
   --font-handwriting: "Rock Salt", cursive;
   --font-architect: "Architects Daughter", cursive;
   --font-alike: "Alike Angular", serif;
+  --font-cormorant: "Cormorant", serif;
 
   /* Colors — palette */
   --color-plp-parchment: #f4f0e8;
@@ -126,7 +134,7 @@
 
   p {
     line-height: 1.6;
-    font-family: var(--font-prata);
+    /* font-family: var(--font-prata); */
   }
 
   .subtitle,

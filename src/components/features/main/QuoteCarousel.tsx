@@ -48,7 +48,7 @@ export default function QuoteCarousel({
       contentClassName="max-w-6xl px-4 md:px-10"
     >
       <div
-        className="relative pt-12 pb-8 md:pt-16 md:pb-10 group"
+        className="relative pt-10 pb-8 md:pt-12 md:pb-10 group"
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}
       >
@@ -91,7 +91,7 @@ export default function QuoteCarousel({
           </button>
         </div>
 
-        <div className="flex gap-2 mt-6 justify-center relative z-10">
+        <div className="flex gap-2 mt-4 justify-center relative z-10">
           {Object.entries(quotes).map((_, i) => (
             <button
               key={i}

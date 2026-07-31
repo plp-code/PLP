@@ -16,18 +16,14 @@ export default function JoinBanner() {
       <div className="relative z-10">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
           <div className="flex flex-col items-start gap-8">
-            <p className="font-bodoni text-xl md:text-3xl leading-[1.15] tracking-tight max-w-lg">
-              A community-led platform where <br className="hidden md:block" />
-              career development, professional presence,{" "}
-              <br className="hidden md:block" />
-              and preloved culture intersect.
-            </p>
+            {/* <p className="font-bodoni text-xl md:text-3xl leading-[1.15] tracking-tight max-w-2xl">
+              A women&apos;s networking company. Secondhand is the mechanism.
+             <br/>
+               Community is the point. 
+            </p> */}
 
             <div className="flex flex-col gap-2">
               <div className="h-px w-10 bg-plp-lime/50 mb-1" />
-              <Label className="tracking-[0.2em] text-sm uppercase opacity-80">
-                We&apos;re changing what it means to show-up at work.
-              </Label>
             </div>
           </div>
 
