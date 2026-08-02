@@ -56,10 +56,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       clearTokenExpiry();
       clearSession();
       queryClient.setQueryData(["session"], null);
+      queryClient.removeQueries({ queryKey: ["maps"] });
+      queryClient.removeQueries({ queryKey: ["locations"] });
+
+      if (isProtectedRoute(pathname)) {
+        router.replace("/login?session=expired");
+      }
     });
 
     return cleanup;
-  }, [queryClient]);
+  }, [queryClient, router, pathname]);
 
   const { data: user = null, isLoading } = useQuery<User | null>({
     queryKey: ["session"],
@@ -97,8 +103,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       clearSession();
       queryClient.removeQueries({ queryKey: ["maps"] });
       queryClient.removeQueries({ queryKey: ["locations"] });
-      if (wasProtected) router.replace("/");
       queryClient.setQueryData(["session"], null);
+
+      if (wasProtected) {
+        router.replace("/");
+      }
       setTimeout(() => setAuthBusy(false), 0);
     }
   }, [queryClient, router, pathname]);

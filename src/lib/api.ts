@@ -5,13 +5,12 @@ interface FetchOptions extends RequestInit {
   skipRefresh?: boolean;
 }
 
-const ACCESS_TOKEN_LIFETIME = 30 * 60;
-const REFRESH_BUFFER = 2 * 60;
 const TOKEN_EXPIRY_KEY = "token_expires_at";
 const SESSION_HINT_KEY = "had_session";
 
 export function markSession() {
-  if (typeof window !== "undefined") localStorage.setItem(SESSION_HINT_KEY, "1");
+  if (typeof window !== "undefined")
+    localStorage.setItem(SESSION_HINT_KEY, "1");
 }
 
 export function clearSession() {
@@ -26,7 +25,6 @@ export function hadSession(): boolean {
 }
 
 let refreshPromise: Promise<boolean> | null = null;
-let refreshTimer: ReturnType<typeof setTimeout> | null = null;
 let authExpiredHandler: (() => void) | null = null;
 
 export function onAuthExpired(handler: () => void) {
@@ -38,37 +36,13 @@ export function onAuthExpired(handler: () => void) {
 
 export function setTokenExpiry(seconds: number) {
   sessionStorage.setItem(TOKEN_EXPIRY_KEY, String(Date.now() + seconds * 1000));
-  scheduleRefresh(seconds);
 }
 
 export function clearTokenExpiry() {
   sessionStorage.removeItem(TOKEN_EXPIRY_KEY);
-  if (refreshTimer) clearTimeout(refreshTimer);
 }
 
-function isTokenExpiringSoon(): boolean {
-  const exp = sessionStorage.getItem(TOKEN_EXPIRY_KEY);
-  if (!exp) return false;
-  return Date.now() > parseInt(exp) - REFRESH_BUFFER * 1000;
-}
-
-function scheduleRefresh(expiresInSeconds: number) {
-  if (refreshTimer) clearTimeout(refreshTimer);
-
-  const refreshIn = (expiresInSeconds - REFRESH_BUFFER) * 1000;
-  if (refreshIn <= 0) {
-    refreshSession();
-    return;
-  }
-
-  refreshTimer = setTimeout(() => refreshSession(), refreshIn);
-}
-
-async function refreshSession(force = false): Promise<boolean> {
-  if (!force && !sessionStorage.getItem(TOKEN_EXPIRY_KEY)) {
-    return false;
-  }
-
+async function refreshSession(): Promise<boolean> {
   if (!refreshPromise) {
     refreshPromise = fetch("/api/v1/auth/refresh", {
       method: "POST",
@@ -76,15 +50,18 @@ async function refreshSession(force = false): Promise<boolean> {
     })
       .then((res) => {
         if (res.ok) {
-          setTokenExpiry(ACCESS_TOKEN_LIFETIME);
+          setTokenExpiry(30 * 60);
+          return true;
         } else {
           clearTokenExpiry();
+          clearSession();
           authExpiredHandler?.();
+          return false;
         }
-        return res.ok;
       })
       .catch(() => {
         clearTokenExpiry();
+        clearSession();
         authExpiredHandler?.();
         return false;
       })
@@ -94,16 +71,13 @@ async function refreshSession(force = false): Promise<boolean> {
   }
   return refreshPromise;
 }
+
 async function fetcher<T>(
   endpoint: string,
   options: FetchOptions = {},
 ): Promise<T> {
   const cleanEndpoint = endpoint.replace(/^\//, "");
   const url = `/api/v1/${cleanEndpoint}`;
-
-  if (!options.skipRefresh && isTokenExpiringSoon() && !options._retry) {
-    await refreshSession();
-  }
 
   const headers = {
     "Content-Type": "application/json",
@@ -118,8 +92,15 @@ async function fetcher<T>(
 
   if (response.status === 401 && !options._retry && !options.skipRefresh) {
     options._retry = true;
-    const refreshed = await refreshSession(true);
-    if (refreshed) return fetcher<T>(endpoint, options);
+
+    // Call refresh ONCE behind the scenes
+    const refreshed = await refreshSession();
+
+    // If refresh succeeded, transparently retry the failed request
+    if (refreshed) {
+      return fetcher<T>(endpoint, options);
+    }
+
     throw new Error("Session expired or unauthorized.");
   }
 
@@ -134,7 +115,7 @@ async function fetcher<T>(
     } else if (Array.isArray(err.detail)) {
       message = err.detail
         .map((e) => {
-          const field = e.loc?.slice(-1)[0]; // "password"
+          const field = e.loc?.slice(-1)[0];
           return field ? `${field}: ${e.msg}` : e.msg;
         })
         .join(". ");

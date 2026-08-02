@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import AuthAction from "../features/login/AuthBtn";
+import AuthAction from "../features/auth/AuthBtn";
 import BackButton from "@/components/ui/BackBtn";
 import { useAuthUser } from "@/context/AuthContext";
 

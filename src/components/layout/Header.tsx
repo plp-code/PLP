@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Label } from "../ui/Typography";
 import { useAuthUser } from "@/context/AuthContext";
-import AuthAction from "../features/login/AuthBtn";
+import AuthAction from "../features/auth/AuthBtn";
 
 interface HeaderProps {
   isMenuOpen: boolean;
