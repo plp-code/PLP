@@ -8,7 +8,7 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   api,
@@ -31,6 +31,10 @@ interface AuthContextType {
   checkSession: () => Promise<void>;
 }
 
+function isProtectedRoute(pathname: string): boolean {
+  return /^\/maps\/[^/]+/.test(pathname);
+}
+
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
@@ -43,6 +47,7 @@ const AuthContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
   const [isAuthBusy, setAuthBusy] = useState(false);
 
@@ -52,17 +57,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       clearSession();
       queryClient.setQueryData(["session"], null);
       queryClient.removeQueries({ queryKey: ["maps"] });
+      queryClient.removeQueries({ queryKey: ["locations"] });
+
+      if (isProtectedRoute(pathname)) {
+        router.replace("/login?session=expired");
+      }
     });
 
     return cleanup;
-  }, [queryClient]);
+  }, [queryClient, router, pathname]);
 
   const { data: user = null, isLoading } = useQuery<User | null>({
     queryKey: ["session"],
     queryFn: async ({ signal }) => {
       try {
-        // Guests (no prior session) skip the refresh-on-401 round trip; returning
-        // users with an expired access token still get a refresh attempt.
         const data = await api.get<User>("/users/me", {
           signal,
           skipRefresh: !hadSession(),
@@ -85,6 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     setAuthBusy(true);
+    const wasProtected = isProtectedRoute(pathname);
     try {
       await api.post("/auth/logout");
     } catch (error) {
@@ -92,13 +101,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       clearTokenExpiry();
       clearSession();
-      queryClient.setQueryData(["session"], null);
       queryClient.removeQueries({ queryKey: ["maps"] });
       queryClient.removeQueries({ queryKey: ["locations"] });
-      router.replace("/");
-      setAuthBusy(false);
+      queryClient.setQueryData(["session"], null);
+
+      if (wasProtected) {
+        router.replace("/");
+      }
+      setTimeout(() => setAuthBusy(false), 0);
     }
-  }, [queryClient, router]);
+  }, [queryClient, router, pathname]);
 
   return (
     <AuthContext.Provider

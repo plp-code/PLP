@@ -1,27 +1,53 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronLeft, ChevronDown, MapPin, Navigation } from "lucide-react";
+import { ChevronLeft, MapPin, Navigation, CheckCircle2 } from "lucide-react";
 import {
   getTodayHours,
   getWeekHours,
   formatPriceLevel,
   buildDirectionsUrl,
 } from "@/lib/utils";
+import { useStoreReviews } from "@/hooks/useStoreReviews";
+import { Snackbar } from "@/components/ui/Snackbar";
+import { AddReviewModal } from "./AddReviewModal";
+import { StoreStatusBadge } from "./StoreStatusBadge";
+import { StoreHours } from "./StoreHours";
+import { StoreReviews } from "./StoreReviews";
+import type { Location, LocationPin } from "@/types";
+import type { UserLocation } from "@/hooks/useGeolocation";
+
+interface StoreDetailViewProps {
+  store: Location | LocationPin;
+  onBack: () => void;
+  distance: number | null;
+  userLocation: UserLocation | null;
+}
 
 export function StoreDetailView({
   store,
   onBack,
   distance,
   userLocation,
-}: any) {
-  const timeData = getTodayHours(store.hours);
-  const week = getWeekHours(store.hours);
-  const today = week.find((d) => d.isToday);
-  const priceLevel = formatPriceLevel(store.price_level);
+}: StoreDetailViewProps) {
+  // `store` may be a lightweight pin (from a map marker) that lacks the
+  // full detail fields; narrow to the full Location when they're present.
+  const details = "hours" in store ? store : null;
+  const timeData = getTodayHours(details?.hours);
+  const week = getWeekHours(details?.hours);
+  const priceLevel = formatPriceLevel(details?.price_level);
   const gmapsUrl = buildDirectionsUrl(store, userLocation);
 
-  const [hoursOpen, setHoursOpen] = useState(false);
+  const {
+    isAuthenticated,
+    authLoading,
+    reviews,
+    reviewOpen,
+    setReviewOpen,
+    showReviewSuccess,
+    setShowReviewSuccess,
+    openReview,
+    submitReview,
+  } = useStoreReviews();
 
   return (
     <div className="flex-1 overflow-y-auto flex flex-col bg-gray-50 pb-[calc(6rem_+_env(safe-area-inset-bottom))] md:pb-0 relative animate-in slide-in-from-right-4 md:duration-300">
@@ -44,30 +70,10 @@ export function StoreDetailView({
         </div>
 
         <div className="absolute top-4 right-4">
-          <div
-            className={`flex items-center font-bodoni gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm ${
-              !timeData.isOpen
-                ? "text-gray-600 bg-white/85"
-                : timeData.isClosingSoon
-                  ? "text-amber-700 bg-white/90"
-                  : "text-emerald-700 bg-white/90"
-            }`}
-          >
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                !timeData.isOpen
-                  ? "bg-gray-400"
-                  : timeData.isClosingSoon
-                    ? "bg-amber-500 shadow-[0_0_5px_rgba(245,158,11,0.6)]"
-                    : "bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.6)]"
-              }`}
-            />
-            {!timeData.isOpen
-              ? "Closed"
-              : timeData.isClosingSoon
-                ? "Closing Soon"
-                : "Open"}
-          </div>
+          <StoreStatusBadge
+            isOpen={timeData.isOpen}
+            isClosingSoon={timeData.isClosingSoon}
+          />
         </div>
       </div>
 
@@ -104,73 +110,46 @@ export function StoreDetailView({
           </a>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
-          <button
-            onClick={() => setHoursOpen((o) => !o)}
-            className="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left hover:bg-gray-50 transition-colors"
-          >
-            <div className="flex items-baseline gap-3 min-w-0">
-              <span className="font-bodoni text-[12px] font-semibold uppercase tracking-[0.15em] text-gray-400 shrink-0">
-                Hours
-              </span>
-              <span
-                className={`text-[15px] font-prata truncate ${
-                  !timeData.isOpen
-                    ? "text-gray-700"
-                    : timeData.isClosingSoon
-                      ? "text-amber-600"
-                      : "text-emerald-700"
-                }`}
-              >
-                {!timeData.isOpen
-                  ? today
-                    ? today.string
-                    : timeData.string
-                  : timeData.isClosingSoon
-                    ? `Closes soon · ${today ? today.string : timeData.string}`
-                    : today
-                      ? today.string
-                      : timeData.string}
-              </span>
-            </div>
-            <ChevronDown
-              size={18}
-              className={`text-gray-400 shrink-0 transition-transform duration-200 ${
-                hoursOpen ? "rotate-180" : ""
-              }`}
-            />
-          </button>
+        <StoreHours timeData={timeData} week={week} />
 
-          {hoursOpen && (
-            <div className="border-t border-gray-100 px-4 py-2">
-              {week.map((d) => (
-                <div
-                  key={d.label}
-                  className={`flex items-center font-prata justify-between py-2 text-[14px] tracking-wide ${
-                    d.isToday ? "text-gray-900 font-semibold" : "text-gray-500"
-                  }`}
-                >
-                  <span>{d.label}</span>
-                  <span className={d.isClosed ? "text-gray-400" : ""}>
-                    {d.string}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {store.description && (
+        {details?.description && (
           <div className="flex flex-col">
             <span className="font-bodoni text-[12px] font-semibold uppercase tracking-[0.15em] text-gray-400 block mb-2.5">
               About
             </span>
             <p className="text-gray-600 font-prata text-[15px] md:text-[16px] leading-[1.8] whitespace-pre-wrap">
-              {store.description}
+              {details.description}
             </p>
           </div>
         )}
+
+        <StoreReviews
+          reviews={reviews}
+          isAuthenticated={isAuthenticated}
+          disabled={authLoading}
+          onAdd={openReview}
+        />
       </div>
+
+      <AddReviewModal
+        open={reviewOpen}
+        onClose={() => setReviewOpen(false)}
+        onSubmit={submitReview}
+        storeName={store.name}
+      />
+
+      <Snackbar
+        show={showReviewSuccess}
+        onClose={() => setShowReviewSuccess(false)}
+        icon={CheckCircle2}
+        iconColor="text-green-600"
+        borderColor="border-green-200"
+        bgColor="bg-green-50"
+        textColor="text-green-900"
+        title="Thanks for sharing!"
+        subtitle="Your experience has been added."
+        autoCloseMs={3000}
+      />
     </div>
   );
 }

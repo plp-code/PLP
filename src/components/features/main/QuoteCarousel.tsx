@@ -45,10 +45,10 @@ export default function QuoteCarousel({
     <Container
       fullBleed
       className="bg-plp-maroon border-y border-plp-maroon relative overflow-hidden"
-      contentClassName="max-w-6xl px-10"
+      contentClassName="max-w-6xl px-4 md:px-10"
     >
       <div
-        className="relative pt-12 pb-8 md:pt-16 md:pb-10 group"
+        className="relative pt-10 pb-8 md:pt-12 md:pb-10 group"
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}
       >
@@ -60,7 +60,7 @@ export default function QuoteCarousel({
             <ChevronLeft className="w-6 h-6 stroke-[1.5px]" />
           </button>
 
-          <div className="grid grid-cols-1 grid-rows-1 w-full text-center text-plp-testz px-4 md:px-12">
+          <div className="grid grid-cols-1 grid-rows-1 w-full text-center text-plp-testz px-2 md:px-12">
             {Object.entries(quotes).map(([author, quote], i) => (
               <div
                 key={i}
@@ -71,7 +71,7 @@ export default function QuoteCarousel({
                 }`}
               >
                 <blockquote className="font-handwriting text-lg md:text-2xl lg:text-3xl leading-relaxed tracking-tight mb-6 text-balance">
-                  "{quote}"
+                  &ldquo;{quote}&rdquo;
                 </blockquote>
 
                 <cite className="flex not-italic flex-col flex-wrap gap-2 justify-center">
@@ -91,7 +91,7 @@ export default function QuoteCarousel({
           </button>
         </div>
 
-        <div className="flex gap-2 mt-6 justify-center relative z-10">
+        <div className="flex gap-2 mt-4 justify-center relative z-10">
           {Object.entries(quotes).map((_, i) => (
             <button
               key={i}

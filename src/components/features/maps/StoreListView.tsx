@@ -1,18 +1,19 @@
 import { ChevronRight, Loader2, Navigation, Clock } from "lucide-react";
-import { getTodayHours, formatPriceLevel } from "@/lib/utils";
+import { getTodayHours, formatPriceLevel, getDistance } from "@/lib/utils";
+import type { Location } from "@/types";
+import type { UserLocation } from "@/hooks/useGeolocation";
 
-function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const R = 3958.8;
-  const dLat = (lat2 - lat1) * (Math.PI / 180);
-  const dLon = (lon2 - lon1) * (Math.PI / 180);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * (Math.PI / 180)) *
-      Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+interface StoreListViewProps {
+  stores: Location[];
+  totalCount: number;
+  onSelect: (id: number) => void;
+  hasMore: boolean;
+  loadingMore: boolean;
+  observerRef: (node: HTMLDivElement | null) => void;
+  isSearching: boolean;
+  activeId: number | null;
+  userLocation: UserLocation | null;
+  className?: string;
 }
 
 export function StoreListView({
@@ -26,7 +27,7 @@ export function StoreListView({
   activeId,
   userLocation,
   className = "",
-}: any) {
+}: StoreListViewProps) {
   return (
     <div className={`flex-1 overflow-y-auto flex flex-col ${className}`}>
       <div className="p-3 md:px-5 md:py-4 border-b border-gray-100 bg-white/95 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between shadow-sm">
@@ -37,7 +38,7 @@ export function StoreListView({
       </div>
 
       <div className="divide-y divide-gray-100/80 pb-[calc(5rem_+_env(safe-area-inset-bottom))] md:pb-0">
-        {stores.map((store: any, index: number) => {
+        {stores.map((store, index) => {
           const timeData = getTodayHours(store.hours);
           const isSelected = store.id === activeId;
           const priceLevel = formatPriceLevel(store.price_level);

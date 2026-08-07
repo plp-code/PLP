@@ -70,7 +70,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <div className="hidden md:flex md:w-1/3 bg-plp-maroon text-plp-parchment relative overflow-hidden flex-col justify-between p-8 lg:p-12 xl:p-14 border-l-2 border-black">
+        <div className="hidden md:flex md:w-1/3 bg-plp-maroon text-plp-parchment relative overflow-hidden flex-col justify-between p-8 lg:p-12 xl:p-14 border-l-2 border-plp-navy">
           <div className="relative z-10 mt-8 md:mt-0">
             <h2 className="text-3xl lg:text-4xl font-seventies leading-[0.85] mb-4 lg:mb-6 tracking-tight capitalize">
               The Preloved <br /> Professional

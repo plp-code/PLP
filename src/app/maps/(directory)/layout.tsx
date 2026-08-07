@@ -1,4 +1,5 @@
 import HeaderSimplified from "@/components/layout/HeaderSimplified";
+import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MobileGuard from "@/components/layout/MobileGuard";
 import { ReactNode } from "react";

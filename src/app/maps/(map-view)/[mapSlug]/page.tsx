@@ -15,13 +15,13 @@ export default function Page({ params }: { params: Promise<{ mapSlug: string }> 
   const { mapSlug } = use(params);
   const router = useRouter();
   const pathname = usePathname();
-  const { user, isLoading } = useAuthUser();
+  const { user, isLoading, isAuthBusy } = useAuthUser();
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!isLoading && !user && !isAuthBusy) {
       router.replace(`/login?returnTo=${encodeURIComponent(pathname)}`);
     }
-  }, [isLoading, pathname, router, user]);
+  }, [isLoading, pathname, router, user, isAuthBusy]);
 
   if (isLoading) {
     return (

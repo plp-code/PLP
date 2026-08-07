@@ -30,6 +30,7 @@ export default function AuthAction({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   return (
     <Link
+      replace
       href={{ pathname: "/login", query: { returnTo: pathname } }}
       className="plp-btn-blue cursor-pointer uppercase flex items-center justify-center gap-1.5 h-10 w-10 md:w-auto md:h-9 md:px-4 font-bold text-[13px] capitalize tracking-tighter"
     >

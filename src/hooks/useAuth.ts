@@ -47,8 +47,10 @@ export function useAuthActions(returnTo?: string | null) {
       markSession();
       await checkSession();
       router.replace(targetPath);
-    } catch (err: any) {
-      setError(err.message || "Invalid email or password.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Invalid email or password.",
+      );
     } finally {
       setIsLoading(false);
       setAuthBusy(false);
@@ -67,8 +69,12 @@ export function useAuthActions(returnTo?: string | null) {
       markSession();
       await checkSession();
       router.replace(targetPath);
-    } catch (err: any) {
-      setError(err.message || "Registration failed. Please check your inputs.");
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Registration failed. Please check your inputs.",
+      );
     } finally {
       setIsLoading(false);
       setAuthBusy(false);
