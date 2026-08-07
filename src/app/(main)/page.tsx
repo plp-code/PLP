@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Hero from "@/components/features/main/Hero";
 import QuoteCarousel from "@/components/features/main/QuoteCarousel";
-import PhilosophyGrid from "@/components/features/main/PhilosophyGrid";
 import Manifesto from "@/components/features/main/Manifesto";
-import EmailCapture from "@/components/features/marketing/EmailCapture";
+import MapsSection from "@/components/features/main/MapsSection";
+import JoinBanner from "@/components/features/marketing/JoinBanner";
 
 export const metadata: Metadata = {
   title: "The Preloved Professional",
@@ -21,10 +21,10 @@ export default function LandingPage() {
   return (
     <div>
       <Hero />
-      <EmailCapture />
+      {/* <JoinBanner /> */}
       <Manifesto />
       <QuoteCarousel />
-      <PhilosophyGrid />
+      <MapsSection />
     </div>
   );
 }

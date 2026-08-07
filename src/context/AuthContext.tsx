@@ -8,13 +8,16 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   api,
   onAuthExpired,
   clearTokenExpiry,
   setTokenExpiry,
+  markSession,
+  clearSession,
+  hadSession,
 } from "@/lib/api";
 import { User } from "@/types";
 
@@ -26,6 +29,10 @@ interface AuthContextType {
   setAuthBusy: (busy: boolean) => void;
   logout: () => Promise<void>;
   checkSession: () => Promise<void>;
+}
+
+function isProtectedRoute(pathname: string): boolean {
+  return /^\/maps\/[^/]+/.test(pathname);
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -40,25 +47,36 @@ const AuthContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
   const [isAuthBusy, setAuthBusy] = useState(false);
 
   useEffect(() => {
     const cleanup = onAuthExpired(() => {
       clearTokenExpiry();
+      clearSession();
       queryClient.setQueryData(["session"], null);
-      queryClient.invalidateQueries({ queryKey: ["maps"] });
+      queryClient.removeQueries({ queryKey: ["maps"] });
+      queryClient.removeQueries({ queryKey: ["locations"] });
+
+      if (isProtectedRoute(pathname)) {
+        router.replace("/login?session=expired");
+      }
     });
 
     return cleanup;
-  }, [queryClient]);
+  }, [queryClient, router, pathname]);
 
   const { data: user = null, isLoading } = useQuery<User | null>({
     queryKey: ["session"],
     queryFn: async ({ signal }) => {
       try {
-        const data = await api.get<User>("/users/me", { signal });
+        const data = await api.get<User>("/users/me", {
+          signal,
+          skipRefresh: !hadSession(),
+        });
         setTokenExpiry(30 * 60);
+        markSession();
         return data;
       } catch {
         clearTokenExpiry();
@@ -75,19 +93,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     setAuthBusy(true);
+    const wasProtected = isProtectedRoute(pathname);
     try {
       await api.post("/auth/logout");
     } catch (error) {
       console.error("Logout failed", error);
     } finally {
       clearTokenExpiry();
-      queryClient.setQueryData(["session"], null);
-      queryClient.invalidateQueries({ queryKey: ["maps"] });
+      clearSession();
+      queryClient.removeQueries({ queryKey: ["maps"] });
       queryClient.removeQueries({ queryKey: ["locations"] });
-      router.replace("/");
-      setAuthBusy(false);
+      queryClient.setQueryData(["session"], null);
+
+      if (wasProtected) {
+        router.replace("/");
+      }
+      setTimeout(() => setAuthBusy(false), 0);
     }
-  }, [queryClient, router]);
+  }, [queryClient, router, pathname]);
 
   return (
     <AuthContext.Provider

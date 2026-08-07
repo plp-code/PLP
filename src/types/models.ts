@@ -5,6 +5,8 @@ export interface User {
   email: string;
 }
 
+export type MapStatus = "live" | "waitlist" | "dropped";
+
 export interface MapItem {
   id: number;
   name: string;
@@ -13,6 +15,8 @@ export interface MapItem {
   region?: string | null;
   price: number;
   is_purchased: boolean;
+  is_waitlisted: boolean;
+  status: MapStatus;
 }
 
 export interface MapListResponse {

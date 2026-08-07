@@ -10,6 +10,16 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect, useRef, useState } from "react";
+import type { Location, LocationPin } from "@/types";
+import type { UserLocation } from "@/hooks/useGeolocation";
+
+export interface MapComponentProps {
+  stores: LocationPin[];
+  activeId: number | null;
+  setActiveId: (id: number) => void;
+  activeStore: Location | LocationPin | null;
+  userLocation: UserLocation | null;
+}
 
 const DEFAULT_PIN_COLOR = "#2563eb";
 const ACTIVE_PIN_COLOR = "#E4002B";
@@ -36,7 +46,7 @@ const userIcon = L.divIcon({
   popupAnchor: [0, -10],
 });
 
-function FlyToStore({ store }: { store: any | null }) {
+function FlyToStore({ store }: { store: Location | LocationPin | null }) {
   const map = useMap();
   useEffect(() => {
     if (store?.latitude && store?.longitude) {
@@ -66,7 +76,7 @@ export default function MapComponent({
   setActiveId,
   activeStore,
   userLocation,
-}: any) {
+}: MapComponentProps) {
   const markerRefs = useRef<{ [key: number]: L.Marker | null }>({});
 
   const [isMobile, setIsMobile] = useState(false);
@@ -79,8 +89,7 @@ export default function MapComponent({
   }, []);
 
   const validStores = stores.filter(
-    (s: any) =>
-      typeof s.latitude === "number" && typeof s.longitude === "number",
+    (s) => typeof s.latitude === "number" && typeof s.longitude === "number",
   );
 
   useEffect(() => {
@@ -100,7 +109,7 @@ export default function MapComponent({
 
       {!isMobile && <ZoomControl position="topright" />}
 
-      {validStores.map((s: any) => {
+      {validStores.map((s) => {
         // const gmapsUrl = buildDirectionsUrl(s, userLocation ?? null);
 
         return (

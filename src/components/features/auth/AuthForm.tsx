@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Loader2, Mail, Lock, User, AlertTriangle } from "lucide-react";
 import { useAuthActions } from "@/hooks/useAuth";
@@ -99,9 +100,19 @@ export default function AuthForm() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-plp-maroon font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
-              Password
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-plp-maroon font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
+                Password
+              </label>
+              {isLogin && (
+                <Link
+                  href="/forgot-password"
+                  className="text-[10px] sm:text-[11px] font-bold text-plp-maroon/70 hover:text-plp-maroon hover:underline tracking-tighter"
+                >
+                  Forgot Password?
+                </Link>
+              )}
+            </div>
             <div className="relative">
               <Lock
                 size={15}

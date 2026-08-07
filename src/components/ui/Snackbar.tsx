@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { X } from "lucide-react";
+import { X, type LucideIcon } from "lucide-react";
 
 export const Snackbar = ({
   show,
@@ -16,7 +16,7 @@ export const Snackbar = ({
 }: {
   show: boolean;
   onClose: () => void;
-  icon: any;
+  icon: LucideIcon;
   iconColor: string;
   borderColor: string;
   bgColor: string;

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAuthUser } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { MapItem } from "@/types";
+import type { CheckoutSessionResponse } from "@/types/api";
 
 export function useMapCheckout() {
   const [checkoutLoadingId, setCheckoutLoadingId] = useState<number | null>(
@@ -30,7 +31,7 @@ export function useMapCheckout() {
     setCheckoutLoadingId(map.id);
 
     try {
-      const response = await api.post(
+      const response = await api.post<CheckoutSessionResponse>(
         `/checkout/create-session?map_slug=${encodeURIComponent(map.slug)}`,
       );
 
