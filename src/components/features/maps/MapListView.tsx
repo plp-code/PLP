@@ -1,27 +1,25 @@
 import { MapPin, Lock, Unlock, ArrowRight, Loader2 } from "lucide-react";
-import { MapItem } from "@/types";
-import { ComingSoonRow, UpcomingLocation } from "./ComingSoonCard";
+import { MapItem } from "@/types/models"; // Ensure your import path is correct
+import { ComingSoonRow } from "./ComingSoonCard";
 
 interface Props {
   maps: MapItem[];
   onAction: (map: MapItem) => void;
   loadingId: number | null;
-  isAuthenticated: boolean;
-  upcoming?: UpcomingLocation[];
-  joinedWaitlist?: boolean;
+  upcoming?: MapItem[];
   waitlistDisabled?: boolean;
-  onJoinWaitlist?: () => void;
+  waitlistLoadingSlug?: string | null;
+  onJoinWaitlist: (slug: string) => void;
 }
 
 export function MapListView({
   maps,
   onAction,
   loadingId,
-  isAuthenticated,
   upcoming = [],
-  joinedWaitlist = false,
   waitlistDisabled = false,
-  onJoinWaitlist = () => {},
+  waitlistLoadingSlug = null,         
+  onJoinWaitlist,
 }: Props) {
   return (
     <div className="flex flex-col gap-3">
@@ -73,21 +71,17 @@ export function MapListView({
               <button
                 onClick={() => onAction(map)}
                 disabled={loadingId === map.id}
-                className={`group/btn flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-200 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-70 ${
+                className={`group/btn font-prata flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${
                   owned
-                    ? "bg-plp-maroon text-white hover:bg-red-800"
-                    : "bg-gray-900 text-white hover:bg-gray-800"
+                    ? "w-full bg-plp-maroon text-white hover:bg-red-800 hover:shadow-lg"
+                    : "flex-1 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg sm:flex-none"
                 }`}
               >
                 {loadingId === map.id ? (
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   <>
-                    {owned
-                      ? "View Map"
-                      : isAuthenticated
-                        ? "Buy Now"
-                        : "Log In"}
+                    {owned ? "View Map" : "Buy Map"}
                     <ArrowRight
                       size={14}
                       className="transition-transform group-hover/btn:translate-x-0.5"
@@ -100,13 +94,12 @@ export function MapListView({
         );
       })}
 
-      {upcoming.map((location) => (
+    {upcoming.map((map) => (
         <ComingSoonRow
-          key={`coming-soon-${location.name}`}
-          location={location}
-          isAuthenticated={isAuthenticated}
-          joined={joinedWaitlist}
+          key={`coming-soon-${map.slug}`}
+          map={map}
           disabled={waitlistDisabled}
+          isLoading={waitlistLoadingSlug === map.slug} 
           onJoin={onJoinWaitlist}
         />
       ))}

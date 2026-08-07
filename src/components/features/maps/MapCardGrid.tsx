@@ -73,11 +73,8 @@ export function MapCardGrid({
               <Loader2 size={16} className="animate-spin" />
             ) : (
               <>
-                {owned
-                  ? "View Map"
-                  : isAuthenticated
-                    ? "Buy Now"
-                    : "Log In to Buy"}
+                {owned ? "View Map" : "Buy Map"}
+
                 <ArrowRight
                   size={14}
                   className="transition-transform group-hover/btn:translate-x-0.5"

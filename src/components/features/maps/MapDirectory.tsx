@@ -19,38 +19,20 @@ import { ComingSoonCard } from "./ComingSoonCard";
 import { DirectoryToolbar } from "./DirectoryToolbar";
 import { Snackbar } from "@/components/ui/Snackbar";
 import { Spinner } from "@/components/ui/Spinner";
+import { useJoinWaitlist } from "@/hooks/useJoinWaitlist";
 
 export default function MapDirectory() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [showGuestBanner, setShowGuestBanner] = useState(true);
-  const [joinedWaitlist, setJoinedWaitlist] = useState(false);
-  const [showWaitlistSuccess, setShowWaitlistSuccess] = useState(false);
-
-  const router = useRouter();
-  const pathname = usePathname();
 
   const { isAuthenticated, isLoading: authLoading } = useAuthUser();
   const { maps, loading, error } = useMapDirectory();
   const { handleMapAction, checkoutLoadingId } = useMapCheckout();
-
+  const { joinWaitlist, loadingSlug, showWaitlistSuccess, setShowWaitlistSuccess, error: waitlistError } = useJoinWaitlist();
   const { searchQuery, setSearchQuery, filteredMaps, filteredUpcoming } =
     useMapSearch(maps);
   const { showSuccessMessage, setShowSuccessMessage, purchasedMapName } =
     useCheckoutSuccessToast();
-
-  const handleJoinWaitlist = () => {
-    if (authLoading) return;
-
-    if (!isAuthenticated) {
-      // replace (not push) so login doesn't leave a duplicate of this page in
-      // history — otherwise Back after login is a no-op.
-      router.replace(`/login?returnTo=${encodeURIComponent(pathname)}`);
-      return;
-    }
-
-    setJoinedWaitlist(true);
-    setShowWaitlistSuccess(true);
-  };
 
   if (loading) return <Spinner text="Loading maps..." />;
 
@@ -167,28 +149,28 @@ export default function MapDirectory() {
                   isAuthenticated={isAuthenticated}
                 />
               ))}
-              {filteredUpcoming.map((location) => (
+
+              {filteredUpcoming.map((map) => (
                 <ComingSoonCard
-                  key={`coming-soon-${location.name}`}
-                  location={location}
-                  isAuthenticated={isAuthenticated}
-                  joined={joinedWaitlist}
+                  key={`coming-soon-${map.slug}`}
+                  map={map}
                   disabled={authLoading}
-                  onJoin={handleJoinWaitlist}
+                  isLoading={loadingSlug === map.slug}
+                  onJoin={joinWaitlist}
                 />
               ))}
             </div>
+
             {viewMode === "list" && (
               <div className="hidden sm:block">
                 <MapListView
                   maps={filteredMaps}
                   onAction={handleMapAction}
                   loadingId={checkoutLoadingId}
-                  isAuthenticated={isAuthenticated}
                   upcoming={filteredUpcoming}
-                  joinedWaitlist={joinedWaitlist}
-                  waitlistDisabled={authLoading}
-                  onJoinWaitlist={handleJoinWaitlist}
+                  waitlistDisabled={authLoading} 
+                  waitlistLoadingSlug={loadingSlug} 
+                  onJoinWaitlist={joinWaitlist}
                 />
               </div>
             )}
