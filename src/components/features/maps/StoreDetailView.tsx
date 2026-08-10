@@ -123,12 +123,12 @@ export function StoreDetailView({
           </div>
         )}
 
-        <StoreReviews
+        {/* <StoreReviews
           reviews={reviews}
           isAuthenticated={isAuthenticated}
           disabled={authLoading}
           onAdd={openReview}
-        />
+        /> */}
       </div>
 
       <AddReviewModal
