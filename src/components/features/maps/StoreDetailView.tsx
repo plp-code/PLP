@@ -61,8 +61,9 @@ export function StoreDetailView({
           <span>Back</span>
         </button>
       </div>
+      
 
-      <div className="relative h-40 md:h-52 w-full shrink-0 overflow-hidden bg-gradient-to-br from-gray-200/60 to-gray-400/60 border-b border-gray-100">
+      {/* <div className="relative h-40 md:h-52 w-full shrink-0 overflow-hidden bg-gradient-to-br from-gray-200/60 to-gray-400/60 border-b border-gray-100">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="bg-white/30 p-5 rounded-3xl backdrop-blur-md shadow-lg ring-1 ring-white/30">
             <MapPin size={36} className="text-white" />
@@ -75,7 +76,7 @@ export function StoreDetailView({
             isClosingSoon={timeData.isClosingSoon}
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="px-5 md:px-6 py-6 flex flex-col gap-6 w-full">
         <div className="flex flex-col">

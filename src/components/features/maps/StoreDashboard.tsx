@@ -32,6 +32,8 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     setSearchTerm,
     activePrice,
     setActivePrice,
+    activeCategory,
+    setActiveCategory,
     isOpenNow,
     setIsOpenNow,
     filteredStores,
@@ -84,6 +86,12 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     if (view === "detail") resetToList();
   };
 
+  const handleCategorySelect = (value: string) => {
+    setActiveCategory(activeCategory === value ? null : value);
+    setIsDrawerOpen(true);
+    if (view === "detail") resetToList();
+  };
+
   const handleLocateToggle = () => {
     if (userLocation) clearLocation();
     else locate();
@@ -113,7 +121,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
         )}
       </div>
 
-      <div className="absolute top-0 inset-x-0 p-4 md:p-6 z-[1000] flex flex-col gap-3 pointer-events-none">
+      <div className="absolute top-0 inset-x-0 p-4 md:p-6 z-[1000] flex flex-col items-start gap-3 pointer-events-none">
         <MapFilterBar
           searchTerm={searchTerm}
           onSearchChange={handleSearchChange}
@@ -121,6 +129,8 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
           onToggleOpenNow={handleToggleOpenNow}
           activePrice={activePrice}
           onPriceSelect={handlePriceSelect}
+          activeCategory={activeCategory}
+          onCategorySelect={handleCategorySelect}
           hasLocation={!!userLocation}
           isLocating={isLocating}
           onLocateToggle={handleLocateToggle}
@@ -128,12 +138,22 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
       </div>
 
       <aside
-        className={`absolute bg-white z-[1000] flex flex-col shadow-[0_-8px_30px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-in-out overflow-hidden border-t border-gray-200/50
+        className={`absolute bg-white z-[999] flex flex-col
+          shadow-[0_-8px_30px_rgba(0,0,0,0.12)]
+          transition-transform duration-300 ease-in-out
+          overflow-hidden border-t border-gray-200/50
+          
           inset-x-0 bottom-0 h-[65dvh] rounded-t-3xl
           ${isDrawerOpen ? "translate-y-0" : "translate-y-full"}
-          md:top-36 md:bottom-6 md:left-6 md:h-auto md:w-[440px] lg:w-[500px] md:rounded-2xl md:border
-          ${isDrawerOpen ? "md:translate-x-0 md:translate-y-0" : "md:-translate-x-[120%] md:translate-y-0"}
-        `}
+          md:top-36 md:bottom-6 md:left-6 md:right-auto
+          md:h-auto md:w-[440px]
+          md:rounded-2xl md:border
+          ${
+            isDrawerOpen
+              ? "md:translate-x-0 md:translate-y-0"
+              : "md:-translate-x-[120%] md:translate-y-0"
+          }
+          `}
       >
         <StoreListView
           stores={filteredStores}
@@ -170,18 +190,43 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
         )}
       </aside>
 
-      <div className="md:hidden absolute bottom-[calc(1.5rem_+_env(safe-area-inset-bottom))] inset-x-0 flex justify-center z-[1010] pointer-events-none">
+      <div
+        className="absolute z-[1000] pointer-events-none
+
+          /* Mobile */
+          inset-x-0 bottom-[calc(1.5rem+env(safe-area-inset-bottom))]
+          flex justify-center
+
+          /* Desktop */
+          md:inset-x-auto
+          md:left-6
+          md:w-[440px]"
+      >
         <button
           onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-          className="pointer-events-auto bg-gray-900/95 backdrop-blur-md text-white px-6 py-3.5 rounded-full font-bold shadow-[0_8px_20px_rgba(0,0,0,0.2)] flex items-center gap-2.5 text-sm active:scale-95 transition-all"
+          className="
+            pointer-events-auto
+            bg-gray-900/95 backdrop-blur-md
+            text-white
+            h-12 px-5
+            rounded-full
+            font-medium
+            shadow-[0_6px_20px_rgba(0,0,0,0.2)]
+            flex items-center justify-center gap-2
+            text-sm
+            active:scale-95
+            transition-all duration-200
+            md:hidden"
         >
           {isDrawerOpen ? (
             <>
-              <MapIcon size={16} /> Show Map
+              <MapIcon size={17} />
+              <span>Map</span>
             </>
           ) : (
             <>
-              <ListIcon size={16} /> Show List
+              <ListIcon size={17} />
+              <span>List</span>
             </>
           )}
         </button>
@@ -189,9 +234,12 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
 
       <button
         onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-        className={`hidden md:flex absolute top-1/2 -translate-y-1/2 z-[1000] bg-white shadow-xl border border-gray-200 p-2 rounded-r-xl transition-all duration-300 hover:bg-gray-50 ${
-          isDrawerOpen ? "left-[464px] lg:left-[524px]" : "left-0"
-        }`}
+        className={`
+          hidden md:flex absolute top-1/2 -translate-y-1/2 z-[900]
+          bg-white shadow-xl border border-gray-200 p-2 rounded-r-xl
+          transition-all duration-300 hover:bg-gray-50
+          ${isDrawerOpen ? "left-[464px]" : "left-0"}
+        `}
       >
         {isDrawerOpen ? (
           <ChevronLeft size={20} className="text-gray-600" />
