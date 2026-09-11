@@ -1,71 +1,100 @@
-import { MessageSquarePlus } from "lucide-react";
+import { MessageSquarePlus, ShoppingBag } from "lucide-react";
 import type { BoughtItem } from "@/hooks/useStoreReviews";
 
 interface StoreReviewsProps {
   reviews: BoughtItem[];
-  isAuthenticated: boolean;
   disabled: boolean;
   onAdd: () => void;
 }
 
-export function StoreReviews({
-  reviews,
-  isAuthenticated,
-  disabled,
-  onAdd,
-}: StoreReviewsProps) {
+export function StoreReviews({ reviews, disabled, onAdd }: StoreReviewsProps) {
   return (
-    <div className="flex flex-col">
-      <div className="mb-2.5 flex items-center justify-between gap-3">
-        <span className="font-bodoni cursor-pointer text-[12px] font-semibold uppercase tracking-[0.15em] text-gray-400">
-          What People Bought
-        </span>
+    <section className="flex flex-col gap-3">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <span className="block font-bodoni text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+            What People Bought
+          </span>
+
+          {reviews.length > 0 && (
+            <p className="mt-0.5 font-prata text-[12px] normal-case text-gray-400">
+              {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+            </p>
+          )}
+        </div>
+
         <button
+          type="button"
           onClick={onAdd}
           disabled={disabled}
-          className="inline-flex cursor-pointer shrink-0 items-center gap-1.5 rounded-full border border-plp-maroon/20 bg-plp-maroon/5 px-3 py-1.5 font-prata text-[12px] font-bold text-plp-maroon transition-colors hover:bg-plp-maroon/10 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-plp-maroon/15 bg-plp-maroon/[0.04] px-3 py-2 font-prata text-[12px] font-semibold text-plp-maroon transition-all hover:border-plp-maroon/25 hover:bg-plp-maroon/[0.08] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <MessageSquarePlus size={14} />
-          {isAuthenticated ? "Add yours" : "Log in to add"}
+          <MessageSquarePlus size={14} strokeWidth={1.8} />
+          Share a find
         </button>
       </div>
 
       {reviews.length > 0 ? (
-        <ul className="flex flex-col divide-y divide-gray-100 rounded-xl border border-gray-200 bg-white">
+        <div className="flex flex-col gap-2.5">
           {reviews.map((entry, index) => (
-            <li
+            <article
               key={`${entry.item}-${index}`}
-              className="flex items-baseline justify-between gap-3 px-3.5 py-2.5"
+              className="rounded-xl border border-gray-200 bg-white px-4 py-3.5 transition-colors hover:border-gray-300"
             >
-              <div className="min-w-0">
-                <p className="font-prata truncate text-[14px] font-semibold text-gray-900">
-                  {entry.item}
-                </p>
-                <p className="truncate font-prata text-[12px] italic text-gray-500">
-                  &ldquo;{entry.quote}&rdquo; — {entry.buyer}
-                </p>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500">
+                      <ShoppingBag size={14} strokeWidth={1.8} />
+                    </div>
+
+                    <p className="truncate font-prata text-[14px] font-semibold text-gray-900">
+                      {entry.item}
+                    </p>
+                  </div>
+                </div>
+
+                {typeof entry.price === "number" && (
+                  <span className="shrink-0 rounded-md bg-emerald-50 px-2 py-1 font-prata text-[12px] font-semibold text-emerald-700">
+                    ${(entry.price / 100).toFixed(2)}
+                  </span>
+                )}
               </div>
-              {typeof entry.price === "number" && (
-                <span className="shrink-0 text-[13px] font-black text-emerald-700">
-                  ${(entry.price / 100).toFixed(2)}
+
+              <p className="mt-2.5 font-prata text-[13px] leading-5 text-gray-600">
+                “{entry.quote}”
+              </p>
+
+              <div className="mt-2.5 flex items-center gap-2">
+                <div className="h-1 w-1 rounded-full bg-gray-300" />
+
+                <span className="font-prata text-[11px] text-gray-400">
+                  {entry.buyer}
                 </span>
-              )}
-            </li>
+              </div>
+            </article>
           ))}
-        </ul>
+        </div>
       ) : (
         <button
+          type="button"
           onClick={onAdd}
-          className="flex flex-col items-center gap-1 rounded-xl border border-dashed border-gray-200 bg-white px-4 py-6 text-center transition-colors hover:border-plp-maroon/30 hover:bg-plp-maroon/[0.02]"
+          disabled={disabled}
+          className="group flex flex-col items-center rounded-xl border border-dashed border-gray-200 bg-white px-5 py-7 text-center transition-all hover:border-plp-maroon/25 hover:bg-plp-maroon/[0.02] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <span className="font-prata text-[14px] font-semibold text-gray-700">
-            No reviews yet
+          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-400 transition-colors group-hover:bg-plp-maroon/[0.07] group-hover:text-plp-maroon">
+            <MessageSquarePlus size={18} strokeWidth={1.7} />
+          </div>
+
+          <span className="font-prata text-[14px] font-semibold text-gray-800">
+            No finds shared yet
           </span>
-          <span className="font-prata text-[13px] text-gray-400">
-            Be the first to share your experience.
+
+          <span className="mt-1 max-w-[250px] font-prata text-[12px] leading-5 text-gray-400">
+            "Be the first to share what you bought here.
           </span>
         </button>
       )}
-    </div>
+    </section>
   );
 }

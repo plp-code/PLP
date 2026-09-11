@@ -32,8 +32,8 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     setSearchTerm,
     activePrice,
     setActivePrice,
-    activeCategory,
-    setActiveCategory,
+    activeCategories,
+    setActiveCategories,
     isOpenNow,
     setIsOpenNow,
     filteredStores,
@@ -87,7 +87,21 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   };
 
   const handleCategorySelect = (value: string) => {
-    setActiveCategory(activeCategory === value ? null : value);
+    setActiveCategories((prev) =>
+      prev.includes(value)
+        ? prev.filter((category) => category !== value)
+        : [...prev, value],
+    );
+
+    setIsDrawerOpen(true);
+
+    if (view === "detail") {
+      resetToList();
+    }
+  };
+
+  const handleClearCategories = () => {
+    setActiveCategories([]);
     setIsDrawerOpen(true);
     if (view === "detail") resetToList();
   };
@@ -129,8 +143,9 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
           onToggleOpenNow={handleToggleOpenNow}
           activePrice={activePrice}
           onPriceSelect={handlePriceSelect}
-          activeCategory={activeCategory}
+          activeCategories={activeCategories}
           onCategorySelect={handleCategorySelect}
+          onClearCategories={handleClearCategories}
           hasLocation={!!userLocation}
           isLocating={isLocating}
           onLocateToggle={handleLocateToggle}

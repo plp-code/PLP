@@ -1,6 +1,6 @@
 "use client";
-
-import { Search, Loader2, Navigation, Clock, ChevronDown } from "lucide-react";
+import { CATEGORY_OPTIONS } from "@/lib/utils";
+import { Search, Loader2, Navigation, Clock, ChevronDown, Check } from "lucide-react";
 import { useState } from "react";
 
 const PRICE_LEVELS = [
@@ -10,24 +10,6 @@ const PRICE_LEVELS = [
   { level: 4, label: "Corner Office", range: "$18-70" },
 ];
 
-const CATEGORY_OPTIONS: { value: string; label: string }[] = [
-  { value: "blazer", label: "Blazer" },
-  { value: "boots", label: "Boots" },
-  { value: "button-down", label: "Button-down" },
-  { value: "capris", label: "Capris" },
-  { value: "cardigan", label: "Cardigan" },
-  { value: "coat", label: "Coat" },
-  { value: "dress", label: "Dress" },
-  { value: "heels", label: "Heels" },
-  { value: "jacket", label: "Jacket" },
-  { value: "loafers", label: "Loafers" },
-  { value: "pants", label: "Pants" },
-  { value: "short-sleeve-top", label: "Short Sleeve Top" },
-  { value: "skirt", label: "Skirt" },
-  { value: "sleeveless-top", label: "Sleeveless Top" },
-  { value: "suit-set", label: "Suit Set/Two-Piece" },
-];
-
 interface MapFilterBarProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
@@ -35,8 +17,9 @@ interface MapFilterBarProps {
   onToggleOpenNow: () => void;
   activePrice: string | null;
   onPriceSelect: (value: string) => void;
-  activeCategory: string | null;
+  activeCategories: string[];
   onCategorySelect: (value: string) => void;
+  onClearCategories: () => void;
   hasLocation: boolean;
   isLocating: boolean;
   onLocateToggle: () => void;
@@ -49,8 +32,9 @@ export function MapFilterBar({
   onToggleOpenNow,
   activePrice,
   onPriceSelect,
-  activeCategory,
+  activeCategories,
   onCategorySelect,
+  onClearCategories,
   hasLocation,
   isLocating,
   onLocateToggle,
@@ -62,11 +46,19 @@ export function MapFilterBar({
     ({ level }) => String(level) === activePrice,
   );
 
-  console.log(selectedPrice);
+  const selectedCategoryLabels = activeCategories
+    .map(
+      (value) =>
+        CATEGORY_OPTIONS.find((option) => option.value === value)?.label,
+    )
+    .filter(Boolean);
 
-  const selectedCategory = CATEGORY_OPTIONS.find(
-    ({ value }) => value === activeCategory,
-  );
+  const categoryLabel =
+    activeCategories.length === 0
+      ? "Categories"
+      : activeCategories.length === 1
+        ? selectedCategoryLabels[0]
+        : `${activeCategories.length} categories`;
 
   return (
     <div className="w-full md:w-[550px] flex flex-col gap-2.5 pointer-events-auto">
@@ -217,22 +209,19 @@ export function MapFilterBar({
 
         <div className="relative shrink-0">
           <button
+            type="button"
             onClick={() => {
               setIsCategoryOpen((prev) => !prev);
               setIsPriceOpen(false);
             }}
             aria-expanded={isCategoryOpen}
-            className={`w-[145px] md:w-[160px] flex font-prata justify-between items-center gap-2 px-3.5 py-2 md:py-1.5 md:px-4 rounded-full text-xs font-bold border whitespace-nowrap transition-all shadow-sm active:scale-95
-              ${
-                activeCategory
-                  ? "bg-plp-navy text-white border-gray-900"
-                  : "bg-white/95 backdrop-blur-md text-gray-600 border-gray-200/50 hover:bg-gray-50"
-              }
-            `}
+            className={`flex w-[145px] items-center justify-between gap-2 whitespace-nowrap rounded-full border px-3.5 py-2 font-prata text-xs font-bold shadow-sm transition-all active:scale-95 md:w-[160px] md:px-4 md:py-1.5 ${
+              activeCategories.length > 0
+                ? "border-gray-900 bg-plp-navy text-white"
+                : "border-gray-200/50 bg-white/95 text-gray-600 backdrop-blur-md hover:bg-gray-50"
+            }`}
           >
-            <span className="truncate">
-              {selectedCategory?.label ?? "Categories"}
-            </span>
+            <span className="truncate">{categoryLabel}</span>
 
             <ChevronDown
               size={13}
@@ -243,38 +232,55 @@ export function MapFilterBar({
           </button>
 
           {isCategoryOpen && (
-            <div className="fixed left-4 right-4 top-[140px] max-h-[55dvh] overflow-y-auto rounded-2xl border border-gray-200/70 bg-white/98 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.14)] p-2 z-[1100] md:absolute md:left-0 md:right-auto md:top-full md:mt-2 md:w-[300px] md:max-h-[400px]">
-              {CATEGORY_OPTIONS.map(({ value, label }) => {
-                const active = activeCategory === value;
+            <div className="fixed left-4 right-4 top-[140px] z-[1100] overflow-hidden rounded-2xl border border-gray-200/70 bg-white/98 shadow-[0_12px_30px_rgba(0,0,0,0.14)] backdrop-blur-md md:absolute md:left-0 md:right-auto md:top-full md:mt-2 md:w-[320px]">
+              <div className="max-h-[55dvh] overflow-y-auto p-2 md:max-h-[400px]">
+                {CATEGORY_OPTIONS.map(({ value, label }) => {
+                  const active = activeCategories.includes(value);
 
-                return (
-                  <button
-                    key={value}
-                    onClick={() => {
-                      onCategorySelect(value);
-                      setIsCategoryOpen(false);
-                    }}
-                    className={`
-                      w-full
-                      cursor-pointer
-                      flex items-center justify-between
-                      gap-4
-                      px-3.5 py-3
-                      rounded-xl
-                      text-left
-                      font-prata text-xs
-                      transition-colors
-                      ${
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => onCategorySelect(value)}
+                      className={`flex w-full items-center justify-between gap-3 rounded-xl px-3.5 py-3 text-left font-prata text-xs transition-colors ${
                         active
-                          ? "bg-gray-900 text-white"
+                          ? "bg-plp-navy/[0.07] text-gray-900"
                           : "text-gray-700 hover:bg-gray-100"
-                      }
-                    `}
+                      }`}
+                    >
+                      <span className="flex min-w-0 items-center gap-3">
+                        <span
+                          className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${
+                            active
+                              ? "border-plp-navy bg-plp-navy text-white"
+                              : "border-gray-300 bg-white"
+                          }`}
+                        >
+                          {active && <Check size={11} strokeWidth={3} />}
+                        </span>
+
+                        <span className="truncate font-bold">{label}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {activeCategories.length > 0 && (
+                <div className="flex items-center justify-between border-t border-gray-100 bg-gray-50/80 px-4 py-2.5">
+                  <span className="font-prata text-[11px] text-gray-400">
+                    {activeCategories.length} selected
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={onClearCategories}
+                    className="font-prata text-[11px] font-semibold text-gray-500 transition-colors hover:text-gray-900"
                   >
-                    <span className="font-bold">{label}</span>
+                    Clear all
                   </button>
-                );
-              })}
+                </div>
+              )}
             </div>
           )}
         </div>
