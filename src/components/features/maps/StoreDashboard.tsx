@@ -13,6 +13,7 @@ import { useMapData } from "@/hooks/useMapData";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useStoreFilters } from "@/hooks/useStoreFilters";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useGetClothingCategories } from "@/hooks/useClothingCategory";
 import { StoreListView } from "./StoreListView";
 import { StoreDetailView } from "./StoreDetailView";
 import { MapFilterBar } from "./MapFilterBar";
@@ -40,6 +41,12 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     mapPins,
     storeById,
   } = useStoreFilters(stores, pins, userLocation);
+
+  const {
+    data: categories = [],
+    isLoading,
+    error,
+  } = useGetClothingCategories();
 
   const [activeId, setActiveId] = useState<number | null>(null);
   const [view, setView] = useState<"list" | "detail">("list");
@@ -113,7 +120,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     if (view === "detail") resetToList();
   };
 
-  if (loading) {
+  if (loading || isLoading) {
     return <Spinner text="Loading Stores" />;
   }
 
@@ -149,6 +156,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
           hasLocation={!!userLocation}
           isLocating={isLocating}
           onLocateToggle={handleLocateToggle}
+          categories={categories}
         />
       </div>
 

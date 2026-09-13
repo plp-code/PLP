@@ -1,23 +1,5 @@
 import { LocationHours } from "@/types";
 
-export const CATEGORY_OPTIONS: { value: string; label: string }[] = [
-  { value: "blazer", label: "Blazer" },
-  { value: "boots", label: "Boots" },
-  { value: "button-down", label: "Button-down" },
-  { value: "capris", label: "Capris" },
-  { value: "cardigan", label: "Cardigan" },
-  { value: "coat", label: "Coat" },
-  { value: "dress", label: "Dress" },
-  { value: "heels", label: "Heels" },
-  { value: "jacket", label: "Jacket" },
-  { value: "loafers", label: "Loafers" },
-  { value: "pants", label: "Pants" },
-  { value: "short-sleeve-top", label: "Short Sleeve Top" },
-  { value: "skirt", label: "Skirt" },
-  { value: "sleeveless-top", label: "Sleeveless Top" },
-  { value: "suit-set", label: "Suit Set/Two-Piece" },
-];
-
 export const getTodayHours = (
   hours?: LocationHours[],
 ): { isOpen: boolean; isClosingSoon: boolean; string: string } => {

@@ -36,25 +36,22 @@ export function StoreDetailView({
   distance,
   userLocation,
 }: StoreDetailViewProps) {
-  // `store` may be a lightweight pin (from a map marker) that lacks the
-  // full detail fields; narrow to the full Location when they're present.
   const details = "hours" in store ? store : null;
   const timeData = getTodayHours(details?.hours);
   const week = getWeekHours(details?.hours);
   const priceLevel = formatPriceLevel(details?.price_level);
   const gmapsUrl = buildDirectionsUrl(store, userLocation);
-
   const {
-    isAuthenticated,
-    authLoading,
     reviews,
+    isLoading,
+    isSubmitting,
     reviewOpen,
     setReviewOpen,
     showReviewSuccess,
     setShowReviewSuccess,
-    openReview,
     submitReview,
-  } = useStoreReviews();
+  } = useStoreReviews(store.id);
+
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -154,8 +151,8 @@ export function StoreDetailView({
 
         <StoreReviews
           reviews={reviews}
-          disabled={authLoading}
-          onAdd={openReview}
+          disabled={isLoading || isSubmitting}
+          onAdd={() => setReviewOpen(true)}
         />
       </div>
 

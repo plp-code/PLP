@@ -3,30 +3,31 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Loader2, X, ChevronDown, Check } from "lucide-react";
-import { CATEGORY_OPTIONS } from "@/lib/utils";
-
-export interface NewReview {
-  categories: string[];
-  item: string;
-  quote: string;
-  price?: number;
-}
+import { useGetClothingCategories } from "@/hooks/useClothingCategory";
+import type { NewReview } from "@/types";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSubmit: (review: NewReview) => void | Promise<void>;
+  onSubmit: (review: NewReview) => Promise<void>;
   storeName?: string;
 }
 
-export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
+export function AddReviewModal({
+  open,
+  onClose,
+  onSubmit,
+  storeName,
+}: Props) {
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
+
+  const { data: categoryOptions = [] } = useGetClothingCategories();
 
   const [item, setItem] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [quote, setQuote] = useState("");
+  const [experience, setExperience] = useState("");
   const [price, setPrice] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -39,7 +40,7 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
       setCategories([]);
       setIsCategoryOpen(false);
       setItem("");
-      setQuote("");
+      setExperience("");
       setPrice("");
       setSubmitting(false);
 
@@ -71,16 +72,16 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
 
   if (!mounted || !open) return null;
 
-  const toggleCategory = (value: string) => {
+  const toggleCategory = (slug: string) => {
     setCategories((prev) =>
-      prev.includes(value)
-        ? prev.filter((category) => category !== value)
-        : [...prev, value],
+      prev.includes(slug)
+        ? prev.filter((category) => category !== slug)
+        : [...prev, slug],
     );
   };
 
   const canSubmit =
-    item.trim().length > 0 && quote.trim().length > 0 && !submitting;
+    item.trim().length > 0 && experience.trim().length > 0 && !submitting;
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -92,13 +93,13 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
     const parsedPrice = Number.parseFloat(price);
 
     try {
-      await onSubmit({
-        categories: categories.map((c) => c.trim()),
-        item: item.trim(),
-        quote: quote.trim(),
-        price:
-          Number.isFinite(parsedPrice) && parsedPrice > 0
-            ? Math.round(parsedPrice * 100)
+      await onSubmit({ 
+        category_slugs: categories.map((c) => c.trim()),
+        item_purchased: item.trim(),
+        experience: experience.trim(),
+        price_paid:
+          Number.isFinite(parsedPrice) && parsedPrice >= 0
+            ? Number(parsedPrice.toFixed(2))
             : undefined,
       });
     } finally {
@@ -203,15 +204,14 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
                     </span>
                   ) : (
                     <div className="flex flex-wrap gap-1.5">
-                      {categories.slice(0, 3).map((value) => {
+                      {categories.slice(0, 3).map((slug) => {
                         const label =
-                          CATEGORY_OPTIONS.find(
-                            (option) => option.value === value,
-                          )?.label ?? value;
+                          categoryOptions.find((cat) => cat.slug === slug)?.name ??
+                          slug;
 
                         return (
                           <span
-                            key={value}
+                            key={slug}
                             className="inline-flex items-center rounded-full bg-plp-maroon/[0.07] px-2.5 py-1 font-prata text-[11px] font-medium text-plp-maroon"
                           >
                             {label}
@@ -239,14 +239,14 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
               {isCategoryOpen && (
                 <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl">
                   <div className="max-h-64 overflow-y-auto p-1.5">
-                    {CATEGORY_OPTIONS.map(({ value, label }) => {
-                      const checked = categories.includes(value);
+                    {categoryOptions.map((cat) => {
+                      const checked = categories.includes(cat.slug);
 
                       return (
                         <button
-                          key={value}
+                          key={cat.id}
                           type="button"
-                          onClick={() => toggleCategory(value)}
+                          onClick={() => toggleCategory(cat.slug)}
                           className={`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
                             checked
                               ? "bg-plp-maroon/[0.06]"
@@ -271,7 +271,7 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
                                   : "text-gray-700"
                               }`}
                             >
-                              {label}
+                              {cat.name}
                             </span>
                           </span>
 
@@ -305,16 +305,16 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
 
               {categories.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 pt-1">
-                  {categories.map((value) => {
+                  {categories.map((slug) => {
                     const label =
-                      CATEGORY_OPTIONS.find((option) => option.value === value)
-                        ?.label ?? value;
+                      categoryOptions.find((cat) => cat.slug === slug)?.name ??
+                      slug;
 
                     return (
                       <button
-                        key={value}
+                        key={slug}
                         type="button"
-                        onClick={() => toggleCategory(value)}
+                        onClick={() => toggleCategory(slug)}
                         className="group inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-2.5 py-1.5 font-prata text-[11px] text-gray-600 transition-colors hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900"
                       >
                         {label}
@@ -365,8 +365,8 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
               </span>
 
               <textarea
-                value={quote}
-                onChange={(event) => setQuote(event.target.value)}
+                value={experience}
+                onChange={(event) => setExperience(event.target.value)}
                 rows={4}
                 maxLength={280}
                 placeholder="How was the selection, pricing, and overall experience?"
@@ -374,7 +374,7 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
               />
 
               <span className="self-end font-prata text-[11px] text-gray-300">
-                {quote.length}/280
+                {experience.length}/280
               </span>
             </label>
           </div>

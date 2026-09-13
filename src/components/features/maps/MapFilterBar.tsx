@@ -1,7 +1,8 @@
 "use client";
-import { CATEGORY_OPTIONS } from "@/lib/utils";
-import { Search, Loader2, Navigation, Clock, ChevronDown, Check } from "lucide-react";
+
 import { useState } from "react";
+import { Search, Loader2, Navigation, Clock, ChevronDown, Check } from "lucide-react";
+import type { ClothingCategory } from "@/types";
 
 const PRICE_LEVELS = [
   { level: 1, label: "Unpaid Internship", range: "$0-20" },
@@ -23,6 +24,7 @@ interface MapFilterBarProps {
   hasLocation: boolean;
   isLocating: boolean;
   onLocateToggle: () => void;
+  categories: ClothingCategory[];
 }
 
 export function MapFilterBar({
@@ -38,6 +40,7 @@ export function MapFilterBar({
   hasLocation,
   isLocating,
   onLocateToggle,
+  categories = [],
 }: MapFilterBarProps) {
   const [isPriceOpen, setIsPriceOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -48,8 +51,7 @@ export function MapFilterBar({
 
   const selectedCategoryLabels = activeCategories
     .map(
-      (value) =>
-        CATEGORY_OPTIONS.find((option) => option.value === value)?.label,
+      (slug) => categories.find((cat) => cat.slug === slug)?.name ?? slug,
     )
     .filter(Boolean);
 
@@ -175,7 +177,6 @@ export function MapFilterBar({
                       setIsPriceOpen(false);
                     }}
                     className={`
-                      curosr-pointer
                       w-full
                       flex items-center justify-between gap-4
                       px-3.5 py-3
@@ -234,14 +235,14 @@ export function MapFilterBar({
           {isCategoryOpen && (
             <div className="fixed left-4 right-4 top-[140px] z-[1100] overflow-hidden rounded-2xl border border-gray-200/70 bg-white/98 shadow-[0_12px_30px_rgba(0,0,0,0.14)] backdrop-blur-md md:absolute md:left-0 md:right-auto md:top-full md:mt-2 md:w-[320px]">
               <div className="max-h-[55dvh] overflow-y-auto p-2 md:max-h-[400px]">
-                {CATEGORY_OPTIONS.map(({ value, label }) => {
-                  const active = activeCategories.includes(value);
+                {categories.map((cat) => {
+                  const active = activeCategories.includes(cat.slug);
 
                   return (
                     <button
-                      key={value}
+                      key={cat.id}
                       type="button"
-                      onClick={() => onCategorySelect(value)}
+                      onClick={() => onCategorySelect(cat.slug)}
                       className={`flex w-full items-center justify-between gap-3 rounded-xl px-3.5 py-3 text-left font-prata text-xs transition-colors ${
                         active
                           ? "bg-plp-navy/[0.07] text-gray-900"
@@ -259,7 +260,7 @@ export function MapFilterBar({
                           {active && <Check size={11} strokeWidth={3} />}
                         </span>
 
-                        <span className="truncate font-bold">{label}</span>
+                        <span className="truncate font-bold">{cat.name}</span>
                       </span>
                     </button>
                   );
