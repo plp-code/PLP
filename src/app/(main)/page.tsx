@@ -19,11 +19,17 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <div>
+    <div className="flex flex-col w-full">
       <Hero />
-      {/* <JoinBanner /> */}
+
+      <div className="w-full h-px bg-plp-navy/10" />
+
       <Manifesto />
+
+      <div className="w-full h-px bg-plp-navy/10" />
+
       <QuoteCarousel />
+
       <MapsSection />
     </div>
   );
