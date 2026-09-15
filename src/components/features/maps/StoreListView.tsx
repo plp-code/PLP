@@ -2,6 +2,7 @@ import { ChevronRight, Loader2, Navigation, Clock } from "lucide-react";
 import { getTodayHours, formatPriceLevel, getDistance } from "@/lib/utils";
 import type { Location } from "@/types";
 import type { UserLocation } from "@/hooks/useGeolocation";
+import { StoreStatusBadge } from "./StoreStatusBadge";
 
 interface StoreListViewProps {
   stores: Location[];
@@ -56,93 +57,84 @@ export function StoreListView({
             <div
               key={store.id}
               onClick={() => onSelect(store.id)}
-              className={`group relative p-4 md:p-5 min-h-[96px] md:min-h-[110px] cursor-pointer transition-all duration-200 flex justify-between items-center ${
+              className={`group relative flex min-h-[100px] cursor-pointer items-center px-4 py-4 transition-colors duration-200 md:min-h-[108px] md:px-5 ${
                 isSelected
-                  ? "bg-blue-50/40"
+                  ? "bg-blue-50/50"
                   : "bg-white hover:bg-gray-50 active:bg-gray-100"
               }`}
             >
+              {/* Selected indicator */}
               <div
-                className={`absolute left-0 top-0 bottom-0 w-1.5 bg-blue-600 transition-transform duration-300 origin-left ${
+                className={`absolute bottom-0 left-0 top-0 w-1 origin-left bg-blue-600 transition-transform duration-200 ${
                   isSelected ? "scale-x-100" : "scale-x-0"
                 }`}
               />
 
+              {/* Number */}
               <span
-                className={`shrink-0 mr-3 md:mr-4 font-bodoni text-[13px] md:text-[14px] font-semibold tabular-nums w-5 text-center transition-colors ${
+                className={`mr-3 w-5 shrink-0 text-center font-bodoni text-[12px] font-semibold tabular-nums transition-colors md:mr-4 md:text-[13px] ${
                   isSelected
                     ? "text-blue-600"
-                    : "text-gray-400 group-hover:text-gray-600"
+                    : "text-gray-300 group-hover:text-gray-500"
                 }`}
               >
                 {index + 1}
               </span>
 
-              <div className="pr-3 md:pr-4 min-w-0 flex flex-col justify-center gap-2 flex-1">
+              {/* Main content */}
+              <div className="min-w-0 flex-1">
                 <h3
-                  className={`font-bodoni font-bold capitalize text-[17px] md:text-[18px] leading-tight tracking-[-0.01em] line-clamp-2 transition-colors ${
+                  className={`line-clamp-2 font-bodoni text-[17px] font-bold capitalize leading-[1.2] tracking-[-0.01em] transition-colors md:text-[18px] ${
                     isSelected
                       ? "text-blue-800"
-                      : "text-gray-900 group-hover:text-blue-600"
+                      : "text-gray-900 group-hover:text-blue-700"
                   }`}
                 >
                   {store.name}
                 </h3>
 
-                <div className="flex items-center gap-1.5 flex-wrap">
+                <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5">
                   {distance !== null && (
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
-                      <Navigation size={10} className="fill-blue-200" />
+                    <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 font-prata text-[11px] font-medium text-blue-700">
+                      <Navigation
+                        size={10}
+                        strokeWidth={2}
+                        className="text-blue-500"
+                      />
                       {distance.toFixed(1)} mi
                     </span>
                   )}
 
                   {priceLevel && (
-                    <span className="inline-flex items-center text-[11px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
+                    <span className="inline-flex items-center rounded-md bg-emerald-50 px-2 py-1 font-prata text-[11px] font-semibold text-emerald-700">
                       {priceLevel}
                     </span>
                   )}
 
                   {timeData.string && (
-                    <span className="inline-flex items-center font-prata gap-1 text-[13px] font-medium text-gray-400 px-2 py-0.5">
-                      <Clock size={10} />
+                    <span className="inline-flex items-center gap-1 font-prata text-[11px] text-gray-400">
+                      <Clock size={11} strokeWidth={1.8} />
                       {timeData.string}
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="flex flex-col items-end justify-center gap-2 md:gap-2.5 shrink-0 pl-2">
-                <div
-                  className={`flex items-center font-bodoni gap-1.5 text-[11px] md:text-[12px] font-semibold uppercase tracking-[0.15em] px-2 py-1 rounded-full ${
-                    !timeData.isOpen
-                      ? "text-gray-500 bg-gray-50 border border-gray-200"
-                      : timeData.isClosingSoon
-                        ? "text-amber-700 bg-amber-50 border border-amber-100"
-                        : "text-emerald-700 bg-emerald-50 border border-emerald-100"
-                  }`}
-                >
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full ${
-                      !timeData.isOpen
-                        ? "bg-gray-400"
-                        : timeData.isClosingSoon
-                          ? "bg-amber-500 shadow-[0_0_4px_rgba(245,158,11,0.5)]"
-                          : "bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.5)]"
-                    }`}
-                  />
-                  {!timeData.isOpen
-                    ? "Closed"
-                    : timeData.isClosingSoon
-                      ? "Closing Soon"
-                      : "Open"}
-                </div>
+              {/* Right side */}
+              <div className="ml-3 flex shrink-0 flex-col items-end gap-2">
+                <StoreStatusBadge
+                  isOpen={timeData.isOpen}
+                  isClosingSoon={timeData.isClosingSoon}
+                  compact
+                />
+
                 <ChevronRight
-                  size={18}
+                  size={17}
+                  strokeWidth={1.8}
                   className={`transition-all duration-200 ${
                     isSelected
-                      ? "text-blue-500 translate-x-0.5"
-                      : "text-gray-300 group-hover:text-gray-400"
+                      ? "translate-x-0.5 text-blue-500"
+                      : "text-gray-300 group-hover:translate-x-0.5 group-hover:text-gray-500"
                   }`}
                 />
               </div>

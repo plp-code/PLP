@@ -106,6 +106,7 @@ export default function MapDirectory() {
             : undefined
         }
         autoCloseMs={3000}
+        position="bottom-right"
       />
       <Snackbar
         show={showWaitlistSuccess}
@@ -117,6 +118,7 @@ export default function MapDirectory() {
         textColor="text-green-900"
         title="You're on the waitlist!"
         subtitle="We'll email you as soon as new maps go live."
+        position="bottom-right"
         autoCloseMs={4000}
       />
       {!authLoading && !isAuthenticated && (
@@ -130,6 +132,7 @@ export default function MapDirectory() {
           textColor="text-amber-900"
           title="Browsing as Guest"
           subtitle="Log in or create an account to make any purchases."
+          position="bottom-right"
           autoCloseMs={5000}
         />
       )}
