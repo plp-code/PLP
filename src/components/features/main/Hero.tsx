@@ -8,7 +8,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative w-full bg-plp-parchment px-4 pb-8 pt-4 sm:px-5 md:h-[calc(100dvh-94px)] md:py-6"
+      className="relative w-full bg-plp-parchment px-4 pb-6 pt-4 sm:px-5 md:h-[calc(100dvh-94px)] md:py-6"
     >
       <div className="mx-auto flex h-full w-full max-w-7xl flex-col items-center">
         <div className="mb-5 flex shrink-0 flex-col items-center text-center md:mb-6">
@@ -19,14 +19,10 @@ export default function Hero() {
           <Label className="mt-2 text-[clamp(1rem,1.7vw,1.4rem)] tracking-[0.08em] text-plp-maroon">
             Power never goes out of style.
           </Label>
-
-          {/* <p className="mt-2 max-w-2xl font-prata text-[clamp(0.95rem,1.35vw,1.125rem)] leading-relaxed text-plp-maroon/70">
-            The best professional clothing has already been to work.
-          </p> */}
         </div>
 
-        <div className="w-full overflow-hidden rounded-lg border border-plp-navy bg-white md:hidden">
-          <div className="relative aspect-[4/3] w-full bg-stone-100">
+        <div className="w-full md:hidden">
+          <div className="relative aspect-[4/4.6] w-full overflow-hidden rounded-lg border border-plp-navy bg-white">
             <Image
               src={heroImageMobile}
               alt="Preloved professional clothing"
@@ -36,8 +32,11 @@ export default function Hero() {
               sizes="100vw"
             />
           </div>
+
+          <ArtworkCredit />
         </div>
 
+        {/* Desktop image */}
         <div className="hidden min-h-0 w-full flex-1 flex-col md:flex">
           <div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-plp-navy bg-white">
             <div className="relative h-full min-h-0 w-full bg-stone-100">
@@ -52,19 +51,25 @@ export default function Hero() {
             </div>
           </div>
 
-          <p className="mt-2 text-right font-mono text-[9px] uppercase tracking-[0.12em] text-plp-maroon/45">
-            Artwork by{" "}
-            <a
-              href="https://www.instagram.com/byynancyy/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-plp-maroon/70 underline decoration-plp-maroon/25 underline-offset-2 transition-colors hover:text-plp-maroon hover:decoration-plp-maroon"
-            >
-             @byynancyy 
-            </a>
-          </p>
+          <ArtworkCredit />
         </div>
       </div>
     </section>
+  );
+}
+
+function ArtworkCredit() {
+  return (
+    <p className="mt-2 text-right font-mono text-[9px] uppercase tracking-[0.12em] text-plp-maroon/45">
+      Artwork by{" "}
+      <a
+        href="https://www.instagram.com/byynancyy/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="pointer-events-auto text-plp-maroon/70 underline decoration-plp-maroon/25 underline-offset-2 transition-colors hover:text-plp-maroon hover:decoration-plp-maroon"
+      >
+        @byynancyy
+      </a>
+    </p>
   );
 }
