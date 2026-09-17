@@ -9,7 +9,7 @@ interface TextProps {
 export const Display = ({ children, className = "" }: TextProps) => (
   <p
     className={twMerge(
-      "font-seventies text-plp-maroon leading-[0.85] tracking-tighter",
+      "font-seventies leading-[0.9] tracking-[-0.035em] text-plp-maroon",
       className,
     )}
   >
@@ -20,7 +20,7 @@ export const Display = ({ children, className = "" }: TextProps) => (
 export const Subtitle = ({ children, className = "" }: TextProps) => (
   <p
     className={twMerge(
-      "font-bodoni lg:text-4xl md:text-2xl leading-tight",
+      "font-bodoni leading-tight tracking-[-0.01em] text-plp-maroon",
       className,
     )}
   >
@@ -31,7 +31,7 @@ export const Subtitle = ({ children, className = "" }: TextProps) => (
 export const Label = ({ children, className = "" }: TextProps) => (
   <span
     className={twMerge(
-      "text-sm font-prata font-bold uppercase tracking-widest",
+      "font-prata text-sm font-semibold uppercase tracking-[0.12em]",
       className,
     )}
   >

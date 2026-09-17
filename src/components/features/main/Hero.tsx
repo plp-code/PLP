@@ -1,59 +1,51 @@
-"use client";
-
+import Image from "next/image";
 import { Display, Label } from "../../ui/Typography";
+
 import heroImage from "@/assets/hero_web_view.png";
 import heroImageMobile from "@/assets/hero_mobile_view.png";
-import Image from "next/image";
 
 export default function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-fit md:min-h-[calc(100dvh-94px)] w-full flex-col items-center justify-start md:justify-center overflow-visible bg-plp-parchment px-6 pt-6 pb-16 md:pt-0 md:pb-20"
+      className="relative w-full overflow-visible bg-plp-parchment px-5 pb-14 pt-6 sm:px-6 md:flex md:min-h-[calc(100dvh-94px)] md:items-center md:py-12"
     >
-      <div className="relative z-10 flex w-full max-w-[95vw] xl:max-w-7xl flex-col items-center transition-all duration-700">
-        <div className="w-full text-center">
-          <Display className="inline-block capitalize text-balance whitespace-normal md:whitespace-nowrap text-[15vw] md:text-[8.25vw] xl:text-[105px] leading-[1.05] md:leading-[1] tracking-tighter mb-4 text-plp-maroon">
-            the preloved professional
+      <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
+        <div className="mb-7 flex w-full flex-col items-center text-center md:mb-8">
+          <Display className="text-balance text-[clamp(3.75rem,8vw,6.75rem)] leading-[0.9] text-plp-maroon">
+            The Preloved Professional
           </Display>
-        </div>
 
-        <div className="w-full text-center mb-6">
-          <Label className="font-[word-spacing:0.125rem] md:[word-spacing:0.2rem] whitespace-normal md:whitespace-nowrap text-[3.75vw] md:text-[2.0625vw] xl:text-[26.25px] leading-[1.05] md:leading-[1] tracking-wide mb-4 text-plp-maroon">
+          <Label className="mt-5 text-[clamp(0.85rem,1.5vw,1.25rem)] tracking-[0.08em] text-plp-maroon">
             Power never goes out of style.
           </Label>
-        </div>
 
-        <div className="w-full text-center mb-6">
-          <p className="font-cormorant text-[3vw] md:text-[1.65vw] xl:text-[21px] leading-[1.2] tracking-normal opacity-90 text-plp-maroon">
-            A women&apos;s networking company. Secondhand is the mechanism.
-            Community is the point.
+          <p className="mt-3 max-w-2xl font-prata text-[clamp(0.8rem,1.2vw,1rem)] leading-relaxed text-plp-maroon/70">
+            The best professional clothing has already been to work.
           </p>
         </div>
 
-        <div className="w-full">
-          <div className="relative border rounded-lg border-plp-navy bg-white overflow-hidden">
-            <div className="relative w-full aspect-4/3 md:hidden bg-stone-100">
-              <Image
-                src={heroImageMobile}
-                alt="Hero"
-                fill
-                priority
-                className="object-cover"
-                sizes="100vw"
-              />
-            </div>
+        <div className="w-full overflow-hidden rounded-lg border border-plp-navy bg-white">
+          <div className="relative aspect-[4/3] w-full bg-stone-100 md:hidden">
+            <Image
+              src={heroImageMobile}
+              alt="Preloved professional clothing"
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
 
-            <div className="relative hidden w-full aspect-[1920/823] md:block bg-stone-100">
-              <Image
-                src={heroImage}
-                alt="Hero"
-                fill
-                priority
-                className="object-cover"
-                sizes="100vw"
-              />
-            </div>
+          <div className="relative hidden aspect-[1920/823] w-full bg-stone-100 md:block">
+            <Image
+              src={heroImage}
+              alt="Preloved professional clothing"
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 1280px) 100vw, 1280px"
+            />
           </div>
         </div>
       </div>

@@ -7,8 +7,8 @@ import {
   LogOut,
   Loader2,
   X,
-  Scroll,
   Globe,
+  Mail,
 } from "lucide-react";
 import { Label } from "../ui/Typography";
 import { useAuthUser } from "@/context/AuthContext";
@@ -24,7 +24,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
 
   const navItems = [
     { name: "Home", icon: <Globe size={18} />, to: "/#home" },
-    { name: "Manifesto", icon: <Scroll size={18} />, to: "/#manifesto" },
+    { name: "Email", icon: <Mail size={18} />, to: "/#email" },
     { name: "Maps", icon: <Globe size={18} />, to: "/maps" },
     ...(isAuthenticated
       ? []
