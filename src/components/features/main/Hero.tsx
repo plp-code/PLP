@@ -38,17 +38,31 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="hidden min-h-0 w-full flex-1 overflow-hidden rounded-lg border border-plp-navy bg-white md:block">
-          <div className="relative h-full min-h-0 w-full bg-stone-100">
-            <Image
-              src={heroImage}
-              alt="Preloved professional clothing"
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 1280px) 100vw, 1280px"
-            />
+        <div className="hidden min-h-0 w-full flex-1 flex-col md:flex">
+          <div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-plp-navy bg-white">
+            <div className="relative h-full min-h-0 w-full bg-stone-100">
+              <Image
+                src={heroImage}
+                alt="Preloved professional clothing"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 1280px) 100vw, 1280px"
+              />
+            </div>
           </div>
+
+          <p className="mt-2 text-right font-mono text-[9px] uppercase tracking-[0.12em] text-plp-maroon/45">
+            Artwork by{" "}
+            <a
+              href="https://www.instagram.com/byynancyy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-plp-maroon/70 underline decoration-plp-maroon/25 underline-offset-2 transition-colors hover:text-plp-maroon hover:decoration-plp-maroon"
+            >
+             @byynancyy 
+            </a>
+          </p>
         </div>
       </div>
     </section>

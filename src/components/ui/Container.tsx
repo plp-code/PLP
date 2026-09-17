@@ -1,36 +1,30 @@
-import type { ReactNode, ElementType } from "react";
+import type { ElementType, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface ContainerProps {
   children: ReactNode;
   className?: string;
+  contentClassName?: string;
   fullBleed?: boolean;
   bg?: string;
-  contentClassName?: string;
   as?: ElementType;
 }
 
 export const Container = ({
   children,
-  className = "",
+  className,
+  contentClassName,
   fullBleed = false,
   bg = "bg-transparent",
-  contentClassName = "",
   as: Component = "section",
 }: ContainerProps) => {
   return (
-    <Component
-      className={twMerge(
-        "w-full",
-        bg,
-        className
-      )}
-    >
+    <Component className={twMerge("w-full", bg, className)}>
       <div
         className={twMerge(
-          "mx-auto max-w-7xl",
+          "mx-auto w-full max-w-7xl",
+          !fullBleed && "px-5 sm:px-6 md:px-10 lg:px-16",
           contentClassName,
-          !fullBleed && "px-6 md:px-12 lg:px-16"
         )}
       >
         {children}

@@ -68,7 +68,7 @@ export default function MapDirectory() {
   };
 
   const liveMaps = maps.filter((m) => m.status === "live");
-  const upcomingMaps = maps.filter((m) => m.status === "waitlist");
+  const upcomingMaps = maps.filter((m) => m.status === "waitlist" || m.status === "next");
 
   const startIndex = (currentPage - 1) * limit;
   const endIndex = startIndex + maps.length;
@@ -88,6 +88,8 @@ export default function MapDirectory() {
       </div>
     );
   }
+
+  console.log(upcomingMaps);
 
   return (
     <div className="w-full max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">

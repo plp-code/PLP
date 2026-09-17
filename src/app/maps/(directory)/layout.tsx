@@ -1,7 +1,5 @@
 import HeaderSimplified from "@/components/layout/HeaderSimplified";
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import MobileGuard from "@/components/layout/MobileGuard";
 import { ReactNode } from "react";
 
 export default function SimplifiedLayout({ children }: { children: ReactNode }) {
@@ -11,7 +9,6 @@ export default function SimplifiedLayout({ children }: { children: ReactNode }) 
         <HeaderSimplified />
       </div>
 
-      {/* <MobileGuard /> */}
 
       <div className="grow pt-16">
         {children}

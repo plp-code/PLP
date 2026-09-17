@@ -5,7 +5,7 @@ export interface User {
   email: string;
 }
 
-export type MapStatus = "live" | "waitlist" | "dropped";
+export type MapStatus = "live" | "waitlist" | "dropped" | "next" ;
 
 export interface MapItem {
   id: number;
