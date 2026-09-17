@@ -19,7 +19,7 @@ export default function MapsPage() {
           contentClassName="py-14 md:py-20"
         />
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 translate-y-[50%] sm:translate-y-[22%]">
+        {/* <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 translate-y-[50%] sm:translate-y-[22%]">
           <div className="mx-auto flex max-w-7xl justify-end px-3 sm:px-6 lg:px-8">
             <div className="relative w-[150px] rotate-[2deg] bg-[#f4e58c] px-3.5 pb-3.5 pt-4 shadow-[3px_5px_12px_rgba(61,11,25,0.15)] sm:w-[210px] sm:rotate-[1.5deg] sm:px-5 sm:pb-5 sm:pt-6 ">
               <span
@@ -44,7 +44,7 @@ export default function MapsPage() {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <Container

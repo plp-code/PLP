@@ -211,6 +211,7 @@ export function MapFilterBar({
         <div className="relative shrink-0">
           <button
             type="button"
+            disabled
             onClick={() => {
               setIsCategoryOpen((prev) => !prev);
               setIsPriceOpen(false);
@@ -242,6 +243,7 @@ export function MapFilterBar({
                     <button
                       key={cat.id}
                       type="button"
+                      disabled 
                       onClick={() => onCategorySelect(cat.slug)}
                       className={`flex w-full items-center justify-between gap-3 rounded-xl px-3.5 py-3 text-left font-prata text-xs transition-colors ${
                         active
