@@ -12,9 +12,10 @@ export const metadata: Metadata = {
 export default function MapsPage() {
   return (
     <section className="min-h-screen bg-plp-parchment flex flex-col font-text selection:bg-plp-lime selection:text-plp-maroon">
+     {/* Your path to power, store by store.  */}
       <Banner
         title="PLP Thrift Maps"
-        description="Your path to power, store by store."
+        description="Not a PDF. Your map lives in your account, updates as stores change, and filters by what you&apos;re looking for."
         contentClassName="py-14 md:py-20"
       />
 

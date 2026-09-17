@@ -7,7 +7,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Prata&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap');
 
 /* TAILWIND CORE  */
 @import "tailwindcss";
@@ -39,8 +38,6 @@
   --font-bodoni: "Bodoni Moda", serif;
   --font-handwriting: "Rock Salt", cursive;
   --font-architect: "Architects Daughter", cursive;
-  --font-alike: "Alike Angular", serif;
-  --font-cormorant: "Cormorant", serif;
 
   /* Colors — palette */
   --color-plp-parchment: #f4f0e8;
@@ -129,7 +126,6 @@
   h5,
   h6 {
     font-family: var(--font-bodoni);
-    text-transform: uppercase;
   }
 
   p {

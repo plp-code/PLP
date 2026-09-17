@@ -9,22 +9,22 @@ import { MapPin, Compass, ArrowUpRight, Plus } from "lucide-react";
 const STEPS = [
   {
     label: "01",
-    title: "[step one]",
-    desc: "[some text — how we source and verify what goes on the map]",
+    title: "Every store, in person",
+    desc: "We visit each one ourselves. No directories, no aggregated reviews, no guessing from a website.",
     pin: { top: "26%", left: "32%" },
     coord: { lat: "[lat 01]", long: "[long 01]" },
   },
   {
     label: "02",
-    title: "[step two]",
-    desc: "[some text — how the community shapes and adds to it]",
+    title: "Tagged by what it costs",
+    desc: "Every store carries a price range, so you can plan a trip against your budget instead of hoping.",
     pin: { top: "44%", left: "62%" },
     coord: { lat: "[lat 02]", long: "[long 02]" },
   },
   {
     label: "03",
-    title: "[step three]",
-    desc: "[some text — how it stays alive, current, and in-person]",
+    title: "It gets better as people use it",
+    desc: "Members log what they find. When ten women pull blouses from the same store, the map says so. Stores change, and the map moves with them.",
     pin: { top: "70%", left: "44%" },
     coord: { lat: "[lat 03]", long: "[long 03]" },
   },
@@ -78,19 +78,21 @@ export default function MapsSection() {
       />
 
       <Container className="relative z-10">
-        <header className="max-w-3xl mb-10 md:mb-14">
-          <div className="flex items-center gap-3 md:gap-4 mb-5">
+        <header className="mb-9 max-w-3xl md:mb-12">
+          <div className="flex items-center gap-3 md:gap-4">
             <Compass
-              className="w-6 h-6 md:w-10 md:h-10 shrink-0 text-plp-olive"
+              className="h-6 w-6 shrink-0 text-plp-olive md:h-9 md:w-9"
               strokeWidth={1.5}
             />
-            <Display className="text-4xl md:text-7xl lowercase text-plp-maroon tracking-tight leading-none">
-              [what the map is]
+
+            <Display className="text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.9] text-plp-maroon">
+              PLP Thrift Maps
             </Display>
           </div>
 
-          <Subtitle className="font-bodoni italic text-lg md:text-3xl text-plp-clay leading-snug mt-4 md:mt-6">
-            [a single line on the purpose of the map]
+          <Subtitle className="mt-4 max-w-2xl font-bodoni text-[18px] italic leading-snug text-plp-clay md:mt-5 md:text-[26px]">
+            A searchable guide to the secondhand stores in your city that carry
+            professional clothing.
           </Subtitle>
         </header>
 
@@ -100,17 +102,34 @@ export default function MapsSection() {
           onMouseLeave={() => setIsAutoPlaying(true)}
         >
           <div>
-            <div className="border-l-2 border-plp-maroon pl-5 md:pl-6 mb-6 md:mb-8">
-              <p className="font-mono uppercase tracking-[0.3em] text-xs text-plp-navy/50 mb-4">
+            <div className="mb-7 border-l-2 border-plp-maroon pl-4 md:mb-8 md:pl-6">
+              <p className="mb-3 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-plp-navy/45">
                 [the purpose]
               </p>
-              <p className="text-plp-maroon/80 leading-relaxed text-base md:text-lg font-light max-w-md">
-                [some text — why the map exists and who it serves]
-              </p>
+
+              <div className="max-w-[58ch] space-y-3 font-prata text-[13px] leading-6 text-plp-maroon/80 md:space-y-4 md:text-[15px] md:leading-7">
+                <p>
+                  Many thrift stores are a waste of an afternoon. Some
+                  aren&apos;t, and the difference isn&apos;t obvious from the
+                  door. The reason most working women don&apos;t thrift
+                  isn&apos;t money, it&apos;s time.
+                </p>
+
+                <p>
+                  Hunting is the expensive part. The map is how you spend an
+                  hour instead of a Saturday.
+                </p>
+
+                <p>
+                  PLP thrift maps are hand-picked lists of stores worth a visit
+                  for professional clothing. You&apos;ll know what you can
+                  expect to spend, what you might find, and how to get there.
+                </p>
+              </div>
             </div>
 
-            <p className="font-prata not-italic text-sm md:text-base text-plp-olive tracking-wide uppercase mb-5 md:mb-6">
-              [how we build it]
+            <p className="mb-4 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-plp-navy/45 md:mb-5">
+              [how it works]
             </p>
 
             <div className="flex flex-col border-t border-plp-maroon/20">
@@ -131,10 +150,10 @@ export default function MapsSection() {
                       }`}
                     />
                     <div
-                      className={`flex items-center gap-3 md:gap-4 py-4 transition-all duration-300 ${
+                      className={`flex items-center gap-3 py-3.5 transition-all duration-300 md:gap-4 md:py-4 ${
                         isActive
-                          ? "pl-4 bg-plp-lime/10"
-                          : "pl-0 opacity-45 hover:opacity-100 hover:pl-2"
+                          ? "bg-plp-lime/10 pl-3 md:pl-4"
+                          : "pl-0 opacity-50 hover:pl-2 hover:opacity-100"
                       }`}
                     >
                       <Label
@@ -144,7 +163,7 @@ export default function MapsSection() {
                       >
                         {step.label}
                       </Label>
-                      <h3 className="font-prata not-italic text-lg md:text-xl uppercase tracking-tight text-plp-maroon">
+                      <h3 className="font-bodoni text-[16px] font-semibold normal-case leading-tight tracking-[-0.01em] text-plp-maroon md:text-[18px]">
                         {step.title}
                       </h3>
                       <div className="h-px flex-1 bg-plp-maroon/20" />
@@ -167,7 +186,7 @@ export default function MapsSection() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <p className="pb-6 pl-4 md:pl-10 pr-2 text-base md:text-lg leading-relaxed text-plp-maroon/70 font-light">
+                        <p className="pb-5 pl-3 pr-2 font-prata text-[13px] leading-6 text-plp-maroon/70 md:pb-6 md:pl-10 md:text-[14px]">
                           {step.desc}
                         </p>
                       </div>
@@ -176,24 +195,11 @@ export default function MapsSection() {
                 );
               })}
             </div>
-
-            <div className="mt-6 flex items-center gap-2">
-              {STEPS.map((step, index) => (
-                <span
-                  key={step.label}
-                  className={`h-1 rounded-full transition-all duration-500 ${
-                    activeIndex === index
-                      ? "w-8 bg-plp-maroon"
-                      : "w-2 bg-plp-maroon/20"
-                  }`}
-                />
-              ))}
-            </div>
           </div>
 
           <div className="lg:sticky lg:top-24">
             <div className="relative bg-plp-parchment border border-plp-maroon/25 p-2 md:p-2.5 shadow-[0_30px_70px_rgba(0,0,0,0.16)]">
-              <div className="relative aspect-[16/11] w-full border border-plp-maroon/30 bg-plp-parchment overflow-hidden">
+              <div className="relative aspect-[4/3] w-full overflow-hidden border border-plp-maroon/30 bg-plp-parchment md:aspect-[16/11]">
                 <div
                   className="absolute inset-0 opacity-[0.16]"
                   style={{
@@ -297,8 +303,7 @@ export default function MapsSection() {
                     [the map]
                   </span>
                 </div>
-
-                <span className="absolute bottom-3 right-3 font-mono text-[10px] tracking-widest text-plp-maroon/50 transition-opacity duration-500">
+                <span className="absolute bottom-3 right-3 hidden font-mono text-[9px] tracking-[0.14em] text-plp-maroon/50 transition-opacity duration-500 sm:block md:text-[10px]">
                   {active.coord.lat} · {active.coord.long}
                 </span>
               </div>
@@ -322,17 +327,18 @@ export default function MapsSection() {
           </div>
         </div>
 
-        <div className="mt-10 md:mt-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-t border-plp-maroon/20 pt-8">
-          <p className="text-plp-maroon/80 leading-relaxed text-lg md:text-2xl font-light max-w-xl font-bodoni italic">
-            [a closing line inviting people onto the map]
+        <div className="mt-9 flex flex-col items-start justify-between gap-5 border-t border-plp-maroon/20 pt-6 md:mt-14 md:flex-row md:items-center md:gap-6 md:pt-8">
+          <p className="max-w-xl font-bodoni text-[18px] italic leading-snug text-plp-maroon/80 md:text-[24px]">
+            Bay Area now. Los Angeles next. After that, the waitlist decides.
           </p>
+
           <Link
             href="/maps"
-            className="group inline-flex items-center gap-3 border border-plp-maroon px-6 py-3 text-plp-maroon uppercase tracking-widest text-sm font-prata transition-colors hover:bg-plp-lime hover:text-plp-black"
+            className="group inline-flex items-center gap-2.5 border border-plp-maroon px-5 py-3 font-prata text-[11px] font-semibold uppercase tracking-[0.12em] text-plp-maroon transition-colors hover:bg-plp-lime"
           >
-            [explore the map]
+            Explore the map
             <ArrowUpRight
-              className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               strokeWidth={1.5}
             />
           </Link>
