@@ -13,18 +13,18 @@ const PILLARS = [
     time: "9:14 AM",
   },
   {
-    label: "In Person",
+    label: "In-Person",
     tag: "Off the Screen",
     desc: "Connections over clothes, swap parties, and group thrift trips.",
-    link: "/in-person",
+    link: "/experiences-and-services",
     time: "9:15 AM",
   },
   {
-    label: "One by one",
+    label: "One-on-one",
     tag: "by inquiry",
     desc: "A small number of wardrobe projects each season, sourced and built for you.",
-    link: "/one-by-one",
-    time: "9:15 AM",
+    link: "/experiences-and-services",
+    time: "9:23 AM",
   },
   {
     label: "For Organizations",
@@ -95,21 +95,21 @@ export default function Email() {
                   }}
                 >
                   <div className="flex gap-3">
-                    <span className="w-14 shrink-0 text-plp-navy/35">From</span>
+                    <span className="w-14 shrink-0 text-plp-navy/35">From:</span>
                     <span className="text-plp-maroon">
                       The Preloved Professional
                     </span>
                   </div>
                   <div className="flex gap-3">
-                    <span className="w-14 shrink-0 text-plp-navy/35">To</span>
+                    <span className="w-14 shrink-0 text-plp-navy/35">To:</span>
                     <span>you</span>
                   </div>
 
                   <div className="flex items-baseline gap-3 pt-1">
                     <span className="w-14 shrink-0 text-plp-navy/35">
-                      Subject
+                      Subject:
                     </span>
-                    <span className="font-bodoni text-[16px] font-semibold normal-case leading-tight tracking-[-0.01em] text-plp-maroon md:text-[19px]">
+                    <span className="text-[12px] normal-case leading-tight tracking-[-0.01em] text-plp-maroon md:text-[19px]">
                       The wardrobe nobody budgeted for.
                     </span>
                   </div>
@@ -268,7 +268,7 @@ export default function Email() {
                             />
 
                             <div>
-                              <h3 className="font-bodoni text-[17px] font-semibold normal-case leading-tight tracking-[-0.01em] text-plp-maroon md:text-[18px]">
+                              <h3 className="font-bodoni text-[17px] font-semibold uppercase leading-tight tracking-[-0.01em] text-plp-maroon md:text-[18px]">
                                 {pillar.label}
                               </h3>
 

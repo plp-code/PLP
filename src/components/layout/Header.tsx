@@ -24,7 +24,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
 
   const navItems = [
     { name: "Home", icon: <Globe size={18} />, to: "/#home" },
-    { name: "Email", icon: <Mail size={18} />, to: "/#email" },
+    { name: "The Memo", icon: <Mail size={18} />, to: "/#memo" },
     { name: "Maps", icon: <Globe size={18} />, to: "/maps" },
     ...(isAuthenticated
       ? []

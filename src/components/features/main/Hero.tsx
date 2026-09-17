@@ -8,25 +8,25 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative w-full overflow-visible bg-plp-parchment px-5 pb-14 pt-6 sm:px-6 md:flex md:min-h-[calc(100dvh-94px)] md:items-center md:py-12"
+      className="relative w-full bg-plp-parchment px-4 pb-8 pt-4 sm:px-5 md:h-[calc(100dvh-94px)] md:py-6"
     >
-      <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
-        <div className="mb-7 flex w-full flex-col items-center text-center md:mb-8">
+      <div className="mx-auto flex h-full w-full max-w-7xl flex-col items-center">
+        <div className="mb-5 flex shrink-0 flex-col items-center text-center md:mb-6">
           <Display className="text-balance text-[clamp(3.75rem,8vw,6.75rem)] leading-[0.9] text-plp-maroon">
             The Preloved Professional
           </Display>
 
-          <Label className="mt-5 text-[clamp(0.85rem,1.5vw,1.25rem)] tracking-[0.08em] text-plp-maroon">
+          <Label className="mt-2 text-[clamp(1rem,1.7vw,1.4rem)] tracking-[0.08em] text-plp-maroon">
             Power never goes out of style.
           </Label>
 
-          <p className="mt-3 max-w-2xl font-prata text-[clamp(0.8rem,1.2vw,1rem)] leading-relaxed text-plp-maroon/70">
+          {/* <p className="mt-2 max-w-2xl font-prata text-[clamp(0.95rem,1.35vw,1.125rem)] leading-relaxed text-plp-maroon/70">
             The best professional clothing has already been to work.
-          </p>
+          </p> */}
         </div>
 
-        <div className="w-full overflow-hidden rounded-lg border border-plp-navy bg-white">
-          <div className="relative aspect-[4/3] w-full bg-stone-100 md:hidden">
+        <div className="w-full overflow-hidden rounded-lg border border-plp-navy bg-white md:hidden">
+          <div className="relative aspect-[4/3] w-full bg-stone-100">
             <Image
               src={heroImageMobile}
               alt="Preloved professional clothing"
@@ -36,8 +36,10 @@ export default function Hero() {
               sizes="100vw"
             />
           </div>
+        </div>
 
-          <div className="relative hidden aspect-[1920/823] w-full bg-stone-100 md:block">
+        <div className="hidden min-h-0 w-full flex-1 overflow-hidden rounded-lg border border-plp-navy bg-white md:block">
+          <div className="relative h-full min-h-0 w-full bg-stone-100">
             <Image
               src={heroImage}
               alt="Preloved professional clothing"
