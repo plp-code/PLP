@@ -5,7 +5,7 @@ export interface User {
   email: string;
 }
 
-export type MapStatus = "live" | "waitlist" | "dropped";
+export type MapStatus = "live" | "waitlist" | "dropped" | "next" ;
 
 export interface MapItem {
   id: number;
@@ -56,4 +56,37 @@ export interface LocationPin {
   name: string;
   latitude: number;
   longitude: number;
+}
+
+
+export interface ClothingCategory {
+  id: number;
+  name: string;
+  slug: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+
+export interface ReviewItem {
+  id: number;
+  location_id: number;
+  item_purchased: string;
+  experience: string;
+  price_paid?: number;
+  created_at: string;
+  updated_at: string;
+  categories: ClothingCategory[];
+  user: User;
+}
+
+export interface NewReview {
+  experience: string;
+  item_purchased: string;
+  category_slugs: string[];
+  price_paid?: number;
+}
+
+export interface CreateReviewPayload extends NewReview {
+  location_id: number;
 }

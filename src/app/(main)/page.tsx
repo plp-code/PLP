@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Hero from "@/components/features/main/Hero";
 import QuoteCarousel from "@/components/features/main/QuoteCarousel";
-import Manifesto from "@/components/features/main/Manifesto";
+import Memo from "@/components/features/main/Memo";
 import MapsSection from "@/components/features/main/MapsSection";
-import JoinBanner from "@/components/features/marketing/JoinBanner";
 
 export const metadata: Metadata = {
   title: "The Preloved Professional",
@@ -19,11 +18,17 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <div>
+    <div className="flex flex-col w-full">
       <Hero />
-      {/* <JoinBanner /> */}
-      <Manifesto />
+
+      <div className="w-full h-px bg-plp-navy/10" />
+
+      <Memo />
+
+      <div className="w-full h-px bg-plp-navy/10" />
+
       <QuoteCarousel />
+
       <MapsSection />
     </div>
   );

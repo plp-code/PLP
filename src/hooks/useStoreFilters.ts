@@ -14,6 +14,7 @@ export function useStoreFilters(
 ) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activePrice, setActivePrice] = useState<string | null>(null);
+  const [activeCategories, setActiveCategories] = useState<string[]>([]);
   const [isOpenNow, setIsOpenNow] = useState(false);
 
   const filteredStores = useMemo(() => {
@@ -73,6 +74,8 @@ export function useStoreFilters(
     setSearchTerm,
     activePrice,
     setActivePrice,
+    activeCategories,
+    setActiveCategories,
     isOpenNow,
     setIsOpenNow,
     filteredStores,

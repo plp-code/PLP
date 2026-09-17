@@ -1,62 +1,75 @@
-"use client";
-
+import Image from "next/image";
 import { Display, Label } from "../../ui/Typography";
+
 import heroImage from "@/assets/hero_web_view.png";
 import heroImageMobile from "@/assets/hero_mobile_view.png";
-import Image from "next/image";
 
 export default function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-fit md:min-h-[calc(100dvh-94px)] w-full flex-col items-center justify-start md:justify-center overflow-visible bg-plp-parchment px-6 pt-6 pb-16 md:pt-0 md:pb-20"
+      className="relative w-full bg-plp-parchment px-4 pb-6 pt-4 sm:px-5 md:h-[calc(100dvh-94px)] md:py-6"
     >
-      <div className="relative z-10 flex w-full max-w-[95vw] xl:max-w-7xl flex-col items-center transition-all duration-700">
-        <div className="w-full text-center">
-          <Display className="inline-block capitalize text-balance whitespace-normal md:whitespace-nowrap text-[15vw] md:text-[8.25vw] xl:text-[105px] leading-[1.05] md:leading-[1] tracking-tighter mb-4 text-plp-maroon">
-            the preloved professional
+      <div className="mx-auto flex h-full w-full max-w-7xl flex-col items-center">
+        <div className="mb-5 flex shrink-0 flex-col items-center text-center md:mb-6">
+          <Display className="text-balance text-[clamp(3.75rem,8vw,6.75rem)] leading-[0.9] text-plp-maroon">
+            The Preloved Professional
           </Display>
-        </div>
 
-        <div className="w-full text-center mb-6">
-          <Label className="font-[word-spacing:0.125rem] md:[word-spacing:0.2rem] whitespace-normal md:whitespace-nowrap text-[3.75vw] md:text-[2.0625vw] xl:text-[26.25px] leading-[1.05] md:leading-[1] tracking-wide mb-4 text-plp-maroon">
+          <Label className="mt-2 text-[clamp(1rem,1.7vw,1.4rem)] tracking-[0.08em] text-plp-maroon">
             Power never goes out of style.
           </Label>
         </div>
 
-        <div className="w-full text-center mb-6">
-          <p className="font-cormorant text-[3vw] md:text-[1.65vw] xl:text-[21px] leading-[1.2] tracking-normal opacity-90 text-plp-maroon">
-            A women&apos;s networking company. Secondhand is the mechanism.
-            Community is the point.
-          </p>
+        <div className="w-full md:hidden">
+          <div className="relative aspect-[4/4.6] w-full overflow-hidden rounded-lg border border-plp-navy bg-white">
+            <Image
+              src={heroImageMobile}
+              alt="Preloved professional clothing"
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
+
+          <ArtworkCredit />
         </div>
 
-        <div className="w-full">
-          <div className="relative border rounded-lg border-plp-navy bg-white overflow-hidden">
-            <div className="relative w-full aspect-4/3 md:hidden bg-stone-100">
-              <Image
-                src={heroImageMobile}
-                alt="Hero"
-                fill
-                priority
-                className="object-cover"
-                sizes="100vw"
-              />
-            </div>
-
-            <div className="relative hidden w-full aspect-[1920/823] md:block bg-stone-100">
+        {/* Desktop image */}
+        <div className="hidden min-h-0 w-full flex-1 flex-col md:flex">
+          <div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-plp-navy bg-white">
+            <div className="relative h-full min-h-0 w-full bg-stone-100">
               <Image
                 src={heroImage}
-                alt="Hero"
+                alt="Preloved professional clothing"
                 fill
                 priority
                 className="object-cover"
-                sizes="100vw"
+                sizes="(max-width: 1280px) 100vw, 1280px"
               />
             </div>
           </div>
+
+          <ArtworkCredit />
         </div>
       </div>
     </section>
+  );
+}
+
+function ArtworkCredit() {
+  return (
+    <p className="mt-2 text-right font-mono text-[9px] uppercase tracking-[0.12em] text-plp-maroon/45">
+      Artwork by{" "}
+      <a
+        href="https://www.instagram.com/byynancyy/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="pointer-events-auto text-plp-maroon/70 underline decoration-plp-maroon/25 underline-offset-2 transition-colors hover:text-plp-maroon hover:decoration-plp-maroon"
+      >
+        @byynancyy
+      </a>
+    </p>
   );
 }

@@ -12,41 +12,52 @@ interface StoreHoursProps {
 
 export function StoreHours({ timeData, week }: StoreHoursProps) {
   const [open, setOpen] = useState(false);
-  const today = week.find((d) => d.isToday);
+  const today = week.find((day) => day.isToday);
+
+  const todayHours = today?.string ?? timeData.string;
+
+  const statusText = !timeData.isOpen
+    ? todayHours
+    : timeData.isClosingSoon
+      ? `Closes soon · ${todayHours}`
+      : todayHours;
+
+  const statusColor = !timeData.isOpen
+    ? "text-gray-600"
+    : timeData.isClosingSoon
+      ? "text-amber-600"
+      : "text-emerald-700";
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
       <button
-        onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left hover:bg-gray-50 transition-colors"
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        className="
+          flex w-full items-center justify-between gap-4
+          px-4 py-3.5 text-left
+          transition-colors hover:bg-gray-50
+          focus-visible:outline-none
+          focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-300
+        "
       >
-        <div className="flex items-baseline gap-3 min-w-0">
-          <span className="font-bodoni text-[12px] font-semibold uppercase tracking-[0.15em] text-gray-400 shrink-0">
+        <div className="min-w-0">
+          <span className="mb-1 block font-bodoni text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
             Hours
           </span>
+
           <span
-            className={`text-[15px] font-prata truncate ${
-              !timeData.isOpen
-                ? "text-gray-700"
-                : timeData.isClosingSoon
-                  ? "text-amber-600"
-                  : "text-emerald-700"
-            }`}
+            className={`block truncate font-prata text-[15px] leading-snug ${statusColor}`}
           >
-            {!timeData.isOpen
-              ? today
-                ? today.string
-                : timeData.string
-              : timeData.isClosingSoon
-                ? `Closes soon · ${today ? today.string : timeData.string}`
-                : today
-                  ? today.string
-                  : timeData.string}
+            {statusText}
           </span>
         </div>
+
         <ChevronDown
-          size={18}
-          className={`text-gray-400 shrink-0 transition-transform duration-200 ${
+          size={17}
+          strokeWidth={1.8}
+          className={`shrink-0 text-gray-400 transition-transform duration-200 ${
             open ? "rotate-180" : ""
           }`}
         />
@@ -54,16 +65,21 @@ export function StoreHours({ timeData, week }: StoreHoursProps) {
 
       {open && (
         <div className="border-t border-gray-100 px-4 py-2">
-          {week.map((d) => (
+          {week.map((day) => (
             <div
-              key={d.label}
-              className={`flex items-center font-prata justify-between py-2 text-[14px] tracking-wide ${
-                d.isToday ? "text-gray-900 font-semibold" : "text-gray-500"
-              }`}
+              key={day.label}
+              className={`
+                flex items-center justify-between gap-6
+                py-2 font-prata text-[14px] leading-relaxed
+                ${day.isToday ? "font-semibold text-gray-900" : "text-gray-500"}
+              `}
             >
-              <span>{d.label}</span>
-              <span className={d.isClosed ? "text-gray-400" : ""}>
-                {d.string}
+              <span className="shrink-0">{day.label}</span>
+
+              <span
+                className={`text-right ${day.isClosed ? "text-gray-400" : ""}`}
+              >
+                {day.string}
               </span>
             </div>
           ))}

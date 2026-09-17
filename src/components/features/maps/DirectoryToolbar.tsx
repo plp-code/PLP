@@ -1,4 +1,12 @@
-import { Search, X, List, LayoutGrid, Signpost, Filter, ChevronDown } from "lucide-react";
+import {
+  Search,
+  X,
+  List,
+  LayoutGrid,
+  Signpost,
+  Filter,
+  ChevronDown,
+} from "lucide-react";
 import { MapStatus } from "@/types";
 
 interface DirectoryToolbarProps {
@@ -30,18 +38,18 @@ export function DirectoryToolbar({
             <Signpost size={18} className="text-plp-maroon" />
           </div>
           <p className="text-sm sm:text-base text-gray-500 font-medium flex items-center gap-2">
-            Explore <span className="text-gray-900 font-bold">{totalCount}</span> curated maps
+            Explore maps
             {isFetching && (
-              <span className="flex h-2 w-2 rounded-full bg-plp-maroon animate-pulse" title="Updating..." />
+              <span
+                className="flex h-2 w-2 rounded-full bg-plp-maroon animate-pulse"
+                title="Updating..."
+              />
             )}
           </p>
         </div>
       </div>
 
-      {/* Right side: Controls */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto">
-        
-        {/* Search Bar */}
         <div className="relative flex-1 sm:w-64 group">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors group-focus-within:text-plp-maroon text-gray-400">
             <Search size={16} />
@@ -65,14 +73,15 @@ export function DirectoryToolbar({
         </div>
 
         <div className="flex items-center gap-2.5">
-          {/* Status Filter Dropdown */}
           <div className="relative flex-1 sm:flex-none sm:w-44 group">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-plp-maroon transition-colors">
               <Filter size={14} />
             </div>
             <select
               value={statusFilter}
-              onChange={(e) => onFilterChange(e.target.value as MapStatus | "all")}
+              onChange={(e) =>
+                onFilterChange(e.target.value as MapStatus | "all")
+              }
               className="block w-full pl-8 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:border-gray-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-plp-maroon/15 focus:border-plp-maroon/30 focus:bg-white transition-all cursor-pointer appearance-none shadow-sm"
             >
               <option value="all">All Maps</option>
@@ -84,7 +93,6 @@ export function DirectoryToolbar({
             </div>
           </div>
 
-          {/* View Toggles */}
           <div className="hidden sm:flex items-center bg-gray-50 p-1 rounded-xl border border-gray-200 shrink-0">
             <button
               onClick={() => onViewModeChange("list")}
