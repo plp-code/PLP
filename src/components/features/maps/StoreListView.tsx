@@ -63,14 +63,12 @@ export function StoreListView({
                   : "bg-white hover:bg-gray-50 active:bg-gray-100"
               }`}
             >
-              {/* Selected indicator */}
               <div
                 className={`absolute bottom-0 left-0 top-0 w-1 origin-left bg-blue-600 transition-transform duration-200 ${
                   isSelected ? "scale-x-100" : "scale-x-0"
                 }`}
               />
 
-              {/* Number */}
               <span
                 className={`mr-3 w-5 shrink-0 text-center font-bodoni text-[12px] font-semibold tabular-nums transition-colors md:mr-4 md:text-[13px] ${
                   isSelected
@@ -81,7 +79,6 @@ export function StoreListView({
                 {index + 1}
               </span>
 
-              {/* Main content */}
               <div className="min-w-0 flex-1">
                 <h3
                   className={`line-clamp-2 font-bodoni text-[17px] font-bold capitalize leading-[1.2] tracking-[-0.01em] transition-colors md:text-[18px] ${
@@ -120,7 +117,6 @@ export function StoreListView({
                 </div>
               </div>
 
-              {/* Right side */}
               <div className="ml-3 flex shrink-0 flex-col items-end gap-2">
                 <StoreStatusBadge
                   isOpen={timeData.isOpen}

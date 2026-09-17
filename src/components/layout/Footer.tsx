@@ -24,55 +24,63 @@ const SOCIAL_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="bg-plp-maroon text-plp-parchment relative overflow-hidden">
-      <div className="relative z-10 pt-14 pb-12 md:pt-16 md:pb-12 text-center px-6">
-        <h2 className="text-[10vw] sm:text-[6vw] md:text-[4vw] font-seventies leading-[0.9] md:leading-[0.85] mb-10 md:mb-10 tracking-tight uppercase">
-          The Preloved <br className="md:hidden" /> Professional
-        </h2>
+    <footer className="relative overflow-hidden bg-plp-maroon text-plp-parchment">
+      <div className="relative z-10 px-5 pb-10 pt-12 md:px-8 md:pb-12 md:pt-16">
+        <div className="mx-auto flex max-w-7xl flex-col items-center text-center">
+          <h2 className="max-w-5xl font-seventies text-[clamp(3.25rem,7.5vw,6.5rem)] leading-[0.88] tracking-[-0.03em] text-plp-parchment">
+            The Preloved Professional
+          </h2>
 
-        <div className="flex flex-col items-center gap-10 md:gap-10">
           <Link
             href="/login"
-            className="inline-flex items-center gap-3 px-8 py-4 md:py-3 border border-plp-parchment/20 rounded-full hover:bg-plp-lime hover:text-plp-maroon hover:border-plp-lime transition-all duration-500 group active:scale-95"
+            className="group mt-8 inline-flex items-center gap-2.5 border border-plp-parchment/60 px-6 py-3 font-prata text-[11px] font-semibold uppercase tracking-[0.12em] text-plp-parchment transition-colors duration-300 hover:border-plp-lime hover:bg-plp-lime hover:text-plp-maroon active:scale-[0.98]"
           >
-            <span className="font-text font-bold uppercase tracking-[0.3em] text-[11px] md:text-xs">
-              Join Now
-            </span>
+            Join Today
             <ArrowUpRight
-              size={16}
-              className="group-hover:rotate-45 transition-transform md:w-3.5 md:h-3.5"
+              size={15}
+              strokeWidth={1.5}
+              className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
             />
           </Link>
 
           <nav
-            className="flex justify-center gap-x-8 sm:gap-x-10"
+            className="mt-10 flex items-center justify-center gap-6 sm:gap-9"
             aria-label="Social links"
           >
-            {SOCIAL_LINKS.map((social) => (
-              <a
-                key={social.name}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex flex-col items-center gap-2.5 transition-all px-3 py-2 min-w-[64px] rounded-md active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plp-lime"
-              >
-                <social.icon
-                  aria-hidden="true"
-                  size={30}
-                  className="opacity-40 group-hover:opacity-100 group-focus-visible:opacity-100 group-hover:text-plp-lime group-focus-visible:text-plp-lime transition-all duration-500 md:w-7 md:h-7"
-                />
-                <span className="text-[11px] font-bold uppercase tracking-[0.2em] opacity-40 md:opacity-30 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all">
-                  {social.name}
-                </span>
-              </a>
-            ))}
+            {SOCIAL_LINKS.map((social) => {
+              const Icon = social.icon;
+
+              return (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  className="group flex flex-col items-center gap-2 text-plp-parchment/50 transition-colors hover:text-plp-lime focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plp-lime"
+                >
+                  <Icon
+                    aria-hidden="true"
+                    size={22}
+                    className="transition-transform duration-300 group-hover:-translate-y-0.5"
+                  />
+
+                  <span className="font-mono text-[9px] uppercase tracking-[0.14em]">
+                    {social.name}
+                  </span>
+                </a>
+              );
+            })}
           </nav>
         </div>
       </div>
-      <div className="relative z-10 flex justify-center md:justify-end items-center px-4 py-6 md:px-6 md:py-4 border-t border-plp-parchment/10">
-        <p className="opacity-50 text-[9px] uppercase tracking-[0.2em] font-black text-center md:text-right">
-          &copy; The Preloved Professional&trade;
-        </p>
+
+      <div className="relative z-10 border-t border-plp-parchment/15 px-5 py-4 md:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-end">
+          <p className="font-mono text-[8px] uppercase tracking-[0.14em] text-plp-parchment/40">
+            © {new Date().getFullYear()} The Preloved Professional™
+          </p>
+        </div>
       </div>
     </footer>
   );

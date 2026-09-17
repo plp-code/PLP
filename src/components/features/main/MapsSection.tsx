@@ -80,11 +80,6 @@ export default function MapsSection() {
       <Container className="relative z-10">
         <header className="mb-9 max-w-3xl md:mb-12">
           <div className="flex items-center gap-3 md:gap-4">
-            <Compass
-              className="h-6 w-6 shrink-0 text-plp-olive md:h-9 md:w-9"
-              strokeWidth={1.5}
-            />
-
             <Display className="text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.9] text-plp-maroon">
               PLP Thrift Maps
             </Display>
@@ -102,11 +97,11 @@ export default function MapsSection() {
           onMouseLeave={() => setIsAutoPlaying(true)}
         >
           <div>
-            <div className="mb-7 border-l-2 border-plp-maroon pl-4 md:mb-8 md:pl-6">
-              <p className="mb-3 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-plp-navy/45">
-                [the purpose]
-              </p>
+            <p className="mb-3 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-plp-navy/45">
+              [the purpose]
+            </p>
 
+            <div className="mb-7 border-l-2 border-plp-maroon pl-4 md:mb-8 md:pl-6">
               <div className="max-w-[58ch] space-y-3 font-prata text-[13px] leading-6 text-plp-maroon/80 md:space-y-4 md:text-[15px] md:leading-7">
                 <p>
                   Many thrift stores are a waste of an afternoon. Some
@@ -336,7 +331,7 @@ export default function MapsSection() {
             href="/maps"
             className="group inline-flex items-center gap-2.5 border border-plp-maroon px-5 py-3 font-prata text-[11px] font-semibold uppercase tracking-[0.12em] text-plp-maroon transition-colors hover:bg-plp-lime"
           >
-            Explore the map
+            Explore Now
             <ArrowUpRight
               className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               strokeWidth={1.5}

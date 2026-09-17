@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { ArrowRight } from "lucide-react";
 
 const PILLARS = [
   {
@@ -30,12 +31,12 @@ const PILLARS = [
     label: "For Organizations",
     tag: "we bring it in",
     desc: "What we do inside companies, universities and membership groups.",
-    link: "/for-organizations",
+    link: "/organizations",
     time: "9:28 AM",
   },
 ];
 
-export default function Email() {
+export default function Memo() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isMessageExpanded, setIsMessageExpanded] = useState(false);
@@ -52,8 +53,8 @@ export default function Email() {
 
   return (
     <section
-      id="email"
-      className="relative w-full overflow-hidden bg-plp-parchment py-20 md:py-28"
+      id="memo"
+      className="relative w-full overflow-hidden bg-plp-parchment py-12 md:py-20"
     >
       <Container className="relative z-10">
         <div className="w-full bg-[#c0c0c0] p-1 shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] shadow-[0_30px_70px_rgba(0,0,0,0.18)]">
@@ -88,28 +89,32 @@ export default function Email() {
             <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-1 mx-1 mb-1">
               <div className="bg-white shadow-[inset_2px_2px_#808080]">
                 <div
-                  className="font-mono text-xs md:text-[13px] text-plp-navy/60 px-6 md:px-8 pt-6 md:pt-8 pb-5 space-y-1.5 border-b border-plp-navy/10"
+                  className="space-y-1.5 border-b border-plp-navy/10 px-5 pb-4 pt-5 font-mono text-[10px] text-plp-navy/55 md:px-8 md:pb-5 md:pt-7 md:text-[12px]"
                   style={{
                     backgroundImage:
                       "url('https://www.transparenttextures.com/patterns/notebook.png')",
                   }}
                 >
                   <div className="flex gap-3">
-                    <span className="w-14 shrink-0 text-plp-navy/35">From:</span>
+                    <span className="w-12 shrink-0 text-plp-navy/30">
+                      From:
+                    </span>
                     <span className="text-plp-maroon">
                       The Preloved Professional
                     </span>
                   </div>
+
                   <div className="flex gap-3">
-                    <span className="w-14 shrink-0 text-plp-navy/35">To:</span>
+                    <span className="w-12 shrink-0 text-plp-navy/30">To:</span>
                     <span>you</span>
                   </div>
 
-                  <div className="flex items-baseline gap-3 pt-1">
-                    <span className="w-14 shrink-0 text-plp-navy/35">
+                  <div className="flex items-baseline gap-3 pt-2">
+                    <span className="w-12 shrink-0 text-plp-navy/30">
                       Subject:
                     </span>
-                    <span className="text-[12px] normal-case leading-tight tracking-[-0.01em] text-plp-maroon md:text-[19px]">
+
+                    <span className="font-bodoni text-[14px] leading-tight tracking-[-0.01em] text-plp-maroon md:text-[20px]">
                       The wardrobe nobody budgeted for.
                     </span>
                   </div>
@@ -122,7 +127,6 @@ export default function Email() {
                       "url('https://www.transparenttextures.com/patterns/notebook.png')",
                   }}
                 >
-                  {/* Always visible */}
                   <div className="space-y-2.5">
                     <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-plp-navy/45">
                       The business
@@ -137,7 +141,6 @@ export default function Email() {
                     </p>
                   </div>
 
-                  {/* Collapsible on mobile */}
                   <div
                     className={`grid transition-[grid-template-rows,opacity] duration-500 md:mt-7 md:grid-rows-[1fr] md:opacity-100 ${
                       isMessageExpanded
@@ -205,28 +208,30 @@ export default function Email() {
 
                         <div className="h-px w-full bg-plp-navy/10" />
 
-                        <p className="-rotate-2 font-handwriting text-2xl text-plp-navy/60 md:text-4xl">
-                          The Preloved Professional
-                        </p>
+                        <div className="overflow-visible px-2 pb-3 pt-1">
+                          <p className="origin-left -rotate-2 font-handwriting text-2xl leading-[1.4] text-plp-navy/60 md:text-4xl">
+                            The Preloved Professional
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Mobile only */}
                   <button
                     type="button"
                     onClick={() => setIsMessageExpanded((prev) => !prev)}
                     aria-expanded={isMessageExpanded}
-                    className="mt-5 inline-flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-plp-maroon md:hidden"
+                    className="mt-5 inline-flex items-center gap-2 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-plp-maroon md:hidden"
                   >
-                    {isMessageExpanded ? "Close message" : "Read full message"}
+                    {isMessageExpanded ? "Close message" : "Continue reading"}
+
                     <span
                       aria-hidden="true"
                       className={`transition-transform duration-200 ${
                         isMessageExpanded ? "rotate-90" : ""
                       }`}
                     >
-                      →
+                      <ArrowRight size={12} />
                     </span>
                   </button>
                 </article>
@@ -237,8 +242,8 @@ export default function Email() {
                 onMouseEnter={() => setIsAutoPlaying(false)}
                 onMouseLeave={() => setIsAutoPlaying(true)}
               >
-                <p className="font-mono uppercase tracking-[0.18em] text-[11px] text-plp-navy/40 px-5 md:px-6 pt-5 pb-3 border-b border-plp-navy/10 bg-[#c0c0c0]/40">
-                  The Offerings - {PILLARS.length} unread
+                <p className="border-b border-plp-navy/10 bg-[#c0c0c0]/40 px-5 pb-3 pt-5 font-mono text-[10px] uppercase tracking-[0.18em] text-plp-navy/40 md:px-6">
+                  Inbox · {PILLARS.length} messages
                 </p>
 
                 {PILLARS.map((pillar, index) => {
@@ -246,10 +251,17 @@ export default function Email() {
                   return (
                     <div
                       key={pillar.label}
-                      className={`group relative border-b border-plp-navy/10 transition-colors ${
-                        active ? "bg-plp-lime/25" : "hover:bg-[#c0c0c0]/20"
+                      className={`group relative border-b border-plp-navy/10 transition-colors duration-300 ${
+                        active ? "bg-plp-lime/20" : "hover:bg-[#c0c0c0]/20"
                       }`}
                     >
+                      {active && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute inset-y-0 left-0 w-[3px] bg-plp-maroon"
+                        />
+                      )}
+
                       <button
                         type="button"
                         onClick={() => {
@@ -262,13 +274,13 @@ export default function Email() {
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-start gap-2.5">
                             <span
-                              className={`mt-1.5 h-2.5 w-2.5 shrink-0 shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] ${
+                              className={`mt-1.5 h-2 w-2 shrink-0 shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] ${
                                 active ? "bg-plp-maroon" : "bg-[#c0c0c0]"
                               }`}
                             />
 
                             <div>
-                              <h3 className="font-bodoni text-[17px] font-semibold uppercase leading-tight tracking-[-0.01em] text-plp-maroon md:text-[18px]">
+                              <h3 className="font-bodoni text-[17px] font-semibold leading-tight tracking-[-0.01em] text-plp-maroon md:text-[19px]">
                                 {pillar.label}
                               </h3>
 
@@ -299,10 +311,15 @@ export default function Email() {
 
                             <Link
                               href={pillar.link}
-                              className="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-plp-maroon underline decoration-plp-maroon/30 underline-offset-4 transition-colors hover:decoration-plp-maroon"
+                              className="group/link inline-flex items-center gap-1.5 font-prata text-[10px] font-semibold normal tracking-[0.12em] text-plp-maroon"
                             >
-                              Explore
-                              <span aria-hidden="true">→</span>
+                           See Detail
+                              <span
+                                aria-hidden="true"
+                                className="transition-transform duration-300 group-hover/link:translate-x-1"
+                              >
+                                <ArrowRight size={12} />
+                              </span>
                             </Link>
                           </div>
                         </div>
@@ -312,15 +329,12 @@ export default function Email() {
                 })}
 
                 <div className="flex-1" />
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-plp-navy/30 px-5 md:px-6 py-3 border-t border-plp-navy/10 bg-[#c0c0c0]/40">
-                  synced just now
-                </p>
               </div>
             </div>
 
-            <div className="flex items-center justify-between bg-[#c0c0c0] mx-1 mb-1 px-4 py-1.5 shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] font-mono text-[10px] uppercase tracking-[0.2em] text-plp-navy/60">
-              <span>4 items</span>
-              <span>connected</span>
+            <div className="mx-1 mb-1 flex items-center justify-between bg-[#c0c0c0] px-4 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-plp-navy/50 shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080]">
+              <span>{PILLARS.length} messages</span>
+              <span>PLP Mail</span>
             </div>
           </div>
         </div>
