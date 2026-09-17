@@ -49,8 +49,6 @@ export function DirectoryToolbar({
         </div>
       </div>
 
-      {/* Not a PDF. Your map lives in your account, updates as stores change, and filters by what you&apos;re looking for." sticky note */}
-
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto">
         <div className="relative flex-1 sm:w-64 group">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors group-focus-within:text-plp-maroon text-gray-400">
