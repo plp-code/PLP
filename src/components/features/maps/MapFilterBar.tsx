@@ -98,7 +98,7 @@ export function MapFilterBar({
         />
       </div>
 
-      <div className="w-full flex items-center gap-2 flex-nowrap overflow-x-auto no-scrollbar pb-1 md:flex-wrap md:overflow-visible md:pb-0">
+      <div className="w-full flex items-center gap-2 flex-nowrap overflow-x-auto no-scrollbar pb-3 md:flex-wrap md:overflow-visible md:pb-0">
         <button
           onClick={onLocateToggle}
           disabled={isLocating}
@@ -162,7 +162,7 @@ export function MapFilterBar({
           </button>
 
           {isPriceOpen && (
-            <div className="fixed left-4 right-4 top-[140px] max-h-[55dvh] overflow-y-auto rounded-2xl border border-gray-200/70 bg-white/98 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.14)] p-2 z-[1100] md:absolute md:left-0 md:right-auto md:top-full md:mt-2 md:w-[300px] md:max-h-none md:overflow-visible">
+            <div className="fixed left-4 right-4 top-[180px] max-h-[55dvh] overflow-y-auto rounded-2xl border border-gray-200/70 bg-white/98 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.14)] p-2 z-[1100] md:absolute md:left-0 md:right-auto md:top-full md:mt-2 md:w-[300px] md:max-h-none md:overflow-visible">
               {PRICE_LEVELS.map(({ level, label, range }) => {
                 const value = String(level);
                 const active = activePrice === value;
