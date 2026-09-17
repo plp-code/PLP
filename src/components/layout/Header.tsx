@@ -28,17 +28,18 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
   const navItems = [
     { name: "Home", icon: <Globe size={17} />, to: "/#home" },
     { name: "The Memo", icon: <Mail size={17} />, to: "/#memo" },
+    { name: "Maps", icon: <MapPin size={17} />, to: "/#maps" },
+
     {
       name: "Experiences & Services",
       icon: <Compass size={17} />,
-      to: "/#experiences-services",
+      to: "/experiences-services",
     },
     {
       name: "For Organizations",
       icon: <Building2 size={17} />,
-      to: "/#organizations",
+      to: "/organizations",
     },
-    { name: "Maps", icon: <MapPin size={17} />, to: "/maps" },
   ];
 
   return (
@@ -181,7 +182,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
 
         <div className="p-3 bg-[#c0c0c0] border-t border-[#808080] flex justify-between items-center mx-1 mb-1">
           <div className="w-20 h-5 bg-white shadow-[inset_1px_1px_#808080] flex items-center px-2 text-[8px] font-mono">
-            VER: 1.0.0
+            VER: 2.0.0
           </div>
           <Label className="text-[9px] opacity-40 uppercase font-bold">
             Est. 2026

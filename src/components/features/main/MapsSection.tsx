@@ -331,7 +331,7 @@ export default function MapsSection() {
             href="/maps"
             className="group inline-flex items-center gap-2.5 border border-plp-maroon px-5 py-3 font-prata text-[11px] font-semibold uppercase tracking-[0.12em] text-plp-maroon transition-colors hover:bg-plp-lime"
           >
-            Explore the map
+            Explore Now
             <ArrowUpRight
               className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               strokeWidth={1.5}

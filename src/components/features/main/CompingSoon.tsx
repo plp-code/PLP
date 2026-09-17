@@ -16,7 +16,7 @@ export default function ComingSoon({
   backHref = "/",
 }: ComingSoonProps) {
   return (
-    <div className="relative flex w-full flex-col items-center overflow-hidden py-16 text-center md:py-20">
+    <div className="relative flex w-full flex-col items-center overflow-hidden py-32 text-center md:py-40">
       <div className="relative z-10 flex max-w-5xl flex-col items-center">
         <div className="mb-4 flex items-center gap-2">
           <span className="relative flex h-2 w-2">
@@ -29,7 +29,7 @@ export default function ComingSoon({
           </span>
         </div>
 
-        <Display className="text-balance text-[clamp(3.75rem,10vw,8rem)] leading-[0.84] tracking-[-0.04em] text-plp-maroon">
+        <Display className="mt-3 capitalize text-balance text-[clamp(3.75rem,10vw,8rem)] leading-[0.84] tracking-[-0.04em] text-plp-maroon">
           {title}
         </Display>
 
@@ -37,7 +37,7 @@ export default function ComingSoon({
           {description}
         </p>
 
-        <div className="mt-7 flex flex-col items-center gap-4 sm:flex-row sm:gap-8">
+        <div className="mt-7 flex items-center gap-4 flex-row sm:gap-8">
           <Link
             href={backHref}
             className="group inline-flex items-center gap-2.5 border-b border-plp-maroon/30 pb-1.5 font-prata text-[11px] font-semibold uppercase tracking-[0.12em] text-plp-maroon transition-colors hover:border-plp-maroon"
