@@ -238,7 +238,7 @@ export function MapFilterBar({
           </button>
 
           {isCategoryOpen && (
-            <div className="fixed left-4 right-4 top-[140px] z-[1100] overflow-hidden rounded-2xl border border-gray-200/70 bg-white/98 shadow-[0_12px_30px_rgba(0,0,0,0.14)] backdrop-blur-md md:absolute md:left-0 md:right-auto md:top-full md:mt-2 md:w-[320px]">
+            <div className="fixed left-4 right-4 top-[180px] z-[1100] overflow-hidden rounded-2xl border border-gray-200/70 bg-white/98 shadow-[0_12px_30px_rgba(0,0,0,0.14)] backdrop-blur-md md:absolute md:left-0 md:right-auto md:top-full md:mt-2 md:w-[320px]">
               <div className="max-h-[55dvh] overflow-y-auto p-2 md:max-h-[400px]">
                 {categories.map((cat) => {
                   const active = activeCategories.includes(cat.slug);
