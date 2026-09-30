@@ -33,7 +33,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
     {
       name: "Experiences & Services",
       icon: <Compass size={17} />,
-      to: "/experiences-services",
+      to: "/experiences-and-services",
     },
     {
       name: "For Organizations",

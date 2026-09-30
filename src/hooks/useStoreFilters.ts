@@ -3,10 +3,6 @@ import { Location, LocationPin } from "@/types";
 import { getDistance, getTodayHours } from "@/lib/utils";
 import type { UserLocation } from "./useGeolocation";
 
-/**
- * Owns the search / price / open-now filter state and derives the filtered
- * store list, the (search-filtered) map pins, and a combined id lookup.
- */
 export function useStoreFilters(
   stores: Location[],
   pins: LocationPin[],

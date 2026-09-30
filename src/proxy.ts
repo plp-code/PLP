@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/dashboard")) {
+  if (/^\/maps\/[^/]+/.test(pathname)) {
     const accessToken = request.cookies.get("access_token");
     const refreshToken = request.cookies.get("refresh_token");
 
@@ -19,5 +19,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/maps/:slug*"],
 };

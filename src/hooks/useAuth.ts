@@ -5,19 +5,8 @@ import { useRouter } from "next/navigation";
 import { useAuthUser } from "@/context/AuthContext";
 import { api, setTokenExpiry, markSession } from "@/lib/api";
 import { useQueryClient } from "@tanstack/react-query";
+import { getSafeReturnPath } from "@/lib/returnTo";
 import type { User } from "@/types/models";
-
-const DEFAULT_RETURN_PATH = "/maps";
-
-function getSafeReturnPath(returnTo?: string | null) {
-  if (!returnTo) return DEFAULT_RETURN_PATH;
-
-  if (!returnTo.startsWith("/") || returnTo.startsWith("//")) {
-    return DEFAULT_RETURN_PATH;
-  }
-
-  return returnTo;
-}
 
 export function useAuthActions(returnTo?: string | null) {
   const [isLoading, setIsLoading] = useState(false);

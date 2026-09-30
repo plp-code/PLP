@@ -5,10 +5,6 @@ export interface UserLocation {
   lng: number;
 }
 
-/**
- * Owns the user's geolocation: attempts one automatic locate on mount
- * (unless previously dismissed) and exposes manual locate / clear controls.
- */
 export function useGeolocation() {
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [isLocating, setIsLocating] = useState(false);

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Loader2, Lock, AlertTriangle } from "lucide-react";
 import { useResetPassword } from "@/hooks/useResetPassword";
-import { ResetPasswordSuccess } from "./ResetPasswordSuccess";
 import { ResetPasswordInvalid } from "./ResetPasswordInvalid";
 
 export function ResetPasswordForm() {
@@ -15,14 +14,19 @@ export function ResetPasswordForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  const { executePasswordReset, isLoading, isSuccess, error: apiError } = useResetPassword();
+  const { state, hasPassword, isLoading, executePasswordReset } =
+    useResetPassword(token);
 
-  if (!token) {
-    return <ResetPasswordInvalid />;
+  if (state === "checking") {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <Loader2 size={24} className="animate-spin text-plp-maroon" />
+      </div>
+    );
   }
 
-  if (isSuccess) {
-    return <ResetPasswordSuccess />;
+  if (state === "invalid") {
+    return <ResetPasswordInvalid />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,13 +43,24 @@ export function ResetPasswordForm() {
       return;
     }
 
-    await executePasswordReset(token, newPassword);
+    await executePasswordReset(newPassword);
   };
 
-  const displayError = validationError || apiError;
+  const displayError = validationError;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <div>
+        <h3 className="text-plp-maroon font-bold text-sm sm:text-base capitalize tracking-tight mb-1">
+          {hasPassword ? "Reset your password" : "Set your password"}
+        </h3>
+        <p className="text-plp-maroon/70 text-[11px] sm:text-xs font-bold leading-normal">
+          {hasPassword
+            ? "Enter a new password for your account."
+            : "Welcome — set a password so you can log back in anytime."}
+        </p>
+      </div>
+
       {displayError && (
         <div className="flex items-center gap-2 bg-plp-maroon/10 border border-plp-maroon/40 text-plp-maroon text-[11px] sm:text-xs font-bold p-2.5">
           <AlertTriangle size={14} className="shrink-0" />
@@ -103,7 +118,7 @@ export function ResetPasswordForm() {
         {isLoading ? (
           <Loader2 size={20} className="animate-spin" />
         ) : (
-          "Update Password"
+          hasPassword ? "Update Password" : "Set Password"
         )}
       </button>
     </form>

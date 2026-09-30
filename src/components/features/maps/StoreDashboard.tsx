@@ -214,16 +214,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
       </aside>
 
       <div
-        className="absolute z-[1000] pointer-events-none
-
-          /* Mobile */
-          inset-x-0 bottom-[calc(1.5rem+env(safe-area-inset-bottom))]
-          flex justify-center
-
-          /* Desktop */
-          md:inset-x-auto
-          md:left-6
-          md:w-[440px]"
+        className="absolute z-[1000] pointer-events-none inset-x-0 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] flex justify-center  md:inset-x-auto md:left-6 md:w-[440px]"
       >
         <button
           onClick={() => setIsDrawerOpen(!isDrawerOpen)}
