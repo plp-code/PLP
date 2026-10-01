@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Loader2, Mail, AlertTriangle } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import { useForgotPassword } from "@/hooks/useForgotPassword";
 import { ForgotPasswordSuccess } from "./ForgotPasswordSuccess";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
-  const { requestPasswordReset, isLoading, isSubmitted, error } = useForgotPassword();
+  const { requestPasswordReset, isLoading, isSubmitted } = useForgotPassword();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,13 +27,6 @@ export function ForgotPasswordForm() {
       </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {error && (
-          <div className="flex items-center gap-2 bg-plp-maroon/10 border border-plp-maroon/40 text-plp-maroon text-[11px] sm:text-xs font-bold p-2.5">
-            <AlertTriangle size={14} className="shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
-
         <div className="flex flex-col gap-1.5">
           <label className="text-plp-maroon font-bold text-[11px] sm:text-xs capitalize tracking-tighter">
             Email Address

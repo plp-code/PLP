@@ -1,25 +1,31 @@
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuthUser } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { MapItem } from "@/types";
 import type { CheckoutSessionResponse } from "@/types/api";
 
+const STRIPE_CHECKOUT_HOST = "checkout.stripe.com";
+
+function isValidStripeUrl(url?: string): url is string {
+  if (!url) return false;
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "https:" && parsed.hostname === STRIPE_CHECKOUT_HOST;
+  } catch {
+    return false;
+  }
+}
+
 export function useMapCheckout() {
   const [checkoutLoadingId, setCheckoutLoadingId] = useState<number | null>(
     null,
   );
-  const { isAuthenticated, isLoading } = useAuthUser();
+  const { isLoading } = useAuthUser();
   const router = useRouter();
-  const pathname = usePathname();
 
   const handleMapAction = async (map: MapItem) => {
     if (isLoading) {
-      return;
-    }
-
-    if (!isAuthenticated) {
-      router.push(`/login?returnTo=${encodeURIComponent(pathname)}`);
       return;
     }
 
@@ -35,15 +41,10 @@ export function useMapCheckout() {
         `/checkout/create-session?map_slug=${encodeURIComponent(map.slug)}`,
       );
 
-      const checkoutUrl =
-        response?.url ?? response?.checkout_url ?? response?.session_url;
-
-      if (checkoutUrl) {
-        window.location.href = checkoutUrl;
-      } else {
-        console.error("No checkout URL in response:", response);
-        alert("Checkout session was created but no redirect URL was returned.");
+      if (!isValidStripeUrl(response?.checkout_url)) {
+        throw new Error("Unexpected checkout URL received");
       }
+      window.location.href = response.checkout_url;
     } catch (error) {
       console.error("Checkout failed:", error);
       alert("Unable to start checkout. Please try again.");

@@ -36,7 +36,6 @@ export default function Hero() {
           <ArtworkCredit />
         </div>
 
-        {/* Desktop image */}
         <div className="hidden min-h-0 w-full flex-1 flex-col md:flex">
           <div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-plp-navy bg-white">
             <div className="relative h-full min-h-0 w-full bg-stone-100">

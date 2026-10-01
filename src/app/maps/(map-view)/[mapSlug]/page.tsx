@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { use } from "react";
 import dynamic from "next/dynamic";
 import { useAuthUser } from "@/context/AuthContext";
+import { buildLoginRedirect } from "@/lib/returnTo";
 import { Spinner } from "@/components/ui/Spinner";
 
 const StoreDashboard = dynamic(
@@ -19,7 +20,7 @@ export default function Page({ params }: { params: Promise<{ mapSlug: string }> 
 
   useEffect(() => {
     if (!isLoading && !user && !isAuthBusy) {
-      router.replace(`/login?returnTo=${encodeURIComponent(pathname)}`);
+      router.replace(buildLoginRedirect(pathname));
     }
   }, [isLoading, pathname, router, user, isAuthBusy]);
 
