@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { useMapDirectory } from "@/hooks/useMapDirectory";
 import { useMapCheckout } from "@/hooks/useMapCheckout";
-import { useCheckoutSuccessToast } from "@/hooks/useCheckoutSuccessToast";
 import { useAuthUser } from "@/context/AuthContext";
 import { MapCardGrid } from "./MapCardGrid";
 import { MapListView } from "./MapListView";
@@ -48,9 +47,6 @@ export default function MapDirectory() {
     showWaitlistSuccess,
     setShowWaitlistSuccess,
   } = useJoinWaitlist();
-
-  const { showSuccessMessage, setShowSuccessMessage, purchasedMapName } =
-    useCheckoutSuccessToast();
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
@@ -102,23 +98,6 @@ export default function MapDirectory() {
   return (
     <div className="mx-auto w-full max-w-7xl px-5 py-6 sm:px-6 md:py-8 lg:px-8">
       {" "}
-      <Snackbar
-        show={showSuccessMessage}
-        onClose={() => setShowSuccessMessage(false)}
-        icon={CheckCircle2}
-        iconColor="text-green-600"
-        borderColor="border-green-200"
-        bgColor="bg-green-50"
-        textColor="text-green-900"
-        title="Transaction Successful!"
-        subtitle={
-          purchasedMapName
-            ? `You now have access to ${decodeURIComponent(purchasedMapName)}`
-            : undefined
-        }
-        autoCloseMs={3000}
-        position="bottom-right"
-      />
       <Snackbar
         show={showWaitlistSuccess}
         onClose={() => setShowWaitlistSuccess(false)}

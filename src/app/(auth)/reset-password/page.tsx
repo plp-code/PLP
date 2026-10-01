@@ -7,7 +7,7 @@ export default function ResetPasswordPage() {
     <div className="plp-window p-1">
       <div className="plp-titlebar h-9 md:h-8 flex items-center justify-between px-3 md:px-2">
         <h2 className="font-bold text-[13px] md:text-sm capitalize tracking-tight">
-          Reset Password
+          Account Password
         </h2>
       </div>
 

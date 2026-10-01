@@ -4,29 +4,21 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthUser } from "@/context/AuthContext";
 import { api, setTokenExpiry, markSession } from "@/lib/api";
-import { AuthResponse } from "@/types/api";
-
-const DEFAULT_RETURN_PATH = "/maps";
-
-function getSafeReturnPath(returnTo?: string | null) {
-  if (!returnTo) return DEFAULT_RETURN_PATH;
-
-  if (!returnTo.startsWith("/") || returnTo.startsWith("//")) {
-    return DEFAULT_RETURN_PATH;
-  }
-
-  return returnTo;
-}
+import { useQueryClient } from "@tanstack/react-query";
+import { getSafeReturnPath } from "@/lib/returnTo";
+import type { User } from "@/types/models";
 
 export function useAuthActions(returnTo?: string | null) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
+  const queryClient = useQueryClient();
   const { checkSession, setAuthBusy } = useAuthUser();
   const targetPath = getSafeReturnPath(returnTo);
 
   const login = async (formData: FormData) => {
+    if (isLoading) return;
+
     setIsLoading(true);
     setAuthBusy(true);
     setError(null);
@@ -35,17 +27,14 @@ export function useAuthActions(returnTo?: string | null) {
       const email = formData.get("email");
       const password = formData.get("password");
 
-      await api.post<AuthResponse>(
+      const user = await api.post<User>(
         "/auth/login",
-        {
-          email: email,
-          password: password,
-        },
+        { email, password },
         { skipRefresh: true },
       );
       setTokenExpiry(30 * 60);
       markSession();
-      await checkSession();
+      queryClient.setQueryData(["session"], user);
       router.replace(targetPath);
     } catch (err) {
       setError(

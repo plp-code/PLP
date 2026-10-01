@@ -1,10 +1,5 @@
 import { useCallback, useRef } from "react";
 
-/**
- * Returns a ref callback to attach to the last list item. When that element
- * scrolls into view (and loading isn't in flight / disabled), `onLoadMore`
- * fires. Reattaching to a new node re-arms the observer.
- */
 export function useInfiniteScroll(
   onLoadMore: () => void,
   {

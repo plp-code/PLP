@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Loader2, Navigation, Clock, ChevronDown, Check } from "lucide-react";
+import {
+  Search,
+  Loader2,
+  Navigation,
+  Clock,
+  ChevronDown,
+  Check,
+} from "lucide-react";
 import type { ClothingCategory } from "@/types";
 
 const PRICE_LEVELS = [
@@ -50,9 +57,7 @@ export function MapFilterBar({
   );
 
   const selectedCategoryLabels = activeCategories
-    .map(
-      (slug) => categories.find((cat) => cat.slug === slug)?.name ?? slug,
-    )
+    .map((slug) => categories.find((cat) => cat.slug === slug)?.name ?? slug)
     .filter(Boolean);
 
   const categoryLabel =
@@ -211,7 +216,6 @@ export function MapFilterBar({
         <div className="relative shrink-0">
           <button
             type="button"
-            disabled
             onClick={() => {
               setIsCategoryOpen((prev) => !prev);
               setIsPriceOpen(false);
@@ -234,7 +238,7 @@ export function MapFilterBar({
           </button>
 
           {isCategoryOpen && (
-            <div className="fixed left-4 right-4 top-[140px] z-[1100] overflow-hidden rounded-2xl border border-gray-200/70 bg-white/98 shadow-[0_12px_30px_rgba(0,0,0,0.14)] backdrop-blur-md md:absolute md:left-0 md:right-auto md:top-full md:mt-2 md:w-[320px]">
+            <div className="fixed left-4 right-4 top-[180px] z-[1100] overflow-hidden rounded-2xl border border-gray-200/70 bg-white/98 shadow-[0_12px_30px_rgba(0,0,0,0.14)] backdrop-blur-md md:absolute md:left-0 md:right-auto md:top-full md:mt-2 md:w-[320px]">
               <div className="max-h-[55dvh] overflow-y-auto p-2 md:max-h-[400px]">
                 {categories.map((cat) => {
                   const active = activeCategories.includes(cat.slug);
@@ -243,7 +247,6 @@ export function MapFilterBar({
                     <button
                       key={cat.id}
                       type="button"
-                      disabled 
                       onClick={() => onCategorySelect(cat.slug)}
                       className={`flex w-full items-center justify-between gap-3 rounded-xl px-3.5 py-3 text-left font-prata text-xs transition-colors ${
                         active

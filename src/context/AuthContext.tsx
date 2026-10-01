@@ -20,6 +20,7 @@ import {
   hadSession,
 } from "@/lib/api";
 import { User } from "@/types";
+import { buildLoginRedirect } from "@/lib/returnTo";
 
 interface AuthContextType {
   user: User | null;
@@ -60,7 +61,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       queryClient.removeQueries({ queryKey: ["locations"] });
 
       if (isProtectedRoute(pathname)) {
-        router.replace("/login?session=expired");
+        router.replace(
+          buildLoginRedirect(
+            window.location.pathname + window.location.search,
+            "expired",
+          ),
+        );
       }
     });
 
@@ -85,6 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     retry: false,
     staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false, 
   });
 
   const checkSession = useCallback(async () => {
