@@ -13,6 +13,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   api,
   onAuthExpired,
+  onEmailNotVerified,
   clearTokenExpiry,
   setTokenExpiry,
   markSession,
@@ -21,12 +22,15 @@ import {
 } from "@/lib/api";
 import { User } from "@/types";
 import { buildLoginRedirect } from "@/lib/returnTo";
+import { useSnackbar } from "@/context/SnackbarContext";
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   isAuthBusy: boolean;
+  emailVerificationBlocked: boolean;
+  setEmailVerificationBlocked: (blocked: boolean) => void;
   setAuthBusy: (busy: boolean) => void;
   logout: () => Promise<void>;
   checkSession: () => Promise<void>;
@@ -41,6 +45,8 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   isAuthenticated: false,
   isAuthBusy: false,
+  emailVerificationBlocked: false,
+  setEmailVerificationBlocked: () => {},
   setAuthBusy: () => {},
   logout: async () => {},
   checkSession: async () => {},
@@ -50,12 +56,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const queryClient = useQueryClient();
+  const snackbar = useSnackbar();
   const [isAuthBusy, setAuthBusy] = useState(false);
+  const [emailVerificationBlocked, setEmailVerificationBlocked] =
+    useState(false);
+
+  useEffect(
+    () => onEmailNotVerified(() => setEmailVerificationBlocked(true)),
+    [],
+  );
 
   useEffect(() => {
     const cleanup = onAuthExpired(() => {
       clearTokenExpiry();
       clearSession();
+      setEmailVerificationBlocked(false);
       queryClient.setQueryData(["session"], null);
       queryClient.removeQueries({ queryKey: ["maps"] });
       queryClient.removeQueries({ queryKey: ["locations"] });
@@ -103,11 +118,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const wasProtected = isProtectedRoute(pathname);
     try {
       await api.post("/auth/logout");
+      snackbar.success("You've been logged out");
     } catch (error) {
       console.error("Logout failed", error);
+      snackbar.error(
+        "Signed out on this device",
+        "We couldn't reach the server.",
+      );
     } finally {
       clearTokenExpiry();
       clearSession();
+      setEmailVerificationBlocked(false);
       queryClient.removeQueries({ queryKey: ["maps"] });
       queryClient.removeQueries({ queryKey: ["locations"] });
       queryClient.setQueryData(["session"], null);
@@ -117,7 +138,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       setTimeout(() => setAuthBusy(false), 0);
     }
-  }, [queryClient, router, pathname]);
+  }, [queryClient, router, pathname, snackbar]);
 
   return (
     <AuthContext.Provider
@@ -126,6 +147,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading,
         isAuthenticated: !!user,
         isAuthBusy,
+        emailVerificationBlocked,
+        setEmailVerificationBlocked,
         setAuthBusy,
         logout,
         checkSession,

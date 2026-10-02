@@ -3,6 +3,7 @@ export interface User {
   first_name: string | null;
   last_name: string | null;
   email: string;
+  is_verified?: boolean;
 }
 
 export type MapStatus = "live" | "waitlist" | "dropped" | "next" ;

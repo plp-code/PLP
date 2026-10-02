@@ -36,8 +36,11 @@ export function StoreListView({
           {stores.length} of {totalCount}{" "}
           {totalCount === 1 ? "Location" : "Locations"}
         </h2>
-      </div>
 
+        <span className="text-[10px] text-gray-400 font-sans tracking-tight">
+          Distances are straight-line
+        </span>
+      </div>
       <div className="divide-y divide-gray-100/80 pb-[calc(5rem_+_env(safe-area-inset-bottom))] md:pb-0">
         {stores.map((store, index) => {
           const timeData = getTodayHours(store.hours);
@@ -98,7 +101,7 @@ export function StoreListView({
                         strokeWidth={2}
                         className="text-blue-500"
                       />
-                      {distance.toFixed(1)} mi
+                      ~ {distance.toFixed(1)} mi
                     </span>
                   )}
 

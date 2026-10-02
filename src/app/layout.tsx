@@ -2,7 +2,9 @@ import "./globals.css";
 import { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import { EmailVerificationBanner } from "@/components/features/auth/EmailVerificationBanner";
 import { AuthProvider } from "@/context/AuthContext";
+import { SnackbarProvider } from "@/context/SnackbarContext";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
@@ -62,11 +64,14 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <Providers>
-          <AuthProvider>
-            <main className="flex-1">{children}</main>
-            <Analytics />
-            <SpeedInsights />
-          </AuthProvider>
+          <SnackbarProvider>
+            <AuthProvider>
+              <main className="flex-1">{children}</main>
+              <EmailVerificationBanner />
+              <Analytics />
+              <SpeedInsights />
+            </AuthProvider>
+          </SnackbarProvider>
         </Providers>
       </body>
     </html>

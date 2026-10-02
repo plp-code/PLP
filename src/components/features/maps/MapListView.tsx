@@ -1,15 +1,14 @@
 import { MapPin, Lock, Unlock, ArrowRight, Loader2 } from "lucide-react";
 import { MapItem } from "@/types/models"; // Ensure your import path is correct
 import { ComingSoonRow } from "./ComingSoonCard";
+import type { WaitlistControls } from "./WaitlistInlineForm";
 
 interface Props {
   maps: MapItem[];
   onAction: (map: MapItem) => void;
   loadingId: number | null;
   upcoming?: MapItem[];
-  waitlistDisabled?: boolean;
-  waitlistLoadingSlug?: string | null;
-  onJoinWaitlist: (slug: string) => void;
+  waitlist: WaitlistControls;
 }
 
 export function MapListView({
@@ -17,9 +16,7 @@ export function MapListView({
   onAction,
   loadingId,
   upcoming = [],
-  waitlistDisabled = false,
-  waitlistLoadingSlug = null,         
-  onJoinWaitlist,
+  waitlist,
 }: Props) {
   return (
     <div className="flex flex-col gap-3">
@@ -98,9 +95,7 @@ export function MapListView({
         <ComingSoonRow
           key={`coming-soon-${map.slug}`}
           map={map}
-          disabled={waitlistDisabled}
-          isLoading={waitlistLoadingSlug === map.slug} 
-          onJoin={onJoinWaitlist}
+          waitlist={waitlist}
         />
       ))}
     </div>

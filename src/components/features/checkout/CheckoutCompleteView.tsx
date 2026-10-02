@@ -1,25 +1,35 @@
 "use client";
 
-import { AlertTriangle, Clock, Mail } from "lucide-react";
+import { AlertTriangle, Clock, LogIn } from "lucide-react";
 import { useCheckoutComplete } from "@/hooks/useCheckoutComplete";
 import { Spinner } from "@/components/ui/Spinner";
+import { buildLoginRedirect } from "@/lib/returnTo";
 import { StatusCard } from "@/components/ui/StatusCard";
 
 export function CheckoutCompleteView() {
-  const { viewState } = useCheckoutComplete();
+  const { viewState, mapSlug } = useCheckoutComplete();
 
   if (viewState === "polling" || viewState === "success") {
     return <Spinner text="Finalizing your purchase" />;
   }
 
-  if (viewState === "verify_email") {
+  if (viewState === "requires_login" || viewState === "already_owned") {
+    const loginHref = buildLoginRedirect(
+      mapSlug ? `/maps/${mapSlug}` : "/maps",
+    );
     return (
       <StatusCard
-        title="Check Your Email"
-        icon={Mail}
-        message="Thanks for your purchase! Check your email to access your map."
-        href="/maps"
-        cta="Browse Maps"
+        title={
+          viewState === "requires_login" ? "Payment Received" : "Already Owned"
+        }
+        icon={LogIn}
+        message={
+          viewState === "requires_login"
+            ? "Payment received. Log in to view your map."
+            : "You already own this map. We refunded this duplicate charge. Log in to view it."
+        }
+        href={loginHref}
+        cta="Log In"
       />
     );
   }
