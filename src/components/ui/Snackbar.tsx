@@ -20,6 +20,7 @@ export const Snackbar = ({
   subtitle,
   autoCloseMs,
   position = "bottom-right",
+  role,
 }: {
   show: boolean;
   onClose: () => void;
@@ -32,6 +33,7 @@ export const Snackbar = ({
   subtitle?: string;
   autoCloseMs?: number;
   position?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
+  role?: "status" | "alert";
 }) => {
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -130,6 +132,7 @@ export const Snackbar = ({
       className={`pointer-events-none fixed ${positionClasses[position]} z-[5000] w-[calc(100%-2rem)] sm:w-auto sm:max-w-sm`}
     >
       <div
+        role={role}
         className={`pointer-events-auto relative overflow-hidden rounded-2xl border ${borderColor} ${bgColor} ${textColor} shadow-lg backdrop-blur-sm transition-all duration-300 ease-out ${
           isVisible && !isClosing
             ? "scale-100 opacity-100"

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSnackbar } from "@/context/SnackbarContext";
 
 export interface UserLocation {
   lat: number;
@@ -6,6 +7,7 @@ export interface UserLocation {
 }
 
 export function useGeolocation() {
+  const snackbar = useSnackbar();
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -25,7 +27,10 @@ export function useGeolocation() {
 
   const locate = () => {
     setDismissed(false);
-    if (!("geolocation" in navigator)) return;
+    if (!("geolocation" in navigator)) {
+      snackbar.error("Location isn't supported on this browser");
+      return;
+    }
 
     setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
@@ -37,7 +42,10 @@ export function useGeolocation() {
         setIsLocating(false);
       },
       () => {
-        alert("Could not get your location. Please check browser permissions.");
+        snackbar.error(
+          "Couldn't get your location",
+          "Allow location access in your browser settings and try again.",
+        );
         setIsLocating(false);
       },
       { enableHighAccuracy: true },

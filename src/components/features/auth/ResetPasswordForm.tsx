@@ -14,8 +14,8 @@ export function ResetPasswordForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  const { state, hasPassword, isLoading, executePasswordReset } =
-    useResetPassword(token);
+  const { state, hasPassword, isLoading, submitError, executePasswordReset } = useResetPassword(token);
+  const displayError = validationError ?? submitError;
 
   if (state === "checking") {
     return (
@@ -46,7 +46,6 @@ export function ResetPasswordForm() {
     await executePasswordReset(newPassword);
   };
 
-  const displayError = validationError;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">

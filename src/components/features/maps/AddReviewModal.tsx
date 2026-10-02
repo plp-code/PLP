@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Loader2, X, ChevronDown, Check } from "lucide-react";
+import { useSnackbar } from "@/context/SnackbarContext";
 import { useGetClothingCategories } from "@/hooks/useClothingCategory";
 import type { NewReview } from "@/types";
 
@@ -30,6 +31,7 @@ export function AddReviewModal({
   const [experience, setExperience] = useState("");
   const [price, setPrice] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const snackbar = useSnackbar();
 
   useEffect(() => {
     setMounted(true);
@@ -102,6 +104,8 @@ export function AddReviewModal({
             ? Number(parsedPrice.toFixed(2))
             : undefined,
       });
+    } catch {
+      snackbar.error("Couldn't post your review", "Please try again.");
     } finally {
       setSubmitting(false);
     }

@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useSnackbar } from "@/context/SnackbarContext";
 import { useGetReviews, useCreateReview } from "@/hooks/useReviews";
 import type { NewReview } from "@/types";
 
 export function useStoreReviews(storeId: number) {
   const [reviewOpen, setReviewOpen] = useState(false);
-  const [showReviewSuccess, setShowReviewSuccess] = useState(false);
+  const snackbar = useSnackbar();
 
   const { data: reviews = [], isLoading } = useGetReviews(storeId);
   const { mutateAsync: createReview, isPending: isSubmitting } = useCreateReview();
@@ -22,7 +23,7 @@ export function useStoreReviews(storeId: number) {
     });
 
     setReviewOpen(false);
-    setShowReviewSuccess(true);
+    snackbar.success("Thanks for sharing!", "Your experience has been added.");
   };
 
   return {
@@ -31,8 +32,6 @@ export function useStoreReviews(storeId: number) {
     isSubmitting,
     reviewOpen,
     setReviewOpen,
-    showReviewSuccess,
-    setShowReviewSuccess,
     submitReview,
   };
 }

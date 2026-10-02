@@ -1,6 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuthUser } from "@/context/AuthContext";
+import { useSnackbar } from "@/context/SnackbarContext";
 import { api } from "@/lib/api";
 import { MapItem } from "@/types";
 import type { CheckoutSessionResponse } from "@/types/api";
@@ -23,6 +24,7 @@ export function useMapCheckout() {
   );
   const { isLoading } = useAuthUser();
   const router = useRouter();
+  const snackbar = useSnackbar();
 
   const handleMapAction = async (map: MapItem) => {
     if (isLoading) {
@@ -47,7 +49,7 @@ export function useMapCheckout() {
       window.location.href = response.checkout_url;
     } catch (error) {
       console.error("Checkout failed:", error);
-      alert("Unable to start checkout. Please try again.");
+      snackbar.error("Couldn't start checkout", "Please try again.");
     } finally {
       setCheckoutLoadingId(null);
     }

@@ -116,7 +116,7 @@ export function getDistance(
   lat2: number,
   lon2: number,
 ): number {
-  const R = 3958.8; // Earth radius in miles
+  const R = 3958.8; 
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
   const a =
@@ -138,30 +138,34 @@ export function buildDirectionsUrl(
   },
   userLocation: { lat: number; lng: number } | null = null,
 ) {
-  if (!userLocation) {
-    if (store.google_place_id) {
-      return `https://www.google.com/maps/place/?q=place_id:${store.google_place_id}`;
-    }
-    if (store.name) {
-      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.name)}@${store.latitude},${store.longitude}`;
-    }
-    return `https://www.google.com/maps/@${store.latitude},${store.longitude},17z`;
-  }
+  const destinationQuery =
+    store.name || `${store.latitude},${store.longitude}`;
 
-  if (store.google_place_id) {
+  
+  if (!userLocation) {
     const params = new URLSearchParams({
       api: "1",
-      travelmode: "driving",
-      origin: `${userLocation.lat},${userLocation.lng}`,
-      destination: store.name || `${store.latitude},${store.longitude}`,
-      destination_place_id: store.google_place_id,
+      query: destinationQuery,
     });
-    return `https://www.google.com/maps/dir/?${params.toString()}`;
+
+    if (store.google_place_id) {
+      params.set("query_place_id", store.google_place_id);
+    }
+
+    return `https://www.google.com/maps/search/?${params.toString()}`;
   }
 
-  if (store.name) {
-    return `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${encodeURIComponent(store.name)}@${store.latitude},${store.longitude}`;
+  
+  const params = new URLSearchParams({
+    api: "1",
+    origin: `${userLocation.lat},${userLocation.lng}`,
+    destination: destinationQuery,
+    travelmode: "driving",
+  });
+
+  if (store.google_place_id) {
+    params.set("destination_place_id", store.google_place_id);
   }
 
-  return `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${store.latitude},${store.longitude}`;
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
 }
