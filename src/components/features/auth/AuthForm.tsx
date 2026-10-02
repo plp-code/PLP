@@ -22,7 +22,8 @@ export default function AuthForm() {
   const [authMethod, setAuthMethod] = useState<AuthMethod>("password");
   const searchParams = useSearchParams();
   const returnTo = searchParams.get("returnTo");
-  const { login, register, isLoading, error } = useAuthActions(returnTo);
+  const { login, register, isLoading, error, checkEmail, resetCheckEmail } =
+    useAuthActions(returnTo);
   const {
     sendMagicLink,
     isLoading: isMagicLinkLoading,
@@ -31,6 +32,7 @@ export default function AuthForm() {
   } = useMagicLink();
 
   const toggleMode = () => {
+    resetCheckEmail();
     setIsLogin(!isLogin);
     setAuthMethod("password");
   };
@@ -64,7 +66,28 @@ export default function AuthForm() {
       </div>
 
       <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-5 sm:pb-6">
-        {isLogin && authMethod === "magic-link" && isMagicLinkSubmitted ? (
+        {!isLogin && checkEmail ? (
+          <div className="flex flex-col items-center text-center py-2">
+            <CheckCircle2 size={36} className="text-plp-maroon mb-3" />
+            <h3 className="text-plp-maroon font-bold text-sm sm:text-base capitalize tracking-tight mb-2">
+              Check Your Email
+            </h3>
+            <p className="text-plp-maroon/80 text-[11px] sm:text-xs leading-relaxed mb-6">
+              We&apos;ve sent you a link to finish setting up your account.
+              It expires in 15 minutes.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                resetCheckEmail();
+                setIsLogin(true);
+              }}
+              className="plp-btn-primary cursor-pointer flex items-center justify-center h-10 w-full font-bodoni font-bold text-[13px] capitalize tracking-tighter"
+            >
+              Back to Login
+            </button>
+          </div>
+        ) : isLogin && authMethod === "magic-link" && isMagicLinkSubmitted ? (
           <div className="flex flex-col items-center text-center py-2">
             <CheckCircle2 size={36} className="text-plp-maroon mb-3" />
             <h3 className="text-plp-maroon font-bold text-sm sm:text-base capitalize tracking-tight mb-2">

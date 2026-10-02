@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSnackbar } from "@/context/SnackbarContext";
 import { getSafeReturnPath } from "@/lib/returnTo";
-import { api, setTokenExpiry, markSession } from "@/lib/api";
+import { api, ApiError, setTokenExpiry, markSession } from "@/lib/api";
 
 type ResetState = "checking" | "valid" | "invalid";
 
@@ -14,12 +15,16 @@ interface ResetCheckResponse {
 }
 
 export function useResetPassword(token: string | null) {
-  const [state, setState] = useState<ResetState>(token ? "checking" : "invalid");
+  const [state, setState] = useState<ResetState>(
+    token ? "checking" : "invalid",
+  );
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [hasPassword, setHasPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
+  const snackbar = useSnackbar();
 
   useEffect(() => {
     if (!token) return;
@@ -48,6 +53,7 @@ export function useResetPassword(token: string | null) {
   const executePasswordReset = async (newPassword: string) => {
     if (!token) return;
     setIsLoading(true);
+    setSubmitError(null);
 
     try {
       await api.post(
@@ -58,12 +64,17 @@ export function useResetPassword(token: string | null) {
       setTokenExpiry(30 * 60);
       markSession();
       await queryClient.invalidateQueries({ queryKey: ["session"] });
+      snackbar.success("Password updated");
       router.replace(getSafeReturnPath(searchParams.get("returnTo")));
-    } catch {
-      setState("invalid");
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 400) {
+        setState("invalid");
+      } else {
+        setSubmitError("Something went wrong. Please try again.");
+      }
       setIsLoading(false);
     }
   };
 
-  return { state, hasPassword, isLoading, executePasswordReset };
+  return { state, hasPassword, isLoading, executePasswordReset, submitError};
 }

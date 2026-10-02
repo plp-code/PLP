@@ -5,6 +5,31 @@ interface FetchOptions extends RequestInit {
   skipRefresh?: boolean;
 }
 
+export class ApiError extends Error {
+  status: number;
+  detail: unknown;
+  code?: string;
+
+  constructor(message: string, status: number, detail?: unknown) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.detail = detail;
+    if (detail && typeof detail === "object" && !Array.isArray(detail)) {
+      const code = (detail as { code?: unknown }).code;
+      if (typeof code === "string") this.code = code;
+    }
+  }
+}
+
+export function isEmailNotVerified(err: unknown): boolean {
+  return (
+    err instanceof ApiError &&
+    err.status === 403 &&
+    err.code === "email_not_verified"
+  );
+}
+
 const TOKEN_EXPIRY_KEY = "token_expires_at";
 const SESSION_HINT_KEY = "had_session";
 
@@ -26,11 +51,19 @@ export function hadSession(): boolean {
 
 let refreshPromise: Promise<boolean> | null = null;
 let authExpiredHandler: (() => void) | null = null;
+let emailNotVerifiedHandler: (() => void) | null = null;
 
 export function onAuthExpired(handler: () => void) {
   authExpiredHandler = handler;
   return () => {
     if (authExpiredHandler === handler) authExpiredHandler = null;
+  };
+}
+
+export function onEmailNotVerified(handler: () => void) {
+  emailNotVerifiedHandler = handler;
+  return () => {
+    if (emailNotVerifiedHandler === handler) emailNotVerifiedHandler = null;
   };
 }
 
@@ -101,13 +134,13 @@ async function fetcher<T>(
       return fetcher<T>(endpoint, options);
     }
 
-    throw new Error("Session expired or unauthorized.");
+    throw new ApiError("Session expired or unauthorized.", 401);
   }
 
   if (!response.ok) {
-    const err: { detail?: string | ApiValidationError[] } = await response
-      .json()
-      .catch(() => ({}));
+    const err: {
+      detail?: string | ApiValidationError[] | { code?: string; message?: string };
+    } = await response.json().catch(() => ({}));
 
     let message: string;
     if (typeof err.detail === "string") {
@@ -119,11 +152,15 @@ async function fetcher<T>(
           return field ? `${field}: ${e.msg}` : e.msg;
         })
         .join(". ");
+    } else if (err.detail && typeof err.detail.message === "string") {
+      message = err.detail.message;
     } else {
       message = `Request failed with status ${response.status}`;
     }
 
-    throw new Error(message);
+    const apiError = new ApiError(message, response.status, err.detail);
+    if (isEmailNotVerified(apiError)) emailNotVerifiedHandler?.();
+    throw apiError;
   }
 
   const text = await response.text();

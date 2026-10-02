@@ -8,18 +8,19 @@ import { api, setTokenExpiry, markSession } from "@/lib/api";
 const POLL_INTERVAL_MS = 1200;
 const MAX_POLLS = 15;
 
-type CheckoutStatus = "pending" | "complete" | "expired" | "failed";
-
 interface CheckoutStatusResponse {
-  status: CheckoutStatus;
-  map_slug?: string; // only guaranteed when status === "complete"
-  requires_verification?: boolean; // no session issued; user must verify via email
+  // Only "pending" keeps polling; any other value (known or not) ends the loop.
+  status: string;
+  map_slug?: string | null;
+  requires_login?: boolean; // paid, but no session issued; user must log in
+  logged_in?: boolean; // already_owned only
 }
 
 export type CheckoutCompleteState =
   | "polling"
   | "success"
-  | "verify_email"
+  | "requires_login"
+  | "already_owned"
   | "error"
   | "timeout"
   | "missing";
@@ -30,6 +31,7 @@ export function useCheckoutComplete() {
   const queryClient = useQueryClient();
   const sessionId = searchParams.get("session_id");
 
+  const [mapSlug, setMapSlug] = useState<string | null>(null);
   const [viewState, setViewState] = useState<CheckoutCompleteState>(
     sessionId ? "polling" : "missing",
   );
@@ -50,14 +52,17 @@ export function useCheckoutComplete() {
         );
         if (cancelled) return;
 
-        if (data.status === "complete") {
-          // No safe session to hand over: don't mark a session or redirect.
-          if (data.requires_verification) {
-            setViewState("verify_email");
-            return;
-          }
+        if (data.status === "pending") {
+          // fall through to the next poll
+        } else if (data.status === "complete") {
           if (!data.map_slug) {
             setViewState("error");
+            return;
+          }
+          setMapSlug(data.map_slug);
+          // Payment alone never mints a session for accounts with a password.
+          if (data.requires_login) {
+            setViewState("requires_login");
             return;
           }
           setTokenExpiry(30 * 60);
@@ -67,9 +72,17 @@ export function useCheckoutComplete() {
           setViewState("success");
           router.replace(`/maps/${data.map_slug}`);
           return;
-        }
-
-        if (data.status === "expired" || data.status === "failed") {
+        } else if (data.status === "already_owned") {
+          if (data.logged_in && data.map_slug) {
+            setViewState("success");
+            router.replace(`/maps/${data.map_slug}`);
+            return;
+          }
+          setMapSlug(data.map_slug ?? null);
+          setViewState("already_owned");
+          return;
+        } else {
+          // expired, failed, duplicate, refunded, or anything unrecognized
           setViewState("error");
           return;
         }
@@ -93,5 +106,5 @@ export function useCheckoutComplete() {
     };
   }, [sessionId, router, queryClient]);
 
-  return { viewState };
+  return { viewState, mapSlug };
 }

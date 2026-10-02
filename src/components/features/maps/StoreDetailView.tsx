@@ -4,7 +4,6 @@ import {
   ChevronLeft,
   MapPin,
   Navigation,
-  CheckCircle2,
   ChevronDown,
 } from "lucide-react";
 import {
@@ -14,7 +13,6 @@ import {
   buildDirectionsUrl,
 } from "@/lib/utils";
 import { useStoreReviews } from "@/hooks/useStoreReviews";
-import { Snackbar } from "@/components/ui/Snackbar";
 import { AddReviewModal } from "./AddReviewModal";
 import { StoreStatusBadge } from "./StoreStatusBadge";
 import { StoreHours } from "./StoreHours";
@@ -47,8 +45,6 @@ export function StoreDetailView({
     isSubmitting,
     reviewOpen,
     setReviewOpen,
-    showReviewSuccess,
-    setShowReviewSuccess,
     submitReview,
   } = useStoreReviews(store.id);
 
@@ -90,7 +86,7 @@ export function StoreDetailView({
                     strokeWidth={2}
                     className="text-slate-500"
                   />
-                  {distance.toFixed(1)} mi away
+                  ~ {distance.toFixed(1)} mi away
                 </span>
               )}
 
@@ -161,20 +157,6 @@ export function StoreDetailView({
         onClose={() => setReviewOpen(false)}
         onSubmit={submitReview}
         storeName={store.name}
-      />
-
-      <Snackbar
-        show={showReviewSuccess}
-        onClose={() => setShowReviewSuccess(false)}
-        icon={CheckCircle2}
-        iconColor="text-green-600"
-        borderColor="border-green-200"
-        bgColor="bg-green-50"
-        textColor="text-green-900"
-        title="Thanks for sharing!"
-        subtitle="Your experience has been added."
-        autoCloseMs={3000}
-        position="bottom-right"
       />
     </div>
   );

@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Map as MapIcon,
-  Shield,
   AlertCircle,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -16,14 +14,14 @@ import { MapCardGrid } from "./MapCardGrid";
 import { MapListView } from "./MapListView";
 import { ComingSoonCard } from "./ComingSoonCard";
 import { DirectoryToolbar } from "./DirectoryToolbar";
-import { Snackbar } from "@/components/ui/Snackbar";
+import type { WaitlistControls } from "./WaitlistInlineForm";
+import { useSnackbar } from "@/context/SnackbarContext";
 import { Spinner } from "@/components/ui/Spinner";
 import { useJoinWaitlist } from "@/hooks/useJoinWaitlist";
 import { MapStatus } from "@/types";
 
 export default function MapDirectory() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
-  const [showGuestBanner, setShowGuestBanner] = useState(true);
   const [statusFilter, setStatusFilter] = useState<MapStatus | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,6 +29,17 @@ export default function MapDirectory() {
   const limit = viewMode === "grid" ? 6 : 5;
 
   const { isAuthenticated, isLoading: authLoading } = useAuthUser();
+  const snackbar = useSnackbar();
+
+  const guestNoticeShown = useRef(false);
+  useEffect(() => {
+    if (authLoading || isAuthenticated || guestNoticeShown.current) return;
+    guestNoticeShown.current = true;
+    snackbar.info(
+      "Browsing as Guest",
+      "Log in or create an account to make any purchases.",
+    );
+  }, [authLoading, isAuthenticated, snackbar]);
 
   const { maps, total, totalPages, loading, isFetching, error } =
     useMapDirectory({
@@ -43,10 +52,20 @@ export default function MapDirectory() {
   const { handleMapAction, checkoutLoadingId } = useMapCheckout();
   const {
     joinWaitlist,
+    submitGuestEmail,
     loadingSlug,
-    showWaitlistSuccess,
-    setShowWaitlistSuccess,
+    expandedSlug,
+    collapseForm,
   } = useJoinWaitlist();
+
+  const waitlistControls: WaitlistControls = {
+    disabled: authLoading,
+    loadingSlug,
+    expandedSlug,
+    onJoin: joinWaitlist,
+    onCollapse: collapseForm,
+    onSubmitEmail: submitGuestEmail,
+  };
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
@@ -97,35 +116,6 @@ export default function MapDirectory() {
 
   return (
     <div className="mx-auto w-full max-w-7xl px-5 py-6 sm:px-6 md:py-8 lg:px-8">
-      {" "}
-      <Snackbar
-        show={showWaitlistSuccess}
-        onClose={() => setShowWaitlistSuccess(false)}
-        icon={CheckCircle2}
-        iconColor="text-green-600"
-        borderColor="border-green-200"
-        bgColor="bg-green-50"
-        textColor="text-green-900"
-        title="You're on the waitlist!"
-        subtitle="We'll email you as soon as new maps go live."
-        position="bottom-right"
-        autoCloseMs={4000}
-      />
-      {!authLoading && !isAuthenticated && (
-        <Snackbar
-          show={showGuestBanner}
-          onClose={() => setShowGuestBanner(false)}
-          icon={Shield}
-          iconColor="text-amber-700"
-          borderColor="border-amber-200"
-          bgColor="bg-amber-50"
-          textColor="text-amber-900"
-          title="Browsing as Guest"
-          subtitle="Log in or create an account to make any purchases."
-          position="bottom-right"
-          autoCloseMs={5000}
-        />
-      )}
       <DirectoryToolbar
         totalCount={total}
         searchQuery={searchQuery}
@@ -201,9 +191,7 @@ export default function MapDirectory() {
                 <ComingSoonCard
                   key={`coming-soon-${map.slug}`}
                   map={map}
-                  disabled={authLoading}
-                  isLoading={loadingSlug === map.slug}
-                  onJoin={joinWaitlist}
+                  waitlist={waitlistControls}
                 />
               ))}
             </div>
@@ -215,9 +203,7 @@ export default function MapDirectory() {
                   onAction={handleMapAction}
                   loadingId={checkoutLoadingId}
                   upcoming={upcomingMaps}
-                  waitlistDisabled={authLoading}
-                  waitlistLoadingSlug={loadingSlug}
-                  onJoinWaitlist={joinWaitlist}
+                  waitlist={waitlistControls}
                 />
               </div>
             )}
