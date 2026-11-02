@@ -1,5 +1,5 @@
 import { MapItem } from "@/types/models";
-import { MapPin, Clock, BellRing } from "lucide-react";
+import { MapPin, Clock } from "lucide-react";
 import { WaitlistInlineForm, type WaitlistControls } from "./WaitlistInlineForm";
 
 interface ComingSoonProps {
@@ -7,41 +7,36 @@ interface ComingSoonProps {
   waitlist: WaitlistControls;
 }
 
+const statusLabel = (map: MapItem) =>
+  map.status === "next" ? "Up Next" : "Coming Soon";
+
 export function ComingSoonCard({ map, waitlist }: ComingSoonProps) {
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-dashed border-plp-maroon/25 bg-plp-maroon/[0.02] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-plp-maroon/40 hover:shadow-lg">
-      <div className="h-1.5 w-full bg-gradient-to-r from-plp-maroon/40 to-plp-babyblue/40" />
-
+    <article className="group relative flex flex-col border border-dashed border-plp-maroon/30 bg-plp-maroon/[0.02] transition-all duration-300 hover:-translate-y-0.5 hover:border-plp-maroon/50">
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <span className="inline-flex min-w-0 items-center gap-1.5 text-xs font-medium text-gray-500">
-            <MapPin size={14} className="shrink-0 text-gray-400" />
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <span className="inline-flex min-w-0 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-plp-maroon/55">
+            <MapPin size={12} strokeWidth={1.5} className="shrink-0" />
             <span className="truncate">{map.region || "Global"}</span>
           </span>
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-plp-maroon/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-plp-maroon">
-            <Clock size={12} /> Coming Soon
+          <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.16em] text-plp-maroon/60">
+            [{statusLabel(map)}]
           </span>
         </div>
 
-        <h3 className="mb-2 text-lg font-bold leading-tight text-gray-900 sm:text-xl">
+        <h3 className="font-bodoni text-[26px] font-semibold leading-[1.1] tracking-[-0.02em] text-plp-maroon">
           {map.name}
         </h3>
 
-        <div className="mb-6 flex-1">
-          <p className="inline-flex items-start gap-1.5 text-sm leading-relaxed text-gray-600">
-            <BellRing
-              size={14}
-              className="mt-0.5 shrink-0 text-plp-maroon/60"
-            />
-            {map.description}
-          </p>
-        </div>
+        <p className="mb-6 mt-3 line-clamp-4 flex-1 font-prata text-[13px] leading-6 text-plp-maroon/60">
+          {map.description}
+        </p>
 
-        <div className="mt-auto border-t border-gray-100 pt-4 sm:pt-5">
+        <div className="mt-auto border-t border-plp-maroon/10 pt-4">
           <WaitlistInlineForm map={map} controls={waitlist} fullWidth />
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 

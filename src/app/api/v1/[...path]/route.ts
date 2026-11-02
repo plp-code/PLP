@@ -15,7 +15,6 @@ async function proxyRequest(req: Request, path: string[]) {
     body: ["GET", "HEAD"].includes(req.method)
       ? undefined
       : await req.arrayBuffer(),
-    // The backend is a JSON API and never issues 3xx; pass any through untouched.
     redirect: "manual",
     // @ts-expect-error - required for streaming request bodies in some runtimes
     duplex: "half",

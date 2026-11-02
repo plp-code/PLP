@@ -6,15 +6,15 @@ export const metadata: Metadata = {
   title: "Organizations | The Preloved Professional",
 };
 
-export default function ExperiencesAndServicesPage() {
+export default function OrganizationsPage() {
   return (
-    <main className="bg-plp-parchment text-plp-maroon">
-      <Container className="py-6 md:py-8" contentClassName="max-w-6xl">
+    <div className="bg-plp-parchment text-plp-maroon">
+      <Container as="div" className="py-6 md:py-8" contentClassName="max-w-6xl">
         <ComingSoon
           title="Coming soon."
           description="We're putting together new ways to experience The Preloved Professional beyond the map. More details are on the way."
         />
       </Container>
-    </main>
+    </div>
   );
 }

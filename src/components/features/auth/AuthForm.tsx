@@ -60,18 +60,18 @@ export default function AuthForm() {
   return (
     <div className="plp-window p-1">
       <div className="plp-titlebar h-9 md:h-8 flex items-center justify-between px-3 md:px-2">
-        <h2 className="font-bold text-[13px] md:text-sm capitalize tracking-tight">
+        <h1 className="font-bold text-[13px] md:text-sm capitalize tracking-tight">
           {isLogin ? "Login" : "Create Account"}
-        </h2>
+        </h1>
       </div>
 
       <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-5 sm:pb-6">
         {!isLogin && checkEmail ? (
           <div className="flex flex-col items-center text-center py-2">
             <CheckCircle2 size={36} className="text-plp-maroon mb-3" />
-            <h3 className="text-plp-maroon font-bold text-sm sm:text-base capitalize tracking-tight mb-2">
+            <h2 className="text-plp-maroon font-bold text-sm sm:text-base capitalize tracking-tight mb-2">
               Check Your Email
-            </h3>
+            </h2>
             <p className="text-plp-maroon/80 text-[11px] sm:text-xs leading-relaxed mb-6">
               We&apos;ve sent you a link to finish setting up your account.
               It expires in 15 minutes.
@@ -90,9 +90,9 @@ export default function AuthForm() {
         ) : isLogin && authMethod === "magic-link" && isMagicLinkSubmitted ? (
           <div className="flex flex-col items-center text-center py-2">
             <CheckCircle2 size={36} className="text-plp-maroon mb-3" />
-            <h3 className="text-plp-maroon font-bold text-sm sm:text-base capitalize tracking-tight mb-2">
+            <h2 className="text-plp-maroon font-bold text-sm sm:text-base capitalize tracking-tight mb-2">
               Check Your Inbox
-            </h3>
+            </h2>
             <p className="text-plp-maroon/80 text-[11px] sm:text-xs leading-relaxed mb-6">
               If an account exists for that email, we've sent a login link.
               It expires in 15 minutes.

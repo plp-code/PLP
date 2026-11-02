@@ -9,11 +9,10 @@ const POLL_INTERVAL_MS = 1200;
 const MAX_POLLS = 15;
 
 interface CheckoutStatusResponse {
-  // Only "pending" keeps polling; any other value (known or not) ends the loop.
   status: string;
   map_slug?: string | null;
-  requires_login?: boolean; // paid, but no session issued; user must log in
-  logged_in?: boolean; // already_owned only
+  requires_login?: boolean;
+  logged_in?: boolean;
 }
 
 export type CheckoutCompleteState =
@@ -53,14 +52,13 @@ export function useCheckoutComplete() {
         if (cancelled) return;
 
         if (data.status === "pending") {
-          // fall through to the next poll
         } else if (data.status === "complete") {
           if (!data.map_slug) {
             setViewState("error");
             return;
           }
           setMapSlug(data.map_slug);
-          // Payment alone never mints a session for accounts with a password.
+
           if (data.requires_login) {
             setViewState("requires_login");
             return;
@@ -82,13 +80,10 @@ export function useCheckoutComplete() {
           setViewState("already_owned");
           return;
         } else {
-          // expired, failed, duplicate, refunded, or anything unrecognized
           setViewState("error");
           return;
         }
-      } catch {
-        // ignored: keep polling until MAX_POLLS
-      }
+      } catch {}
 
       pollCount += 1;
       if (pollCount >= MAX_POLLS) {

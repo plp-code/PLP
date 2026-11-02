@@ -12,7 +12,7 @@ export default function NotFound() {
           Error 404
         </p>
 
-        <Display className="max-w-4xl text-[clamp(4rem,12vw,9rem)] leading-[0.82] tracking-[-0.035em] text-plp-maroon">
+        <Display as="h1" className="max-w-4xl text-[clamp(4rem,12vw,9rem)] leading-[0.82] tracking-[-0.035em] text-plp-maroon">
           Page Not Found
         </Display>
 

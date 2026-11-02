@@ -75,9 +75,7 @@ export default function QuoteCarousel({
 
     touchStartX.current = null;
     touchStartY.current = null;
-
-    // Only treat the gesture as a swipe when it is
-    // clearly more horizontal than vertical.
+    
     if (
       Math.abs(deltaX) < SWIPE_THRESHOLD ||
       Math.abs(deltaX) <= Math.abs(deltaY)
@@ -99,6 +97,7 @@ export default function QuoteCarousel({
   return (
     <Container
       fullBleed
+      aria-label="Quotes on personal style"
       className="relative overflow-hidden border-y border-plp-parchment/10 bg-plp-maroon"
       contentClassName="max-w-6xl px-4 sm:px-6 md:px-10"
     >

@@ -28,6 +28,13 @@
   font-display: swap;
 }
 
+/* Header sizing: --header-h is the navbar's real height; --header-offset is the
+   space HeaderShell reserves above page content (pages can cancel the extra). */
+:root {
+  --header-h: 66px;
+  --header-offset: 94px;
+}
+
 /* THEME CONFIGURATION */
 @theme {
   /* Fonts */

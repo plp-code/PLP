@@ -22,7 +22,6 @@ interface WaitlistInlineFormProps {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Animates height via grid rows (0fr -> 1fr) so no fixed heights are needed.
 const collapsible = (open: boolean) =>
   `grid transition-[grid-template-rows,opacity] duration-200 ease-out motion-reduce:transition-none ${
     open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
@@ -35,7 +34,7 @@ export function WaitlistInlineForm({
 }: WaitlistInlineFormProps) {
   const { disabled, loadingSlug, expandedSlug, onJoin, onCollapse } = controls;
   const expanded = expandedSlug === map.slug;
-  // Server state only: guests are never shown as joined (no email-existence signal).
+
   const joined = map.is_waitlisted;
   const loading = loadingSlug === map.slug;
 
@@ -47,11 +46,9 @@ export function WaitlistInlineForm({
   const errorId = `${formId}-error`;
   const buttonRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  // Set only when the user collapses the form, so a card collapsed because
-  // another one opened doesn't steal focus.
+
   const returnFocus = useRef(false);
 
-  // Reset the draft when the form closes (adjusting state during render).
   const [wasExpanded, setWasExpanded] = useState(expanded);
   if (wasExpanded !== expanded) {
     setWasExpanded(expanded);

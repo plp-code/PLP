@@ -7,10 +7,6 @@ export default function BackButton() {
   const router = useRouter();
 
   const handleBack = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // This only runs once React has hydrated. Before that, the click falls
-    // through to the anchor's href below and navigates home natively — so the
-    // very first click always does something instead of being swallowed while
-    // the header is painted but not yet interactive.
     e.preventDefault();
     if (window.history.length > 1) {
       router.back();

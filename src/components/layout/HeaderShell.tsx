@@ -1,10 +1,9 @@
 "use client";
 
 import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import { ReactNode, useEffect, useState, useRef } from "react";
 
-export default function MainLayout({ children }: { children: ReactNode }) {
+export default function HeaderShell({ children }: { children: ReactNode }) {
   const [isVisible, setIsVisible] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
@@ -44,7 +43,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   }, [isMenuOpen]);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <>
       <div
         className={`fixed top-0 left-0 right-0 z-100 transition-transform duration-500
           ${isVisible || isMenuOpen ? "translate-y-0" : "-translate-y-full"}
@@ -52,7 +51,6 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       >
         <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       </div>
-
 
       <div
         onClick={() => setIsMenuOpen(false)}
@@ -62,14 +60,12 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       />
 
       <div
-        className={`grow pt-[94px] transition-all duration-700 
+        className={`grow pt-(--header-offset) transition-all duration-700
     ${isMenuOpen ? "scale-[0.98] origin-top brightness-90" : "scale-100 brightness-100"}
   `}
       >
         {children}
       </div>
-
-      <Footer />
-    </div>
+    </>
   );
 }

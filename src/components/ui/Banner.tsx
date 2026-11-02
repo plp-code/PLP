@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode } from "react";
+import { useId, type ElementType, type ReactNode } from "react";
 import { Container } from "./Container";
 import { twMerge } from "tailwind-merge";
 
@@ -10,6 +10,7 @@ interface BannerProps {
   title?: ReactNode;
   description?: ReactNode;
   as?: ElementType;
+  titleAs?: ElementType;
   id?: string;
 }
 
@@ -21,8 +22,10 @@ export default function Banner({
   title,
   description,
   as: Component = "section",
+  titleAs: TitleComponent = "p",
   id,
 }: BannerProps) {
+  const titleId = useId();
   const hasHeadingContent = Boolean(eyebrow || title || description);
 
   return (
@@ -39,6 +42,7 @@ export default function Banner({
         className,
       )}
       bg="bg-transparent"
+      aria-labelledby={title ? titleId : undefined}
       {...(id ? { id } : {})}
     >
       {hasHeadingContent ? (
@@ -50,9 +54,9 @@ export default function Banner({
           ) : null}
 
           {title ? (
-            <p className="font-bodoni text-[9vw] md:text-[5vw] lg:text-[3.5vw] leading-[0.9] tracking-tighter text-plp-parchment">
+            <TitleComponent id={titleId} className="font-bodoni text-[9vw] md:text-[5vw] lg:text-[3.5vw] leading-[0.9] tracking-tighter text-plp-parchment">
               {title}
-            </p>
+            </TitleComponent>
           ) : null}
 
           {description ? (

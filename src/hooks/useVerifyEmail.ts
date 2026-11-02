@@ -25,8 +25,7 @@ export function useVerifyEmail(token: string | null) {
     firedAttempt.current = attempt;
 
     (async () => {
-      try {
-        // No skipRefresh: an expired access token refreshes and retries.
+      try { 
         await api.post("/auth/verify-email", { token });
         await queryClient.invalidateQueries({ queryKey: ["session"] });
         setState("success");

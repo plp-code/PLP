@@ -1,5 +1,5 @@
 import { MapPin, Lock, Unlock, ArrowRight, Loader2 } from "lucide-react";
-import { MapItem } from "@/types/models"; // Ensure your import path is correct
+import { MapItem } from "@/types/models";
 import { ComingSoonRow } from "./ComingSoonCard";
 import type { WaitlistControls } from "./WaitlistInlineForm";
 
@@ -91,7 +91,7 @@ export function MapListView({
         );
       })}
 
-    {upcoming.map((map) => (
+      {upcoming.map((map) => (
         <ComingSoonRow
           key={`coming-soon-${map.slug}`}
           map={map}
