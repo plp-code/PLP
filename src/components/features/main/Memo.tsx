@@ -89,7 +89,6 @@ export default function Memo() {
 
             <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-1 mx-1 mb-1">
               <div className="bg-white shadow-[inset_2px_2px_#808080]">
-                {/* Email header: more padding and row spacing */}
                 <div
                   className="space-y-1.5 border-b border-plp-navy/10 px-5 pb-4 pt-5 font-mono text-[10px] text-plp-navy/55 md:space-y-2 md:px-8 md:pb-5 md:pt-6 md:text-[12px]"
                   style={{
@@ -125,7 +124,6 @@ export default function Memo() {
                   </div>
                 </div>
 
-                {/* Email body: wider side padding, more vertical breathing room */}
                 <article
                   className="px-5 py-6 md:px-8 md:py-8"
                   style={{
@@ -193,19 +191,21 @@ export default function Memo() {
                           <div className="max-w-[64ch] space-y-3.5 font-prata text-[13px] leading-6 text-plp-maroon/80 md:space-y-4 md:text-[15px] md:leading-7">
                             <p>
                               At the price you can actually pay, secondhand can
-                              get you better quality than buying new. That isn&apos;t
-                              a compromise. It&apos;s a smarter way to shop.
+                              get you better quality than buying new. That
+                              isn&apos;t a compromise. It&apos;s a smarter way
+                              to shop.
                             </p>
                             <p>And the clothing can do something else.</p>
                             <p>
                               Ask a woman what she wore to a career moment that
-                              mattered, and you&apos;ll rarely get just a story about
-                              clothes. You&apos;ll hear about the room she walked
-                              into, what happened there, what she learned, and
-                              what she&apos;d tell the woman walking in next. Whether
-                              she&apos;s been working for three years or thirty,
-                              there&apos;s something to learn from her story. And
-                              something she might learn from yours.
+                              mattered, and you&apos;ll rarely get just a story
+                              about clothes. You&apos;ll hear about the room she
+                              walked into, what happened there, what she
+                              learned, and what she&apos;d tell the woman
+                              walking in next. Whether she&apos;s been working
+                              for three years or thirty, there&apos;s something
+                              to learn from her story. And something she might
+                              learn from yours.
                             </p>
 
                             <p className="font-medium text-plp-maroon">
