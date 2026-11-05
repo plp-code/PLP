@@ -13,7 +13,7 @@ import {
   buildDirectionsUrl,
 } from "@/lib/utils";
 import { useStoreReviews } from "@/hooks/useStoreReviews";
-import { AddReviewModal } from "./AddReviewModal";
+import { AddReviewModal } from "../maps/AddReviewModal";
 import { StoreStatusBadge } from "./StoreStatusBadge";
 import { StoreHours } from "./StoreHours";
 import { StoreReviews } from "./StoreReviews";

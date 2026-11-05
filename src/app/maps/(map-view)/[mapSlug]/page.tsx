@@ -8,7 +8,7 @@ import { buildLoginRedirect } from "@/lib/returnTo";
 import { Spinner } from "@/components/ui/Spinner";
 
 const StoreDashboard = dynamic(
-  () => import("@/components/features/maps/StoreDashboard"),
+  () => import("@/components/features/stores/StoreDashboard"),
   { ssr: false }
 );
 

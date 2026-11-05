@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { SiInstagram, SiTiktok, SiPinterest } from "react-icons/si";
@@ -27,9 +25,9 @@ export default function Footer() {
     <footer className="relative overflow-hidden bg-plp-maroon text-plp-parchment">
       <div className="relative z-10 px-5 pb-10 pt-12 md:px-8 md:pb-12 md:pt-16">
         <div className="mx-auto flex max-w-7xl flex-col items-center text-center">
-          <h2 className="max-w-5xl font-seventies text-[clamp(3.25rem,7.5vw,6.5rem)] leading-[0.88] tracking-[-0.03em] text-plp-parchment">
+          <p className="max-w-5xl font-seventies text-[clamp(3.25rem,7.5vw,6.5rem)] leading-[0.88] tracking-[-0.03em] text-plp-parchment">
             The Preloved Professional
-          </h2>
+          </p>
 
           <Link
             href="/login"

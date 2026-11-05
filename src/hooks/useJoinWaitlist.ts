@@ -17,10 +17,9 @@ export function useJoinWaitlist() {
   const snackbar = useSnackbar();
 
   const [loadingSlug, setLoadingSlug] = useState<string | null>(null);
-  // Only one guest form is open at a time.
+
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
 
-  // A ref, not state: a second Enter can fire before a re-render disables the form.
   const inFlight = useRef(new Set<string>());
 
   const router = useRouter();
@@ -54,7 +53,6 @@ export function useJoinWaitlist() {
 
       if (
         code === "already_on_waitlist" ||
-        // Stopgap until the backend sends a code: the only plain-string 400.
         (err instanceof ApiError &&
           err.status === 400 &&
           !code &&

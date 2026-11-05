@@ -12,9 +12,7 @@ function usePassiveDismissal() {
   const [dismissed, setDismissed] = useState(true);
 
   useEffect(() => {
-    // Read after mount so server and client markup match on first render.
     try {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDismissed(sessionStorage.getItem(DISMISS_KEY) === "1");
     } catch {
       setDismissed(false);
@@ -41,7 +39,6 @@ export function EmailVerificationBanner() {
   if (!user || user.is_verified !== false) return null;
   if (!emailVerificationBlocked && dismissedPassive) return null;
 
-  // Dismissing a 403 prompt must not set or clear the persistent dismissal.
   const handleDismiss = () => {
     if (emailVerificationBlocked) setEmailVerificationBlocked(false);
     else dismissPassive();
@@ -67,13 +64,22 @@ export function EmailVerificationBanner() {
       <div className="plp-window pointer-events-auto p-1">
         <div className="flex items-start gap-3 px-3 py-3">
           {state === "sent" ? (
-            <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-plp-maroon" />
+            <CheckCircle2
+              size={20}
+              className="mt-0.5 shrink-0 text-plp-maroon"
+            />
           ) : (
-            <MailWarning size={20} className="mt-0.5 shrink-0 text-plp-maroon" />
+            <MailWarning
+              size={20}
+              className="mt-0.5 shrink-0 text-plp-maroon"
+            />
           )}
 
           <div className="min-w-0 flex-1">
-            <p role="status" className="text-plp-maroon text-xs font-bold leading-relaxed">
+            <p
+              role="status"
+              className="text-plp-maroon text-xs font-bold leading-relaxed"
+            >
               {message}
             </p>
             {state !== "sent" && (

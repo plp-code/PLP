@@ -29,7 +29,7 @@ export default function ComingSoon({
           </span>
         </div>
 
-        <Display className="mt-3 capitalize text-balance text-[clamp(3.75rem,10vw,8rem)] leading-[0.84] tracking-[-0.04em] text-plp-maroon">
+        <Display as="h1" className="mt-3 capitalize text-balance text-[clamp(3.75rem,10vw,8rem)] leading-[0.84] tracking-[-0.04em] text-plp-maroon">
           {title}
         </Display>
 

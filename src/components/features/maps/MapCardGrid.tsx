@@ -1,6 +1,5 @@
-import { MapPin, Lock, Unlock, ArrowRight, Loader2 } from "lucide-react";
+import { MapPin, ArrowRight, Loader2, Check } from "lucide-react";
 import { MapItem } from "@/types";
-import { useState } from "react";
 
 interface Props {
   map: MapItem;
@@ -9,74 +8,65 @@ interface Props {
   isAuthenticated: boolean;
 }
 
-export function MapCardGrid({
-  map,
-  onAction,
-  isLoading,
-  isAuthenticated,
-}: Props) {
+export function MapCardGrid({ map, onAction, isLoading }: Props) {
   const owned = map.is_purchased;
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-xl">
-      <div className="h-1.5 w-full bg-gradient-to-r from-plp-maroon to-plp-babyblue opacity-80" />
-
+    <article className="group relative flex flex-col border border-plp-maroon/15 bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-plp-maroon/40 hover:shadow-[0_12px_32px_-16px_rgba(80,0,20,0.35)]">
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <span className="inline-flex min-w-0 items-center gap-1.5 text-xs font-medium text-gray-500">
-            <MapPin size={14} className="shrink-0 text-gray-400" />
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <span className="inline-flex min-w-0 items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-plp-maroon/55">
+            <MapPin size={12} strokeWidth={1.5} className="shrink-0" />
             <span className="truncate">{map.region || "Global"}</span>
           </span>
-          {owned ? (
-            <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">
-              <Unlock size={12} /> Owned
-            </span>
-          ) : (
-            <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-gray-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-gray-500">
-              <Lock size={12} /> Locked
+
+          {owned && (
+            <span className="inline-flex shrink-0 items-center gap-1 border border-plp-maroon/25 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-plp-maroon">
+              <Check size={10} strokeWidth={2} /> Owned
             </span>
           )}
         </div>
 
-        <h3 className="mb-2 text-lg font-bold leading-tight text-gray-900 sm:text-xl">
+        <h3 className="font-bodoni text-[26px] font-semibold leading-[1.1] tracking-[-0.02em] text-plp-maroon">
           {map.name}
         </h3>
 
-        <div className="mb-6 flex-1">
-          <p className="text-sm leading-relaxed text-gray-600">
-            {map.description || "No description available for this directory."}
-          </p>
-        </div>
+        <p className="mb-6 mt-3 line-clamp-4 flex-1 font-prata text-[13px] leading-6 text-plp-maroon/65">
+          {map.description || "No description available for this map."}
+        </p>
 
-        <div className="mt-auto flex items-center justify-between gap-4 border-t border-gray-100 pt-4 sm:pt-5">
-          {!owned && (
-            <div className="flex flex-col shrink-0">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+        <div className="mt-auto flex items-end justify-between gap-4 border-t border-plp-maroon/10 pt-4">
+          {!owned ? (
+            <div className="flex shrink-0 flex-col">
+              <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-plp-maroon/40">
                 Price
               </span>
-              <span className="mt-0.5 text-xl font-black leading-none text-gray-900">
+              <span className="mt-1 font-bodoni text-2xl font-semibold leading-none text-plp-maroon">
                 ${(map.price / 100).toFixed(2)}
               </span>
             </div>
+          ) : (
+            <span />
           )}
 
           <button
+            type="button"
             onClick={onAction}
             disabled={isLoading}
-            className={`group/btn font-prata flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${
+            className={`group/btn flex min-w-32 cursor-pointer items-center justify-center gap-2 px-5 py-2.5 font-prata text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
               owned
-                ? "w-full bg-plp-maroon text-white hover:bg-red-800 hover:shadow-lg"
-                : "flex-1 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg sm:flex-none"
+                ? "border border-plp-maroon text-plp-maroon hover:bg-plp-maroon hover:text-white"
+                : "bg-plp-maroon text-white hover:bg-plp-maroon/85"
             }`}
           >
             {isLoading ? (
-              <Loader2 size={16} className="animate-spin" />
+              <Loader2 size={14} className="animate-spin" />
             ) : (
               <>
                 {owned ? "View Map" : "Buy Map"}
-
                 <ArrowRight
-                  size={14}
+                  size={13}
+                  strokeWidth={1.75}
                   className="transition-transform group-hover/btn:translate-x-0.5"
                 />
               </>
@@ -84,6 +74,6 @@ export function MapCardGrid({
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

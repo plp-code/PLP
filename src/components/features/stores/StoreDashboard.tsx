@@ -16,15 +16,20 @@ import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useGetClothingCategories } from "@/hooks/useClothingCategory";
 import { StoreListView } from "./StoreListView";
 import { StoreDetailView } from "./StoreDetailView";
-import { MapFilterBar } from "./MapFilterBar";
+import { MapFilterBar } from "../maps/MapFilterBar";
 import { Spinner } from "@/components/ui/Spinner";
-import type { MapComponentProps } from "./MapComponent";
+import type { MapComponentProps } from "../maps/MapComponent";
 
 type MapStore = Location | LocationPin;
 
 export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   const { pins, stores, loading, loadMore, hasMore, loadingMore } =
     useMapData(mapSlug);
+
+  const mapTitle = mapSlug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
   const { userLocation, isLocating, locate, clearLocation } = useGeolocation();
 
@@ -55,7 +60,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     useState<ComponentType<MapComponentProps> | null>(null);
 
   useEffect(() => {
-    import("./MapComponent").then((mod) =>
+    import("../maps/MapComponent").then((mod) =>
       setMapComponent(() => mod.default as ComponentType<MapComponentProps>),
     );
   }, []);
@@ -126,6 +131,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
 
   return (
     <div className="relative h-full w-full bg-gray-100 font-sans tracking-tight overflow-hidden">
+      <h1 className="sr-only">{mapTitle} thrift map</h1>
       <div className="absolute inset-0 z-0">
         {MapComponent && (
           <MapComponent

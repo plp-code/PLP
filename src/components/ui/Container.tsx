@@ -8,6 +8,9 @@ interface ContainerProps {
   fullBleed?: boolean;
   bg?: string;
   as?: ElementType;
+  id?: string;
+  "aria-labelledby"?: string;
+  "aria-label"?: string;
 }
 
 export const Container = ({
@@ -17,9 +20,17 @@ export const Container = ({
   fullBleed = false,
   bg = "bg-transparent",
   as: Component = "section",
+  id,
+  "aria-labelledby": ariaLabelledBy,
+  "aria-label": ariaLabel,
 }: ContainerProps) => {
   return (
-    <Component className={twMerge("w-full", bg, className)}>
+    <Component
+      id={id}
+      aria-labelledby={ariaLabelledBy}
+      aria-label={ariaLabel}
+      className={twMerge("w-full", bg, className)}
+    >
       <div
         className={twMerge(
           "mx-auto w-full max-w-7xl",
