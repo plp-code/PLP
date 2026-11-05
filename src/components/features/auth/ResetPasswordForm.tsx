@@ -50,9 +50,9 @@ export function ResetPasswordForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
-        <h3 className="text-plp-maroon font-bold text-sm sm:text-base capitalize tracking-tight mb-1">
+        <h2 className="text-plp-maroon font-bold text-sm sm:text-base capitalize tracking-tight mb-1">
           {hasPassword ? "Reset your password" : "Set your password"}
-        </h3>
+        </h2>
         <p className="text-plp-maroon/70 text-[11px] sm:text-xs font-bold leading-normal">
           {hasPassword
             ? "Enter a new password for your account."

@@ -17,14 +17,14 @@ const STEPS = [
   {
     label: "02",
     title: "Tagged by what it costs",
-    desc: "Every store carries a price range, so you can plan a trip against your budget instead of hoping.",
+    desc: "You’ll find a price range for each store, so you can plan around your budget instead of hoping.",
     pin: { top: "44%", left: "62%" },
     coord: { lat: "[lat 02]", long: "[long 02]" },
   },
   {
     label: "03",
     title: "It gets better as people use it",
-    desc: "Members log what they find. When ten women pull blouses from the same store, the map says so. Stores change, and the map moves with them.",
+    desc: "The more women use the maps, the smarter they get. If women keep finding great blazers at the same store, you’ll know where to look.",
     pin: { top: "70%", left: "44%" },
     coord: { lat: "[lat 03]", long: "[long 03]" },
   },
@@ -56,6 +56,7 @@ export default function MapsSection() {
   return (
     <section
       id="maps"
+      aria-labelledby="maps-heading"
       className="relative w-full overflow-hidden bg-plp-parchment text-plp-maroon py-14 md:py-20"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_25%,rgba(0,0,0,0.07))] pointer-events-none z-0" />
@@ -77,10 +78,14 @@ export default function MapsSection() {
         }}
       />
 
-      <Container className="relative z-10">
+      <Container as="div" className="relative z-10">
         <header className="mb-9 max-w-3xl md:mb-12">
           <div className="flex items-center gap-3 md:gap-4">
-            <Display className="text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.9] text-plp-maroon">
+            <Display
+              as="h2"
+              id="maps-heading"
+              className="text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.9] text-plp-maroon"
+            >
               PLP Thrift Maps
             </Display>
           </div>
@@ -98,33 +103,28 @@ export default function MapsSection() {
         >
           <div>
             <p className="mb-3 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-plp-navy/45">
-              [the purpose]
+              Spend an hour. Not a Saturday.
             </p>
 
             <div className="mb-7 border-l-2 border-plp-maroon pl-4 md:mb-8 md:pl-6">
               <div className="max-w-[58ch] space-y-3 font-prata text-[13px] leading-6 text-plp-maroon/80 md:space-y-4 md:text-[15px] md:leading-7">
                 <p>
-                  Many thrift stores are a waste of an afternoon. Some
-                  aren&apos;t, and the difference isn&apos;t obvious from the
-                  door. The reason most working women don&apos;t thrift
-                  isn&apos;t money, it&apos;s time.
+                  Many thrift stores are a waste of an afternoon. Some aren&apos;t,
+                  and the difference isn&apos;t obvious from the door.
                 </p>
 
                 <p>
-                  Hunting is the expensive part. The map is how you spend an
-                  hour instead of a Saturday.
-                </p>
-
-                <p>
-                  PLP thrift maps are hand-picked lists of stores worth a visit
-                  for professional clothing. You&apos;ll know what you can
-                  expect to spend, what you might find, and how to get there.
+                  PLP Thrift Maps show you which stores are worth the trip, what
+                  you can expect to spend, and what you&apos;re likely to find when
+                  you get there. Every store is selected with professional
+                  clothing in mind. Looking for a blazer? Filter for it and see
+                  where women have been finding them.
                 </p>
               </div>
             </div>
 
             <p className="mb-4 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-plp-navy/45 md:mb-5">
-              [how it works]
+              We did the hunting for you.
             </p>
 
             <div className="flex flex-col border-t border-plp-maroon/20">

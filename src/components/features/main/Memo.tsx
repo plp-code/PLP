@@ -17,14 +17,14 @@ const PILLARS = [
     label: "In-Person",
     tag: "Off the Screen",
     desc: "Connections over clothes, swap parties, and group thrift trips.",
-    link: "/experiences-and-services",
+    link: "/in-person-experiences",
     time: "9:15 AM",
   },
   {
     label: "One-on-one",
     tag: "by inquiry",
     desc: "A small number of wardrobe projects each season, sourced and built for you.",
-    link: "/experiences-and-services",
+    link: "/services",
     time: "9:23 AM",
   },
   {
@@ -54,9 +54,10 @@ export default function Memo() {
   return (
     <section
       id="memo"
+      aria-labelledby="memo-heading"
       className="relative w-full overflow-hidden bg-plp-parchment py-12 md:py-20"
     >
-      <Container className="relative z-10">
+      <Container as="div" className="relative z-10">
         <div className="w-full bg-[#c0c0c0] p-1 shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] shadow-[0_30px_70px_rgba(0,0,0,0.18)]">
           <div className="border border-[#808080]">
             <div className="flex items-center justify-between bg-plp-maroon px-3 py-1.5 m-1 shadow-[inset_1px_1px_#dfdfdf,inset_-1px_-1px_#0a0a0a]">
@@ -80,7 +81,7 @@ export default function Memo() {
               <span>View</span>
               <span>Message</span>
               <div className="flex-1" />
-              <span className="text-plp-maroon font-semibold">Reply</span>
+              <span className="text-plp-maroon font-bold">Reply</span>
               <span>Reply All</span>
               <span>Forward</span>
               <span>Archive</span>
@@ -89,14 +90,14 @@ export default function Memo() {
             <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-1 mx-1 mb-1">
               <div className="bg-white shadow-[inset_2px_2px_#808080]">
                 <div
-                  className="space-y-1.5 border-b border-plp-navy/10 px-5 pb-4 pt-5 font-mono text-[10px] text-plp-navy/55 md:px-8 md:pb-5 md:pt-7 md:text-[12px]"
+                  className="space-y-1.5 border-b border-plp-navy/10 px-5 pb-4 pt-5 font-mono text-[10px] text-plp-navy/55 md:space-y-2 md:px-8 md:pb-5 md:pt-6 md:text-[12px]"
                   style={{
                     backgroundImage:
                       "url('https://www.transparenttextures.com/patterns/notebook.png')",
                   }}
                 >
                   <div className="flex gap-3">
-                    <span className="w-12 shrink-0 text-plp-navy/30">
+                    <span className="w-14 shrink-0 text-plp-navy/30">
                       From:
                     </span>
                     <span className="text-plp-maroon">
@@ -105,103 +106,111 @@ export default function Memo() {
                   </div>
 
                   <div className="flex gap-3">
-                    <span className="w-12 shrink-0 text-plp-navy/30">To:</span>
+                    <span className="w-14 shrink-0 text-plp-navy/30">To:</span>
                     <span>you</span>
                   </div>
 
                   <div className="flex items-baseline gap-3 pt-2">
-                    <span className="w-12 shrink-0 text-plp-navy/30">
+                    <span className="w-14 shrink-0 text-plp-navy/30">
                       Subject:
                     </span>
 
-                    <span className="font-bodoni text-[14px] leading-tight tracking-[-0.01em] text-plp-maroon md:text-[20px]">
+                    <h2
+                      id="memo-heading"
+                      className="font-bodoni text-[14px] leading-tight tracking-[-0.01em] text-plp-maroon md:text-[20px]"
+                    >
                       The wardrobe nobody budgeted for.
-                    </span>
+                    </h2>
                   </div>
                 </div>
 
                 <article
-                  className="px-5 py-5 md:px-8 md:py-8"
+                  className="px-5 py-6 md:px-8 md:py-8"
                   style={{
                     backgroundImage:
                       "url('https://www.transparenttextures.com/patterns/notebook.png')",
                   }}
                 >
                   <div className="space-y-2.5">
-                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-plp-navy/45">
-                      The business
-                    </p>
+                    <h3 className="font-mono text-[14px] font-semibold uppercase tracking-[0.10em] text-plp-navy">
+                      What we do:
+                    </h3>
 
-                    <p className="max-w-[68ch] font-prata text-[13px] leading-6 text-plp-maroon/80 md:text-[15px] md:leading-7">
-                      The Preloved Professional closes the gap between a woman
-                      building a career and the clothes that career asks for. We
-                      publish city guides to the stores worth your time, host
-                      rooms where women at every stage end up talking to each
-                      other, and bring both into companies and universities.
+                    <p className="max-w-[64ch] font-prata text-[13px] leading-6 text-plp-maroon/80 md:text-[15px] md:leading-7">
+                      The Preloved Professional helps women build a better
+                      professional wardrobe secondhand, and connects them with
+                      women who have already been where they&apos;re going. We
+                      map the stores worth knowing, curate the pieces worth
+                      buying, and bring women together through clothing and
+                      conversation, no matter where they are in their careers.
                     </p>
                   </div>
 
                   <div
-                    className={`grid transition-[grid-template-rows,opacity] duration-500 md:mt-7 md:grid-rows-[1fr] md:opacity-100 ${
+                    className={`grid transition-[grid-template-rows,opacity] duration-500 md:mt-8 md:grid-rows-[1fr] md:opacity-100 ${
                       isMessageExpanded
                         ? "mt-6 grid-rows-[1fr] opacity-100"
                         : "grid-rows-[0fr] opacity-0"
                     }`}
                   >
                     <div className="overflow-hidden">
-                      <div className="space-y-6 md:space-y-7">
+                      <div className="space-y-6 md:space-y-8">
                         <div className="space-y-2.5">
-                          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-plp-navy/45">
-                            The problem
-                          </p>
+                          <h3 className="font-mono text-[14px] font-semibold uppercase tracking-[0.10em] text-plp-navy">
+                            Getting dressed for work shouldn&apos;t cost this
+                            much.
+                          </h3>
 
-                          <div className="max-w-[68ch] space-y-3.5 font-prata text-[13px] leading-6 text-plp-maroon/80 md:space-y-4 md:text-[15px] md:leading-7">
+                          <div className="max-w-[64ch] space-y-3.5 font-prata text-[13px] leading-6 text-plp-maroon/80 md:space-y-4 md:text-[15px] md:leading-7">
                             <p>
-                              A professional wardrobe costs more than an
-                              early-career salary supports. Every workaround
-                              carries its own cost. Fast fashion doesn&apos;t
-                              last. Rental never becomes yours. Credit is debt.
+                              Especially when you&apos;re just starting out, the
+                              alternatives aren&apos;t great. Fast fashion
+                              doesn&apos;t last. Rental never becomes yours.
+                              Credit is debt.
                             </p>
-
                             <p>
-                              You can find endless advice on what to wear to
+                              There&apos;s endless advice on what to wear to
                               work, but almost none of it accounts for what you
-                              can spend, and none of it presents secondhand as
-                              an option, let alone a first choice. Even if
-                              you&apos;re sold on it, you&apos;re left figuring
-                              out where to go and what to look for. All without
-                              anyone who&apos;s been in the rooms you&apos;re
-                              trying to get into.
+                              can actually spend. Almost none of it tells you to
+                              shop secondhand.
+                            </p>
+                            <p>
+                              Even when you know secondhand is the answer,
+                              you&apos;re still left figuring out where to go,
+                              what to look for, and what&apos;s actually worth
+                              buying.
                             </p>
                           </div>
                         </div>
 
                         <div className="space-y-2.5">
-                          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-plp-navy/45">
-                            The position
-                          </p>
+                          <h3 className="font-mono text-[14px] font-semibold uppercase tracking-[0.10em] text-plp-navy">
+                            There&apos;s more to secondhand.
+                          </h3>
 
-                          <div className="max-w-[68ch] space-y-3.5 font-prata text-[13px] leading-6 text-plp-maroon/80 md:space-y-4 md:text-[15px] md:leading-7">
+                          <div className="max-w-[64ch] space-y-3.5 font-prata text-[13px] leading-6 text-plp-maroon/80 md:space-y-4 md:text-[15px] md:leading-7">
                             <p>
-                              At the price you can actually pay, secondhand buys
-                              better construction than new does. That isn&apos;t
-                              a compromise. It&apos;s the correct answer, and
-                              almost nobody has told you so.
+                              At the price you can actually pay, secondhand can
+                              get you better quality than buying new. That
+                              isn&apos;t a compromise. It&apos;s a smarter way
+                              to shop.
                             </p>
-
+                            <p>And the clothing can do something else.</p>
                             <p>
-                              The clothing does a second job, and it&apos;s the
-                              more interesting one. Ask a woman what she wore to
-                              something that mattered and you get the room she
-                              wore it into. What happened there, what she
-                              learned, what she would do differently now.
-                              That&apos;s true whether she&apos;s been working
-                              for thirty years or three.
+                              Ask a woman what she wore to a career moment that
+                              mattered, and you&apos;ll rarely get just a story
+                              about clothes. You&apos;ll hear about the room she
+                              walked into, what happened there, what she
+                              learned, and what she&apos;d tell the woman
+                              walking in next. Whether she&apos;s been working
+                              for three years or thirty, there&apos;s something
+                              to learn from her story. And something she might
+                              learn from yours.
                             </p>
 
                             <p className="font-medium text-plp-maroon">
-                              The clothes are the medium. The conversation is
-                              the point.
+                              The clothes get a second life. The stories get
+                              passed on.
                             </p>
                           </div>
                         </div>
@@ -221,7 +230,7 @@ export default function Memo() {
                     type="button"
                     onClick={() => setIsMessageExpanded((prev) => !prev)}
                     aria-expanded={isMessageExpanded}
-                    className="mt-5 inline-flex items-center gap-2 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-plp-maroon md:hidden"
+                    className="mt-5 inline-flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-plp-maroon md:hidden"
                   >
                     {isMessageExpanded ? "Close message" : "Continue reading"}
 
@@ -242,9 +251,9 @@ export default function Memo() {
                 onMouseEnter={() => setIsAutoPlaying(false)}
                 onMouseLeave={() => setIsAutoPlaying(true)}
               >
-                <p className="border-b border-plp-navy/10 bg-[#c0c0c0]/40 px-5 pb-3 pt-5 font-mono text-[10px] uppercase tracking-[0.18em] text-plp-navy/40 md:px-6">
+                <h2 className="border-b border-plp-navy/10 bg-[#c0c0c0]/40 px-5 pb-3 pt-5 font-mono text-[10px] uppercase tracking-[0.10em] text-plp-navy/40 md:px-6">
                   Inbox · {PILLARS.length} messages
-                </p>
+                </h2>
 
                 {PILLARS.map((pillar, index) => {
                   const active = activeIndex === index;
@@ -280,11 +289,11 @@ export default function Memo() {
                             />
 
                             <div>
-                              <h3 className="font-bodoni text-[17px] font-semibold leading-tight tracking-[-0.01em] text-plp-maroon md:text-[19px]">
+                              <h3 className="font-bodoni text-[17px] font-bold leading-tight tracking-[-0.01em] text-plp-maroon md:text-[19px]">
                                 {pillar.label}
                               </h3>
 
-                              <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-plp-maroon/40">
+                              <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.10em] text-plp-maroon/40">
                                 {pillar.tag}
                               </p>
                             </div>
@@ -311,9 +320,9 @@ export default function Memo() {
 
                             <Link
                               href={pillar.link}
-                              className="group/link inline-flex items-center gap-1.5 font-prata text-[10px] font-semibold normal tracking-[0.12em] text-plp-maroon"
+                              className="group/link inline-flex items-center gap-1.5 font-prata text-[10px] font-bold normal tracking-[0.12em] text-plp-maroon"
                             >
-                           See Detail
+                              See Detail
                               <span
                                 aria-hidden="true"
                                 className="transition-transform duration-300 group-hover/link:translate-x-1"

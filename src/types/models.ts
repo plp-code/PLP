@@ -91,3 +91,24 @@ export interface NewReview {
 export interface CreateReviewPayload extends NewReview {
   location_id: number;
 }
+
+export type InPersonEvent = {
+  id: string;
+  title: string;
+  description: string;
+  date?: string | null;
+  time?: string | null;
+  location?: string | null;
+  price?: string;
+  href?: string;
+  status: "confirmed" | "planning";
+};
+
+export type OneOnOneService = {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  price: string;
+  href?: string;
+};

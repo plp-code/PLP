@@ -26,14 +26,17 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
   const { isAuthenticated, isLoading, logout, isAuthBusy } = useAuthUser();
 
   const navItems = [
-    { name: "Home", icon: <Globe size={17} />, to: "/#home" },
-    { name: "The Memo", icon: <Mail size={17} />, to: "/#memo" },
+    { name: "Home", icon: <Globe size={17} />, to: "/" },
     { name: "Maps", icon: <MapPin size={17} />, to: "/maps" },
-
     {
-      name: "Experiences & Services",
+      name: "In Person Experiences",
+      icon: <BriefcaseBusiness size={17} />,
+      to: "/in-person-experiences",
+    },
+    {
+      name: "Services",
       icon: <Compass size={17} />,
-      to: "/experiences-and-services",
+      to: "/services",
     },
     {
       name: "For Organizations",

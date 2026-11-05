@@ -26,9 +26,9 @@ function Card({
   return (
     <div className="plp-window p-1 w-full">
       <div className="plp-titlebar h-10 md:h-8 flex items-center px-3 md:px-2">
-        <h2 className="font-bold text-sm capitalize tracking-tight truncate">
+        <h1 className="font-bold text-sm capitalize tracking-tight truncate">
           {title}
-        </h2>
+        </h1>
       </div>
       <div className="px-4 sm:px-6 py-6 flex flex-col items-center text-center gap-4">
         <Icon size={40} className="text-plp-maroon" aria-hidden />

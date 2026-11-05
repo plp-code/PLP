@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  Map as MapIcon,
-  AlertCircle,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { Map as MapIcon, AlertCircle } from "lucide-react";
 import { useMapDirectory } from "@/hooks/useMapDirectory";
 import { useMapCheckout } from "@/hooks/useMapCheckout";
 import { useAuthUser } from "@/context/AuthContext";
@@ -17,6 +12,8 @@ import { DirectoryToolbar } from "./DirectoryToolbar";
 import type { WaitlistControls } from "./WaitlistInlineForm";
 import { useSnackbar } from "@/context/SnackbarContext";
 import { Spinner } from "@/components/ui/Spinner";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Pagination } from "@/components/ui/Pagination";
 import { useJoinWaitlist } from "@/hooks/useJoinWaitlist";
 import { MapStatus } from "@/types";
 
@@ -80,15 +77,11 @@ export default function MapDirectory() {
   const handleViewModeChange = (mode: "grid" | "list") => {
     setViewMode(mode);
     setCurrentPage(1);
-  };
-
+  }; 
   const liveMaps = maps.filter((m) => m.status === "live");
   const upcomingMaps = maps.filter(
     (map) => map.status === "waitlist" || map.status === "next",
   );
-
-  const startIndex = (currentPage - 1) * limit;
-  const endIndex = startIndex + maps.length;
 
   if (error) {
     return (
@@ -103,9 +96,9 @@ export default function MapDirectory() {
           Something went wrong
         </p>
 
-        <h3 className="mt-2 font-bodoni text-2xl tracking-[-0.02em] text-plp-maroon">
+        <h2 className="mt-2 font-bodoni text-2xl tracking-[-0.02em] text-plp-maroon">
           We couldn't load the maps.
-        </h3>
+        </h2>
 
         <p className="mt-3 max-w-sm font-prata text-[13px] leading-6 text-plp-maroon/55">
           {error}
@@ -127,43 +120,26 @@ export default function MapDirectory() {
         isFetching={isFetching}
       />
       <div className="h-px bg-plp-maroon/10" />{" "}
+      <h2 id="maps-directory-heading" className="sr-only">
+        Available maps
+      </h2>
       <div aria-live="polite" className="mt-4 sm:mt-6">
         {loading ? (
           <div className="flex min-h-64 flex-col items-center justify-center px-4">
             <Spinner text="Finding maps..." />
           </div>
         ) : total === 0 ? (
-          <div className="flex flex-col items-center justify-center px-4 py-16 text-center md:py-20">
-            <MapIcon
-              size={28}
-              strokeWidth={1.25}
-              className="mb-5 text-plp-maroon/30"
-            />
-
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-plp-maroon/35">
-              No results
-            </p>
-
-            <h3 className="mt-2 font-bodoni text-2xl tracking-[-0.02em] text-plp-maroon">
-              No maps found.
-            </h3>
-
-            <p className="mt-3 max-w-sm font-prata text-[13px] leading-6 text-plp-maroon/55">
-              {searchQuery
+          <EmptyState
+            align="center"
+            icon={<MapIcon size={28} strokeWidth={1.25} />}
+            eyebrow="No results"
+            message="No maps found."
+            description={
+              searchQuery
                 ? `Nothing matched “${searchQuery}.” Try another city or clear your search.`
-                : "There aren't any maps available under this filter yet."}
-            </p>
-
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => handleSearchChange("")}
-                className="mt-6 border-b border-plp-maroon/30 pb-1 font-prata text-[10px] font-semibold uppercase tracking-[0.12em] text-plp-maroon transition-colors hover:border-plp-maroon"
-              >
-                Clear search
-              </button>
-            )}
-          </div>
+                : "There aren't any maps available under this filter yet."
+            }
+          />
         ) : (
           <div
             className={`transition-opacity duration-200 ${
@@ -208,106 +184,13 @@ export default function MapDirectory() {
               </div>
             )}
 
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between border-t border-gray-100 sm:border-gray-200 pt-6 sm:px-6 mt-8 sm:mt-10">
-                <div className="flex flex-1 items-center justify-between sm:hidden">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                    disabled={currentPage === 1}
-                    className="group inline-flex items-center gap-1.5 font-prata text-[10px] font-semibold uppercase tracking-[0.1em] text-plp-maroon transition-opacity disabled:cursor-not-allowed disabled:opacity-25"
-                  >
-                    <ChevronLeft
-                      size={14}
-                      strokeWidth={1.5}
-                      className="transition-transform group-hover:-translate-x-0.5"
-                    />
-                    Previous
-                  </button>
-
-                  <span className="font-mono text-[9px] tracking-[0.14em] text-plp-maroon/40">
-                    {String(currentPage).padStart(2, "0")}
-                    <span className="mx-1.5 text-plp-maroon/20">/</span>
-                    {String(totalPages).padStart(2, "0")}
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setCurrentPage((p) => Math.min(p + 1, totalPages))
-                    }
-                    disabled={currentPage === totalPages}
-                    className="group inline-flex items-center gap-1.5 font-prata text-[10px] font-semibold uppercase tracking-[0.1em] text-plp-maroon transition-opacity disabled:cursor-not-allowed disabled:opacity-25"
-                  >
-                    Next
-                    <ChevronRight
-                      size={14}
-                      strokeWidth={1.5}
-                      className="transition-transform group-hover:translate-x-0.5"
-                    />
-                  </button>
-                </div>
-
-                <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-plp-maroon/40">
-                    Showing {startIndex + 1}-{endIndex} of {total}
-                  </p>
-
-                  <nav
-                    className="flex items-center gap-1"
-                    aria-label="Pagination"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                      disabled={currentPage === 1}
-                      aria-label="Previous page"
-                      className="group flex h-9 w-9 items-center justify-center text-plp-maroon/45 transition-colors hover:text-plp-maroon disabled:cursor-not-allowed disabled:opacity-20"
-                    >
-                      <ChevronLeft
-                        className="h-4 w-4 transition-transform group-hover:-translate-x-0.5"
-                        strokeWidth={1.5}
-                      />
-                    </button>
-
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (pageNum) => (
-                        <button
-                          key={pageNum}
-                          type="button"
-                          onClick={() => setCurrentPage(pageNum)}
-                          aria-current={
-                            currentPage === pageNum ? "page" : undefined
-                          }
-                          className={`flex h-9 min-w-9 items-center justify-center px-2 font-mono text-[10px] transition-colors ${
-                            currentPage === pageNum
-                              ? "text-plp-maroon underline decoration-plp-maroon underline-offset-4"
-                              : "text-plp-maroon/35 hover:text-plp-maroon"
-                          }`}
-                        >
-                          {String(pageNum).padStart(2, "0")}
-                        </button>
-                      ),
-                    )}
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setCurrentPage((p) => Math.min(p + 1, totalPages))
-                      }
-                      disabled={currentPage === totalPages}
-                      aria-label="Next page"
-                      className="group flex h-9 w-9 items-center justify-center text-plp-maroon/45 transition-colors hover:text-plp-maroon disabled:cursor-not-allowed disabled:opacity-20"
-                    >
-                      <ChevronRight
-                        className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                        strokeWidth={1.5}
-                      />
-                    </button>
-                  </nav>
-                </div>
-              </div>
-            )}
+            <Pagination
+              page={currentPage}
+              totalPages={totalPages}
+              total={total}
+              pageSize={limit}
+              onPageChange={setCurrentPage}
+            />
           </div>
         )}
       </div>

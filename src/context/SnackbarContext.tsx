@@ -9,7 +9,12 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { AlertCircle, CheckCircle2, Shield, type LucideIcon } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Shield,
+  type LucideIcon,
+} from "lucide-react";
 import { Snackbar } from "@/components/ui/Snackbar";
 
 type Variant = "success" | "error" | "info";
@@ -100,7 +105,6 @@ export function SnackbarProvider({ children }: { children: ReactNode }) {
       {children}
       {message && (
         <ActiveSnackbar
-          // New key per call: a replacement remounts and restarts the timer.
           key={message.id}
           message={message}
           onDone={setMessage}
@@ -115,12 +119,13 @@ function ActiveSnackbar({
   onDone,
 }: {
   message: SnackbarMessage;
-  onDone: (updater: (current: SnackbarMessage | null) => null | SnackbarMessage) => void;
+  onDone: (
+    updater: (current: SnackbarMessage | null) => null | SnackbarMessage,
+  ) => void;
 }) {
   const { id, variant, title, subtitle } = message;
   const preset = PRESETS[variant];
 
-  // Id-bound so a late close from a replaced message can't clear the new one.
   const handleClose = useCallback(
     () => onDone((current) => (current?.id === id ? null : current)),
     [id, onDone],

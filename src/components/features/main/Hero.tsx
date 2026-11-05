@@ -8,11 +8,15 @@ export default function Hero() {
   return (
     <section
       id="home"
+      aria-labelledby="home-heading"
       className="relative w-full bg-plp-parchment px-4 pb-6 pt-4 sm:px-5 md:h-[calc(100dvh-94px)] md:py-6"
     >
       <div className="mx-auto flex h-full w-full max-w-7xl flex-col items-center">
         <div className="mb-5 flex shrink-0 flex-col items-center text-center md:mb-6">
-          <Display className="text-balance text-[clamp(3.75rem,8vw,6.75rem)] leading-[0.9] text-plp-maroon">
+          <Display
+            as="h1"
+            id="home-heading"
+            className="text-balance text-[clamp(3.75rem,8vw,6.75rem)] leading-[0.9] text-plp-maroon">
             The Preloved Professional
           </Display>
 

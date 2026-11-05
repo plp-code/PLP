@@ -11,9 +11,10 @@ export const metadata: Metadata = {
 
 export default function MapsPage() {
   return (
-    <main className="flex min-h-screen flex-col bg-plp-parchment selection:bg-plp-lime selection:text-plp-maroon">
+    <div className="flex min-h-screen flex-col bg-plp-parchment selection:bg-plp-lime selection:text-plp-maroon">
       <div className="relative">
         <Banner
+          titleAs="h1"
           title="PLP Thrift Maps"
           description="Your path to power, store by store."
           contentClassName="py-14 md:py-20"
@@ -49,11 +50,12 @@ export default function MapsPage() {
 
       <Container
         as="section"
+        aria-labelledby="maps-directory-heading"
         className="flex-1 py-8 md:py-12"
         contentClassName="flex w-full max-w-6xl flex-col gap-8"
       >
         <MapDirectory />
       </Container>
-    </main>
+    </div>
   );
 }

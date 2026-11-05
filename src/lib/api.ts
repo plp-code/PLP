@@ -126,10 +126,8 @@ async function fetcher<T>(
   if (response.status === 401 && !options._retry && !options.skipRefresh) {
     options._retry = true;
 
-    // Call refresh ONCE behind the scenes
     const refreshed = await refreshSession();
 
-    // If refresh succeeded, transparently retry the failed request
     if (refreshed) {
       return fetcher<T>(endpoint, options);
     }
@@ -139,7 +137,10 @@ async function fetcher<T>(
 
   if (!response.ok) {
     const err: {
-      detail?: string | ApiValidationError[] | { code?: string; message?: string };
+      detail?:
+        | string
+        | ApiValidationError[]
+        | { code?: string; message?: string };
     } = await response.json().catch(() => ({}));
 
     let message: string;

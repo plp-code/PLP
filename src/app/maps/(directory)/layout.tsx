@@ -1,19 +1,19 @@
-import HeaderSimplified from "@/components/layout/HeaderSimplified";
+import HeaderShell from "@/components/layout/HeaderShell";
 import Footer from "@/components/layout/Footer";
 import { ReactNode } from "react";
 
-export default function SimplifiedLayout({ children }: { children: ReactNode }) {
+export default function SimplifiedLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="fixed top-0 left-0 right-0 z-100">
-        <HeaderSimplified />
+      <div className="relative -mt-[calc(var(--header-offset)-var(--header-h))]">
+        <HeaderShell>
+          <main>{children}</main>
+        </HeaderShell>
       </div>
-
-
-      <div className="grow pt-16">
-        {children}
-      </div>
-
       <Footer />
     </div>
   );
