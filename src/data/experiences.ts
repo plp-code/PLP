@@ -21,17 +21,17 @@ export type OneOnOneService = {
 };
 
 export const IN_PERSON_EVENTS: InPersonEvent[] = [
-  {
-    id: "thrift-pop-up",
-    title: "The Preloved Professional Thrift Pop-Up",
-    description:
-      "Curated workwear from extra small sizes to plus sizes. From business casual to business professional and everything in between.",
-    status: "confirmed",
-    date: "2026-11-15",
-    time: "12:00 - 3:00 PM",
-    location: "8151 W 3rd St, Los Angeles, CA",
-    href: "https://partiful.com/e/dbFF7gSfKLyQZRXPH2IP",
-  },
+  // {
+  //   id: "thrift-pop-up",
+  //   title: "The Preloved Professional Thrift Pop-Up",
+  //   description:
+  //     "Curated workwear from extra small sizes to plus sizes. From business casual to business professional and everything in between.",
+  //   status: "confirmed",
+  //   date: "2026-11-15",
+  //   time: "12:00 - 3:00 PM",
+  //   location: "8151 W 3rd St, Los Angeles, CA",
+  //   href: "https://partiful.com/e/dbFF7gSfKLyQZRXPH2IP",
+  // },
 
   // Planning / no date -> "In the Works"
 ];
