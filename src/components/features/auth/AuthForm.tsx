@@ -19,8 +19,10 @@ type AuthMethod = "password" | "magic-link";
 
 export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
-  const [authMethod, setAuthMethod] = useState<AuthMethod>("password");
   const searchParams = useSearchParams();
+  const [authMethod, setAuthMethod] = useState<AuthMethod>(
+    searchParams.get("method") === "magic-link" ? "magic-link" : "password",
+  );
   const returnTo = searchParams.get("returnTo");
   const { login, register, isLoading, error, checkEmail, resetCheckEmail } =
     useAuthActions(returnTo);
@@ -113,6 +115,27 @@ export default function AuthForm() {
                   <AlertTriangle size={14} className="shrink-0" />
                   <span>{activeError}</span>
                 </div>
+              )}
+
+              {isLogin && authMethod === "password" && error && (
+                <p className="text-plp-maroon/70 text-[11px] sm:text-xs font-bold normal-case leading-relaxed">
+                  Bought as a guest? Use a{" "}
+                  <button
+                    type="button"
+                    onClick={() => setAuthMethod("magic-link")}
+                    className="cursor-pointer underline underline-offset-2 hover:text-plp-maroon"
+                  >
+                    magic link
+                  </button>{" "}
+                  instead, or{" "}
+                  <Link
+                    href="/forgot-password"
+                    className="underline underline-offset-2 hover:text-plp-maroon"
+                  >
+                    reset your password
+                  </Link>
+                  .
+                </p>
               )}
 
               {!isLogin && (
