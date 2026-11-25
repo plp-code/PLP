@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Loader2, MailWarning, X } from "lucide-react";
+import { MailWarning, X } from "lucide-react";
 import { useAuthUser } from "@/context/AuthContext";
-import { useResendVerification } from "@/hooks/useResendVerification";
 
 const DISMISS_KEY = "emailVerifyBannerDismissed";
 
@@ -34,7 +33,6 @@ export function EmailVerificationBanner() {
     useAuthUser();
   const { dismissed: dismissedPassive, dismiss: dismissPassive } =
     usePassiveDismissal();
-  const { state, resend } = useResendVerification();
 
   if (!user || user.is_verified !== false) return null;
   if (!emailVerificationBlocked && dismissedPassive) return null;
@@ -44,16 +42,9 @@ export function EmailVerificationBanner() {
     else dismissPassive();
   };
 
+  // The backend has no resend-verification endpoint, so this is instructions only.
   const message =
-    state === "sent"
-      ? "Verification email sent. Check your inbox."
-      : state === "rate_limited"
-        ? "Too many requests, try again in a minute."
-        : state === "error"
-          ? "Something went wrong. Please try again."
-          : emailVerificationBlocked
-            ? "Verify your email to do that. We can send you a new link."
-            : "Verify your email to protect your account and secure your purchases.";
+    "Verify your email to protect your account and secure your purchases. Use the link in your original verification email.";
 
   return (
     <div
@@ -63,17 +54,7 @@ export function EmailVerificationBanner() {
     >
       <div className="plp-window pointer-events-auto p-1">
         <div className="flex items-start gap-3 px-3 py-3">
-          {state === "sent" ? (
-            <CheckCircle2
-              size={20}
-              className="mt-0.5 shrink-0 text-plp-maroon"
-            />
-          ) : (
-            <MailWarning
-              size={20}
-              className="mt-0.5 shrink-0 text-plp-maroon"
-            />
-          )}
+          <MailWarning size={20} className="mt-0.5 shrink-0 text-plp-maroon" />
 
           <div className="min-w-0 flex-1">
             <p
@@ -82,19 +63,6 @@ export function EmailVerificationBanner() {
             >
               {message}
             </p>
-            {state !== "sent" && (
-              <button
-                type="button"
-                onClick={resend}
-                disabled={state === "sending"}
-                className="plp-btn-primary cursor-pointer mt-2 flex h-8 items-center justify-center gap-2 px-3 font-bodoni text-xs font-bold capitalize tracking-tighter disabled:cursor-wait disabled:opacity-70"
-              >
-                {state === "sending" && (
-                  <Loader2 size={14} className="animate-spin" />
-                )}
-                Resend email
-              </button>
-            )}
           </div>
 
           <button

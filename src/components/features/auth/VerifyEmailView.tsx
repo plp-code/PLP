@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AlertTriangle, CheckCircle2, MailWarning } from "lucide-react";
 import { useVerifyEmail } from "@/hooks/useVerifyEmail";
-import { useResendVerification } from "@/hooks/useResendVerification";
 import { useAuthUser } from "@/context/AuthContext";
 import { buildLoginRedirect } from "@/lib/returnTo";
 import { Spinner } from "@/components/ui/Spinner";
@@ -48,18 +47,9 @@ export function VerifyEmailView() {
   const router = useRouter();
   const token = useSearchParams().get("token")?.trim() || null;
   const { state, retry } = useVerifyEmail(token);
-  const { user, isLoading: authLoading, logout } = useAuthUser();
-  const { state: resendState, resend } = useResendVerification();
+  const { logout } = useAuthUser();
 
   const verifyPath = `/verify-email?token=${encodeURIComponent(token ?? "")}`;
-
-  const handleResend = () => {
-    if (!user) {
-      router.push(buildLoginRedirect(verifyPath));
-      return;
-    }
-    resend();
-  };
 
   const handleLogout = async () => {
     await logout();
@@ -106,36 +96,11 @@ export function VerifyEmailView() {
     );
   }
 
-  const resendMessage =
-    resendState === "sent"
-      ? "We've sent a new verification email."
-      : resendState === "rate_limited"
-        ? "Too many requests, try again in a minute."
-        : resendState === "error"
-          ? "Something went wrong. Please try again."
-          : null;
-
   return (
     <Card
       title="Link Expired"
       icon={MailWarning}
       message="This link has expired or is invalid."
-    >
-      {resendMessage && (
-        <p role="status" className="text-plp-maroon text-xs font-bold">
-          {resendMessage}
-        </p>
-      )}
-      {resendState !== "sent" && (
-        <button
-          type="button"
-          onClick={handleResend}
-          disabled={authLoading || resendState === "sending"}
-          className={BUTTON_CLASS}
-        >
-          {resendState === "sending" ? "Sending..." : "Resend Email"}
-        </button>
-      )}
-    </Card>
+    />
   );
 }
