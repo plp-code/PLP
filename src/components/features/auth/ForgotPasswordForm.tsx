@@ -8,7 +8,8 @@ import { ForgotPasswordSuccess } from "./ForgotPasswordSuccess";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
-  const { requestPasswordReset, isLoading, isSubmitted } = useForgotPassword();
+  const { requestPasswordReset, isLoading, isSubmitted, error } =
+    useForgotPassword();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +48,12 @@ export function ForgotPasswordForm() {
             />
           </div>
         </div>
+
+        {error && (
+          <p role="alert" className="text-red-700 text-xs font-bold">
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"
