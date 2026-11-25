@@ -45,8 +45,7 @@ interface MapFilterBarProps {
   onPriceSelect: (value: string) => void;
 
   activeCategories: string[];
-  onCategorySelect: (value: string) => void;
-  onClearCategories: () => void;
+  onCategoriesApply: (categories: string[]) => void;
 
   hasLocation: boolean;
   isLocating: boolean;
@@ -63,8 +62,7 @@ export function MapFilterBar({
   activePrice,
   onPriceSelect,
   activeCategories,
-  onCategorySelect,
-  onClearCategories,
+  onCategoriesApply,
   hasLocation,
   isLocating,
   onLocateToggle,
@@ -80,9 +78,25 @@ export function MapFilterBar({
     ({ level }) => String(level) === activePrice,
   );
 
-  const categoryCount = activeCategories.length;
+  const [draftCategories, setDraftCategories] = useState(activeCategories);
+
+  const categoryCount = draftCategories.length;
+  const appliedCategoryCount = activeCategories.length;
+
+  const toggleDraftCategory = (slug: string) =>
+    setDraftCategories((prev) =>
+      prev.includes(slug) ? prev.filter((c) => c !== slug) : [...prev, slug],
+    );
+
+  const applyCategories = () => {
+    onCategoriesApply(draftCategories);
+    closeDropdown();
+  };
 
   const toggleDropdown = (value: Dropdown) => {
+    if (value === "categories" && dropdown !== "categories") {
+      setDraftCategories(activeCategories);
+    }
     setDropdown((prev) => (prev === value ? null : value));
   };
 
@@ -299,22 +313,22 @@ export function MapFilterBar({
           onClick={() => toggleDropdown("categories")}
           aria-expanded={dropdown === "categories"}
           aria-controls="category-filter-panel"
-          aria-label={`Clothing categories, ${categoryCount} selected`}
+          aria-label={`Clothing categories, ${appliedCategoryCount} selected`}
           className={`
             ${FILTER_BASE}
-            ${categoryCount > 0 ? FILTER_ACTIVE : FILTER_INACTIVE}
+            ${appliedCategoryCount > 0 ? FILTER_ACTIVE : FILTER_INACTIVE}
           `}
         >
           <span>Categories</span>
 
-          {categoryCount > 0 && (
+          {appliedCategoryCount > 0 && (
             <span
               className="
                 rounded bg-plp-parchment/15
                 px-1 text-[10px] tabular-nums
               "
             >
-              {categoryCount}
+              {appliedCategoryCount}
             </span>
           )}
 
@@ -489,7 +503,7 @@ export function MapFilterBar({
             "
           >
             {categories.map((cat) => {
-              const active = activeCategories.includes(cat.slug);
+              const active = draftCategories.includes(cat.slug);
 
               return (
                 <label
@@ -508,7 +522,7 @@ export function MapFilterBar({
                   <input
                     type="checkbox"
                     checked={active}
-                    onChange={() => onCategorySelect(cat.slug)}
+                    onChange={() => toggleDraftCategory(cat.slug)}
                     className="peer sr-only"
                   />
 
@@ -553,7 +567,7 @@ export function MapFilterBar({
               {categoryCount > 0 && (
                 <button
                   type="button"
-                  onClick={onClearCategories}
+                  onClick={() => setDraftCategories([])}
                   className="
                     cursor-pointer text-[12px]
                     font-medium text-plp-clay
@@ -567,7 +581,7 @@ export function MapFilterBar({
 
               <button
                 type="button"
-                onClick={closeDropdown}
+                onClick={applyCategories}
                 className="
                   plp-btn-primary h-9 cursor-pointer
                   rounded-md px-4 font-text

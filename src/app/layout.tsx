@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { EmailVerificationBanner } from "@/components/features/auth/EmailVerificationBanner";
+import { GuestPasswordBanner } from "@/components/features/auth/GuestPasswordBanner";
 import EventAnnouncementModal from "@/components/features/experiences/EventAnnouncementModal";
 import { AuthProvider } from "@/context/AuthContext";
 import { SnackbarProvider } from "@/context/SnackbarContext";
@@ -70,6 +71,7 @@ export default function RootLayout({
               <div>{children}</div>
               <EventAnnouncementModal />
               <EmailVerificationBanner />
+              <GuestPasswordBanner />
               <Analytics />
               <SpeedInsights />
             </AuthProvider>

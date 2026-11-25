@@ -15,7 +15,7 @@ interface StoreListViewProps {
   hasMore: boolean;
   loadingMore: boolean;
   observerRef: (node: HTMLDivElement | null) => void;
-  isSearching: boolean;
+  categoryFallback?: boolean;
   activeId: number | null;
   userLocation: UserLocation | null;
   className?: string;
@@ -28,7 +28,7 @@ export function StoreListView({
   hasMore,
   loadingMore,
   observerRef,
-  isSearching,
+  categoryFallback = false,
   activeId,
   userLocation,
   className = "",
@@ -50,6 +50,12 @@ export function StoreListView({
             {totalCount === 1 ? "location" : "locations"}
           </span>
         </div>
+
+        {categoryFallback && (
+          <p role="status" className="mt-1 text-[11px] text-plp-clay">
+            No matches for those categories, showing all locations.
+          </p>
+        )}
 
         {userLocation && (
           <p className="mt-1 text-[11px] text-plp-clay">
@@ -165,7 +171,7 @@ export function StoreListView({
           })}
         </div>
 
-        {stores.length === 0 && !isSearching && !loadingMore && (
+        {stores.length === 0 && !loadingMore && (
           <div className="flex flex-1 flex-col items-center justify-center px-6 py-14 text-center">
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-plp-blush text-plp-maroon">
               <SearchX size={22} strokeWidth={1.4} />
@@ -182,35 +188,33 @@ export function StoreListView({
           </div>
         )}
 
-        {!isSearching && (
-          <div
-            ref={observerRef}
-            className="flex flex-col items-center justify-center px-4 py-7"
-          >
-            {loadingMore ? (
-              <div
-                role="status"
-                className="flex items-center gap-2 text-[12px] text-plp-clay"
-              >
-                <Loader2 size={16} className="animate-spin text-plp-maroon" />
-                Finding more locations...
+        <div
+          ref={observerRef}
+          className="flex flex-col items-center justify-center px-4 py-7"
+        >
+          {loadingMore ? (
+            <div
+              role="status"
+              className="flex items-center gap-2 text-[12px] text-plp-clay"
+            >
+              <Loader2 size={16} className="animate-spin text-plp-maroon" />
+              Finding more locations...
+            </div>
+          ) : (
+            !hasMore &&
+            stores.length > 0 && (
+              <div className="flex items-center gap-3">
+                <span className="h-px w-6 bg-plp-secondary" />
+
+                <span className="text-[11px] text-plp-clay">
+                  You&apos;ve reached the end
+                </span>
+
+                <span className="h-px w-6 bg-plp-secondary" />
               </div>
-            ) : (
-              !hasMore &&
-              stores.length > 0 && (
-                <div className="flex items-center gap-3">
-                  <span className="h-px w-6 bg-plp-secondary" />
-
-                  <span className="text-[11px] text-plp-clay">
-                    You&apos;ve reached the end
-                  </span>
-
-                  <span className="h-px w-6 bg-plp-secondary" />
-                </div>
-              )
-            )}
-          </div>
-        )}
+            )
+          )}
+        </div>
       </div>
     </div>
   );

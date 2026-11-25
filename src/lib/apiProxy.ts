@@ -1,10 +1,5 @@
 import { getAllowedOrigins } from "@/lib/siteConfig";
 
-/**
- * Hardened proxy from /api/v1/* (same-origin, browser-facing) to the backend.
- * Route handlers in src/app/api/v1/[...path]/route.ts are thin wrappers.
- */
-
 export const REQUEST_TIMEOUT_MS = 30_000;
 export const MAX_BODY_BYTES = 1024 * 1024;
 

@@ -1,8 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AlertTriangle, CheckCircle2, MailWarning } from "lucide-react";
+import { AlertTriangle, CheckCircle2, LogIn, MailWarning } from "lucide-react";
 import { useVerifyEmail } from "@/hooks/useVerifyEmail";
 import { useAuthUser } from "@/context/AuthContext";
 import { buildLoginRedirect } from "@/lib/returnTo";
@@ -45,11 +46,15 @@ function Card({
 
 export function VerifyEmailView() {
   const router = useRouter();
-  const token = useSearchParams().get("token")?.trim() || null;
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token")?.trim() || null;
   const { state, retry } = useVerifyEmail(token);
   const { logout } = useAuthUser();
 
-  const verifyPath = `/verify-email?token=${encodeURIComponent(token ?? "")}`;
+  const verifyParams = new URLSearchParams({ token: token ?? "" });
+  const returnTo = searchParams.get("returnTo");
+  if (returnTo) verifyParams.set("returnTo", returnTo);
+  const verifyPath = `/verify-email?${verifyParams.toString()}`;
 
   const handleLogout = async () => {
     await logout();
@@ -65,6 +70,20 @@ export function VerifyEmailView() {
         icon={CheckCircle2}
         message="Your email is verified. Taking you back now..."
       />
+    );
+  }
+
+  if (state === "login_required") {
+    return (
+      <Card
+        title="Log In Required"
+        icon={LogIn}
+        message="Log in to verify your email."
+      >
+        <Link href={buildLoginRedirect(verifyPath)} className={BUTTON_CLASS}>
+          Log In
+        </Link>
+      </Card>
     );
   }
 

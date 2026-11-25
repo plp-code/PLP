@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { useIsClient } from "@/hooks/useIsClient";
 import { createPortal } from "react-dom";
 import { X, type LucideIcon } from "lucide-react";
@@ -18,6 +19,7 @@ export const Snackbar = ({
   autoCloseMs,
   position = "bottom-right",
   role,
+  action,
 }: {
   show: boolean;
   onClose: () => void;
@@ -31,6 +33,7 @@ export const Snackbar = ({
   autoCloseMs?: number;
   position?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
   role?: "status" | "alert";
+  action?: { label: string; href: string };
 }) => {
   const mounted = useIsClient();
   const [isVisible, setIsVisible] = useState(false);
@@ -143,6 +146,15 @@ export const Snackbar = ({
 
               {subtitle && (
                 <p className="mt-0.5 text-sm opacity-80">{subtitle}</p>
+              )}
+
+              {action && (
+                <Link
+                  href={action.href}
+                  className="mt-1 inline-block text-sm font-bold underline underline-offset-2 hover:opacity-70"
+                >
+                  {action.label}
+                </Link>
               )}
             </div>
           </div>

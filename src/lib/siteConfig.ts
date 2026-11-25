@@ -1,8 +1,3 @@
-/**
- * Origins allowed to make state-changing requests to /api/v1/*.
- * Committed config on purpose: the Origin check compares against this fixed
- * list, never against the Host header or the request's own URL.
- */
 const PRODUCTION_ORIGINS = [
   "https://theprelovedprofessional.com",
   "https://www.theprelovedprofessional.com",
