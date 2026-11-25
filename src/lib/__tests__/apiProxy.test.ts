@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MAX_BODY_BYTES, proxyRequest } from "@/lib/apiProxy";
 
-const SITE = "https://site.test";
+const SITE = "https://theprelovedprofessional.com";
 
 function req(
   method: string,
@@ -18,7 +18,6 @@ describe("proxyRequest", () => {
 
   beforeEach(() => {
     vi.stubEnv("API_URL", "http://backend.test");
-    vi.stubEnv("SITE_URL", SITE);
     vi.stubEnv("VERCEL", "1");
     vi.stubGlobal("fetch", fetchMock);
     fetchMock.mockResolvedValue(new Response('{"ok":true}', { status: 200 }));
@@ -121,6 +120,42 @@ describe("proxyRequest", () => {
     );
     expect(res.status).toBe(403);
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("allows the www origin", async () => {
+    const res = await proxyRequest(
+      req("POST", undefined, {
+        headers: { origin: "https://www.theprelovedprofessional.com" },
+        body: "{}",
+      }),
+      ["reviews", "1"],
+    );
+    expect(res.status).toBe(200);
+  });
+
+  it("compares Origin to the fixed list, not the request's own URL/Host", async () => {
+    const res = await proxyRequest(
+      req("POST", "https://evil.test/api/v1/reviews/1", {
+        headers: { origin: "https://evil.test", host: "evil.test" },
+        body: "{}",
+      }),
+      ["reviews", "1"],
+    );
+    expect(res.status).toBe(403);
+  });
+
+  it("allows localhost only outside production", async () => {
+    const local = () =>
+      proxyRequest(
+        req("POST", undefined, {
+          headers: { origin: "http://localhost:3000" },
+          body: "{}",
+        }),
+        ["reviews", "1"],
+      );
+    expect((await local()).status).toBe(200);
+    vi.stubEnv("NODE_ENV", "production");
+    expect((await local()).status).toBe(403);
   });
 
   it("blocks writes with neither Origin nor Sec-Fetch-Site", async () => {

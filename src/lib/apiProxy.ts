@@ -1,3 +1,5 @@
+import { getAllowedOrigins } from "@/lib/siteConfig";
+
 /**
  * Hardened proxy from /api/v1/* (same-origin, browser-facing) to the backend.
  * Route handlers in src/app/api/v1/[...path]/route.ts are thin wrappers.
@@ -54,18 +56,7 @@ function getConfig(): { apiOrigin: string; siteOrigins: Set<string> } {
   const apiOrigin = normalizeOrigin(apiUrl);
   if (!apiOrigin) throw new ConfigError("API_URL is missing or invalid");
 
-  const siteUrls =
-    process.env.SITE_URL ?? (isProd ? "" : "http://localhost:3000");
-  const siteOrigins = new Set(
-    siteUrls
-      .split(",")
-      .map((s) => normalizeOrigin(s.trim()))
-      .filter((o): o is string => Boolean(o)),
-  );
-  if (siteOrigins.size === 0)
-    throw new ConfigError("SITE_URL is missing or invalid");
-
-  return { apiOrigin, siteOrigins };
+  return { apiOrigin, siteOrigins: getAllowedOrigins() };
 }
 
 export function buildUpstreamUrl(
