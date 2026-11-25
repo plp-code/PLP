@@ -63,7 +63,6 @@ export function EmptyState({
           {description}
         </p>
       )}
-
     </div>
   );
 }

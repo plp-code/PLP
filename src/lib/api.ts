@@ -33,6 +33,8 @@ export function isEmailNotVerified(err: unknown): boolean {
 const TOKEN_EXPIRY_KEY = "token_expires_at";
 const SESSION_HINT_KEY = "had_session";
 
+const ACCESS_TOKEN_SECONDS = 15 * 60;
+
 export function markSession() {
   if (typeof window !== "undefined")
     localStorage.setItem(SESSION_HINT_KEY, "1");
@@ -67,12 +69,28 @@ export function onEmailNotVerified(handler: () => void) {
   };
 }
 
-export function setTokenExpiry(seconds: number) {
-  sessionStorage.setItem(TOKEN_EXPIRY_KEY, String(Date.now() + seconds * 1000));
+export function setTokenExpiry(seconds: number = ACCESS_TOKEN_SECONDS) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(
+      TOKEN_EXPIRY_KEY,
+      String(Date.now() + seconds * 1000),
+    );
+  } catch {}
 }
 
 export function clearTokenExpiry() {
-  sessionStorage.removeItem(TOKEN_EXPIRY_KEY);
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.removeItem(TOKEN_EXPIRY_KEY);
+  } catch {}
+}
+
+function handleRefreshFailure(): false {
+  clearTokenExpiry();
+  clearSession();
+  authExpiredHandler?.();
+  return false;
 }
 
 async function refreshSession(): Promise<boolean> {
@@ -83,21 +101,12 @@ async function refreshSession(): Promise<boolean> {
     })
       .then((res) => {
         if (res.ok) {
-          setTokenExpiry(30 * 60);
+          setTokenExpiry(ACCESS_TOKEN_SECONDS);
           return true;
-        } else {
-          clearTokenExpiry();
-          clearSession();
-          authExpiredHandler?.();
-          return false;
         }
+        return handleRefreshFailure();
       })
-      .catch(() => {
-        clearTokenExpiry();
-        clearSession();
-        authExpiredHandler?.();
-        return false;
-      })
+      .catch(handleRefreshFailure)
       .finally(() => {
         refreshPromise = null;
       });
@@ -113,7 +122,9 @@ async function fetcher<T>(
   const url = `/api/v1/${cleanEndpoint}`;
 
   const headers = {
-    "Content-Type": "application/json",
+    ...(options.body !== undefined && options.body !== null
+      ? { "Content-Type": "application/json" }
+      : {}),
     ...options.headers,
   };
 
@@ -138,13 +149,15 @@ async function fetcher<T>(
   if (!response.ok) {
     const err: {
       detail?:
-        | string
-        | ApiValidationError[]
-        | { code?: string; message?: string };
+        string | ApiValidationError[] | { code?: string; message?: string };
     } = await response.json().catch(() => ({}));
 
     let message: string;
-    if (typeof err.detail === "string") {
+    if (
+      typeof err.detail === "string" &&
+      err.detail.trim() &&
+      err.detail !== "None"
+    ) {
       message = err.detail;
     } else if (Array.isArray(err.detail)) {
       message = err.detail
@@ -153,7 +166,12 @@ async function fetcher<T>(
           return field ? `${field}: ${e.msg}` : e.msg;
         })
         .join(". ");
-    } else if (err.detail && typeof err.detail.message === "string") {
+    } else if (
+      err.detail &&
+      typeof err.detail === "object" &&
+      !Array.isArray(err.detail) &&
+      typeof err.detail.message === "string"
+    ) {
       message = err.detail.message;
     } else {
       message = `Request failed with status ${response.status}`;
@@ -177,14 +195,14 @@ export const api = {
     fetcher<T>(url, {
       ...options,
       method: "POST",
-      body: body ? JSON.stringify(body) : undefined,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     }),
 
   put: <T = unknown>(url: string, body?: unknown, options?: FetchOptions) =>
     fetcher<T>(url, {
       ...options,
       method: "PUT",
-      body: body ? JSON.stringify(body) : undefined,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     }),
 
   delete: <T = unknown>(url: string, options?: FetchOptions) =>

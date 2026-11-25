@@ -1,7 +1,6 @@
-
 import { Clock } from "lucide-react";
-import type { OneOnOneService } from "@/data/experiences";
-import { Action } from "../shared/Action";
+import type { OneOnOneService } from "@/types";
+import { Action } from "@/components/features/shared/Action";
 
 interface ServiceCardProps {
   service: OneOnOneService;

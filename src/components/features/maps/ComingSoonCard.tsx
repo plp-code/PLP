@@ -1,6 +1,9 @@
 import { MapItem } from "@/types/models";
 import { MapPin, Clock } from "lucide-react";
-import { WaitlistInlineForm, type WaitlistControls } from "./WaitlistInlineForm";
+import {
+  WaitlistInlineForm,
+  type WaitlistControls,
+} from "./WaitlistInlineForm";
 
 interface ComingSoonProps {
   map: MapItem;

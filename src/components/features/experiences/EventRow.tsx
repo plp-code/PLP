@@ -1,6 +1,6 @@
 import { Clock, MapPin } from "lucide-react";
-import type { InPersonEvent } from "@/data/experiences";
-import { Action } from "../shared/Action";
+import { type InPersonEvent } from "@/types";
+import { Action } from "@/components/features/shared/Action";
 
 const MONTH_FMT = new Intl.DateTimeFormat("en-US", {
   month: "short",

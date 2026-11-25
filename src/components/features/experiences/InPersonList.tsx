@@ -1,4 +1,4 @@
-import type { InPersonEvent } from "@/data/experiences";
+import type { InPersonEvent } from "@/types";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { EventRow } from "./EventRow";
 import { PlannedEventCard } from "./PlannedEventsCard";
@@ -55,7 +55,7 @@ export function InPersonList({ events }: { events: InPersonEvent[] }) {
             </h3>
 
             <p className="mt-2 font-prata text-[13px] leading-6 text-plp-maroon/60">
-              A little preview of what we're planning ahead.
+              A little preview of what we&apos;re planning ahead.
             </p>
           </div>
 
@@ -65,7 +65,7 @@ export function InPersonList({ events }: { events: InPersonEvent[] }) {
             ))}
           </div>
         </div>
-      )} 
+      )}
     </section>
   );
 }

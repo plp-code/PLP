@@ -6,7 +6,7 @@ export interface User {
   is_verified?: boolean;
 }
 
-export type MapStatus = "live" | "waitlist" | "dropped" | "next" ;
+export type MapStatus = "live" | "waitlist" | "dropped" | "next";
 
 export interface MapItem {
   id: number;
@@ -59,7 +59,6 @@ export interface LocationPin {
   longitude: number;
 }
 
-
 export interface ClothingCategory {
   id: number;
   name: string;
@@ -67,7 +66,6 @@ export interface ClothingCategory {
   created_at?: string;
   updated_at?: string;
 }
-
 
 export interface ReviewItem {
   id: number;
@@ -78,7 +76,14 @@ export interface ReviewItem {
   created_at: string;
   updated_at: string;
   categories: ClothingCategory[];
-  user: User;
+  is_hidden?: boolean;
+  user?: ReviewAuthor | null;
+}
+
+export interface ReviewAuthor {
+  first_name?: string | null;
+  last_initial?: string | null;
+  last_name?: string | null;
 }
 
 export interface NewReview {
@@ -96,12 +101,13 @@ export type InPersonEvent = {
   id: string;
   title: string;
   description: string;
-  date?: string | null;
-  time?: string | null;
-  location?: string | null;
+  status: "confirmed" | "planning";
+  /** ISO date (YYYY-MM-DD). Omit while the date is still to be announced. */
+  date?: string;
+  time?: string;
+  location?: string;
   price?: string;
   href?: string;
-  status: "confirmed" | "planning";
 };
 
 export type OneOnOneService = {

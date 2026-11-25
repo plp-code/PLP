@@ -12,12 +12,16 @@ export default function NotFound() {
           Error 404
         </p>
 
-        <Display as="h1" className="max-w-4xl text-[clamp(4rem,12vw,9rem)] leading-[0.82] tracking-[-0.035em] text-plp-maroon">
+        <Display
+          as="h1"
+          className="max-w-4xl text-[clamp(4rem,12vw,9rem)] leading-[0.82] tracking-[-0.035em] text-plp-maroon"
+        >
           Page Not Found
         </Display>
 
         <p className="mt-7 max-w-xl font-prata text-[14px] leading-6 text-plp-maroon/65 sm:text-[15px] sm:leading-7">
-          This page is no longer where we left it. Return back home and keep looking.
+          This page is no longer where we left it. Return back home and keep
+          looking.
         </p>
 
         <Link

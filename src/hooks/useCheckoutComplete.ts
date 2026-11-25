@@ -20,6 +20,7 @@ export type CheckoutCompleteState =
   | "success"
   | "requires_login"
   | "already_owned"
+  | "refunded"
   | "error"
   | "timeout"
   | "missing";
@@ -67,6 +68,11 @@ export function useCheckoutComplete() {
           markSession();
           await queryClient.invalidateQueries({ queryKey: ["session"] });
           if (cancelled) return;
+
+          if (!queryClient.getQueryData(["session"])) {
+            setViewState("requires_login");
+            return;
+          }
           setViewState("success");
           router.replace(`/maps/${data.map_slug}`);
           return;
@@ -78,6 +84,9 @@ export function useCheckoutComplete() {
           }
           setMapSlug(data.map_slug ?? null);
           setViewState("already_owned");
+          return;
+        } else if (data.status === "refunded") {
+          setViewState("refunded");
           return;
         } else {
           setViewState("error");

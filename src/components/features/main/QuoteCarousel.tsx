@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Container } from "../../ui/Container";
+import { Container } from "@/components/ui/Container";
 
 interface CarouselProps {
   quotes?: Record<string, string>;
@@ -75,7 +75,7 @@ export default function QuoteCarousel({
 
     touchStartX.current = null;
     touchStartY.current = null;
-    
+
     if (
       Math.abs(deltaX) < SWIPE_THRESHOLD ||
       Math.abs(deltaX) <= Math.abs(deltaY)

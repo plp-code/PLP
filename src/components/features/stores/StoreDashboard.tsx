@@ -1,24 +1,25 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ComponentType } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  List as ListIcon,
-  Map as MapIcon,
-} from "lucide-react";
+
+import { ChevronLeft, List as ListIcon, Map as MapIcon } from "lucide-react";
+
 import { getDistance } from "@/lib/utils";
-import { Location, LocationPin } from "@/types";
+import { getMapType } from "@/lib/mapTypes";
+import type { Location, LocationPin } from "@/types";
+
 import { useMapData } from "@/hooks/useMapData";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useStoreFilters } from "@/hooks/useStoreFilters";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useGetClothingCategories } from "@/hooks/useClothingCategory";
+
 import { StoreListView } from "./StoreListView";
 import { StoreDetailView } from "./StoreDetailView";
-import { MapFilterBar } from "../maps/MapFilterBar";
+import { MapFilterBar } from "@/components/features/maps/MapFilterBar";
 import { Spinner } from "@/components/ui/Spinner";
-import type { MapComponentProps } from "../maps/MapComponent";
+
+import type { MapComponentProps } from "@/components/features/maps/MapComponent";
 
 type MapStore = Location | LocationPin;
 
@@ -47,55 +48,91 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     storeById,
   } = useStoreFilters(stores, pins, userLocation);
 
-  const {
-    data: categories = [],
-    isLoading,
-    error,
-  } = useGetClothingCategories();
+  const { data: categories = [], isLoading } = useGetClothingCategories();
+
+  const mapType = useMemo(() => getMapType(mapSlug), [mapSlug]);
 
   const [activeId, setActiveId] = useState<number | null>(null);
   const [view, setView] = useState<"list" | "detail">("list");
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+
   const [MapComponent, setMapComponent] =
     useState<ComponentType<MapComponentProps> | null>(null);
 
   useEffect(() => {
-    import("../maps/MapComponent").then((mod) =>
-      setMapComponent(() => mod.default as ComponentType<MapComponentProps>),
-    );
+    let cancelled = false;
+
+    import("@/components/features/maps/MapComponent").then((mod) => {
+      if (!cancelled) {
+        setMapComponent(() => mod.default as ComponentType<MapComponentProps>);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const isSearching = searchTerm.trim().length > 0;
+
+  const activeStore = useMemo<MapStore | null>(
+    () => (activeId !== null ? (storeById.get(activeId) ?? null) : null),
+    [storeById, activeId],
+  );
+
+  const showDetail = view === "detail" && activeStore !== null;
 
   const lastElementRef = useInfiniteScroll(loadMore, {
     hasMore,
     loading: loadingMore,
-    disabled: searchTerm.trim().length > 0,
+    disabled: isSearching || !isDrawerOpen || showDetail,
   });
 
-  const activeStore = useMemo<MapStore | null>(
-    () => (activeId != null ? (storeById.get(activeId) ?? null) : null),
-    [storeById, activeId],
-  );
+  const activeDistance = useMemo(() => {
+    if (!userLocation || !activeStore) return null;
+
+    return getDistance(
+      userLocation.lat,
+      userLocation.lng,
+      activeStore.latitude,
+      activeStore.longitude,
+    );
+  }, [userLocation, activeStore]);
 
   const resetToList = () => {
     setView("list");
     setActiveId(null);
   };
 
+  const openList = () => {
+    setIsDrawerOpen(true);
+    resetToList();
+  };
+
+  const toggleDrawer = () => {
+    setIsDrawerOpen((prev) => !prev);
+  };
+
+  const handleStoreSelect = (id: number) => {
+    setActiveId(id);
+    setView("detail");
+    setIsDrawerOpen(true);
+  };
+
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
-    if (view === "detail") resetToList();
+    openList();
   };
 
   const handleToggleOpenNow = () => {
     setIsOpenNow(!isOpenNow);
-    setIsDrawerOpen(true);
-    if (view === "detail") resetToList();
+    openList();
   };
 
   const handlePriceSelect = (value: string) => {
-    setActivePrice(activePrice === value ? null : value);
-    setIsDrawerOpen(true);
-    if (view === "detail") resetToList();
+    setActivePrice(!value || activePrice === value ? null : value);
+
+    openList();
   };
 
   const handleCategorySelect = (value: string) => {
@@ -105,24 +142,22 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
         : [...prev, value],
     );
 
-    setIsDrawerOpen(true);
-
-    if (view === "detail") {
-      resetToList();
-    }
+    openList();
   };
 
   const handleClearCategories = () => {
     setActiveCategories([]);
-    setIsDrawerOpen(true);
-    if (view === "detail") resetToList();
+    openList();
   };
 
   const handleLocateToggle = () => {
-    if (userLocation) clearLocation();
-    else locate();
-    setIsDrawerOpen(true);
-    if (view === "detail") resetToList();
+    if (userLocation) {
+      clearLocation();
+    } else {
+      locate();
+    }
+
+    openList();
   };
 
   if (loading || isLoading) {
@@ -130,143 +165,266 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   }
 
   return (
-    <div className="relative h-full w-full bg-gray-100 font-sans tracking-tight overflow-hidden">
+    <div
+      className="
+        relative h-full min-h-0 w-full overflow-hidden
+        bg-plp-parchment font-text text-plp-ink
+
+        [--drawer-width:440px]
+        [--drawer-offset:0px]
+
+        md:[--drawer-offset:1rem]
+
+        lg:[--drawer-width:500px]
+        lg:[--drawer-offset:1.5rem]
+      "
+    >
       <h1 className="sr-only">{mapTitle} thrift map</h1>
+
       <div className="absolute inset-0 z-0">
         {MapComponent && (
           <MapComponent
             stores={mapPins}
             activeId={activeId}
-            setActiveId={(id: number) => {
-              setActiveId(id);
-              setView("detail");
-              setIsDrawerOpen(true);
-            }}
+            mapType={mapType}
+            setActiveId={handleStoreSelect}
             activeStore={activeStore}
             userLocation={userLocation}
           />
         )}
       </div>
 
-      <div className="absolute top-0 inset-x-0 p-4 md:p-6 z-[1000] flex flex-col items-start gap-3 pointer-events-none">
-        <MapFilterBar
-          searchTerm={searchTerm}
-          onSearchChange={handleSearchChange}
-          isOpenNow={isOpenNow}
-          onToggleOpenNow={handleToggleOpenNow}
-          activePrice={activePrice}
-          onPriceSelect={handlePriceSelect}
-          activeCategories={activeCategories}
-          onCategorySelect={handleCategorySelect}
-          onClearCategories={handleClearCategories}
-          hasLocation={!!userLocation}
-          isLocating={isLocating}
-          onLocateToggle={handleLocateToggle}
-          categories={categories}
-        />
+      <div
+        className="
+          pointer-events-none absolute inset-0 z-[1000]
+          flex min-h-0 flex-col gap-2
+
+          md:inset-y-4
+          md:left-[var(--drawer-offset)]
+          md:right-auto
+          md:w-[var(--drawer-width)]
+          md:gap-3
+
+          lg:inset-y-6
+        "
+      >
+        <div
+          className="
+            pointer-events-auto relative z-30 shrink-0
+            px-3 pt-3
+            md:px-0 md:pt-0
+          "
+        >
+          <MapFilterBar
+            searchTerm={searchTerm}
+            onSearchChange={handleSearchChange}
+            isOpenNow={isOpenNow}
+            onToggleOpenNow={handleToggleOpenNow}
+            activePrice={activePrice}
+            onPriceSelect={handlePriceSelect}
+            activeCategories={activeCategories}
+            onCategorySelect={handleCategorySelect}
+            onClearCategories={handleClearCategories}
+            hasLocation={!!userLocation}
+            isLocating={isLocating}
+            onLocateToggle={handleLocateToggle}
+            categories={categories}
+          />
+        </div>
+
+        <div
+          className="
+            relative flex min-h-0 flex-1
+            flex-col justify-end
+          "
+        >
+          <div
+            className={`
+              pointer-events-none relative
+              flex h-[58dvh] max-h-full min-h-0
+              w-full flex-col
+
+              transition-transform duration-300
+              ease-[cubic-bezier(0.22,1,0.36,1)]
+              motion-reduce:transition-none
+
+              md:h-full md:flex-1
+
+              ${
+                isDrawerOpen
+                  ? "transform-[translate(0,0)]"
+                  : `
+                    transform-[translateY(100%)]
+                    md:transform-[translateX(calc(-100%_-_var(--drawer-offset)))]
+                  `
+              }
+            `}
+          >
+            <aside
+              id="store-drawer"
+              aria-hidden={!isDrawerOpen}
+              inert={!isDrawerOpen}
+              className={`
+                relative flex min-h-0 w-full flex-1
+                flex-col overflow-hidden
+
+                rounded-t-2xl
+                border border-plp-secondary
+                bg-plp-parchment
+
+                shadow-[0_8px_30px_rgba(61,11,25,0.12)]
+
+                md:rounded-xl
+
+                ${isDrawerOpen ? "pointer-events-auto" : "pointer-events-none"}
+              `}
+            >
+              <div
+                aria-hidden="true"
+                className="
+                  flex shrink-0 justify-center
+                  bg-plp-parchment pb-1 pt-2
+                  md:hidden
+                "
+              >
+                <div
+                  className="
+                    h-1 w-9 rounded-full
+                    bg-plp-secondary-dark/60
+                  "
+                />
+              </div>
+
+              <div
+                className={`
+                  min-h-0 flex-1 flex-col
+                  ${showDetail ? "hidden" : "flex"}
+                `}
+              >
+                <StoreListView
+                  stores={filteredStores}
+                  totalCount={mapPins.length}
+                  activeId={activeId}
+                  onSelect={handleStoreSelect}
+                  hasMore={hasMore}
+                  loadingMore={loadingMore}
+                  observerRef={lastElementRef}
+                  isSearching={isSearching}
+                  userLocation={userLocation}
+                  className="min-h-0"
+                />
+              </div>
+
+              {showDetail && activeStore && (
+                <StoreDetailView
+                  store={activeStore}
+                  onBack={() => setView("list")}
+                  userLocation={userLocation}
+                  distance={activeDistance}
+                />
+              )}
+            </aside>
+
+            <button
+              type="button"
+              onClick={toggleDrawer}
+              aria-label={
+                isDrawerOpen ? "Hide store drawer" : "Show store drawer"
+              }
+              aria-expanded={isDrawerOpen}
+              aria-controls="store-drawer"
+              title={isDrawerOpen ? "Hide store drawer" : "Show store drawer"}
+              className="
+                pointer-events-auto absolute
+                left-full top-1/2 z-20
+
+                hidden h-12 w-7 -translate-y-1/2
+                cursor-pointer items-center justify-center
+
+                rounded-r-lg border border-l-0
+                border-plp-secondary
+
+                bg-plp-parchment text-plp-maroon
+                shadow-[3px_0_8px_rgba(61,11,25,0.08)]
+
+                transition-colors duration-150
+                hover:bg-plp-secondary-light
+                active:bg-plp-secondary
+
+                focus-visible:outline-none
+                focus-visible:ring-2
+                focus-visible:ring-inset
+                focus-visible:ring-plp-maroon/40
+
+                md:flex
+              "
+            >
+              <ChevronLeft
+                size={17}
+                strokeWidth={1.8}
+                className={`
+                  transition-transform duration-300
+                  motion-reduce:transition-none
+
+                  ${
+                    isDrawerOpen
+                      ? "transform-[rotate(0deg)]"
+                      : "transform-[rotate(180deg)]"
+                  }
+                `}
+              />
+            </button>
+          </div>
+        </div>
       </div>
 
-      <aside
-        className={`absolute bg-white z-[999] flex flex-col
-          shadow-[0_-8px_30px_rgba(0,0,0,0.12)]
-          transition-transform duration-300 ease-in-out
-          overflow-hidden border-t border-gray-200/50
-          
-          inset-x-0 bottom-0 h-[65dvh] rounded-t-3xl
-          ${isDrawerOpen ? "translate-y-0" : "translate-y-full"}
-          md:top-36 md:bottom-6 md:left-6 md:right-auto
-          md:h-auto md:w-[440px]
-          md:rounded-2xl md:border
-          ${
-            isDrawerOpen
-              ? "md:translate-x-0 md:translate-y-0"
-              : "md:-translate-x-[120%] md:translate-y-0"
-          }
-          `}
-      >
-        <StoreListView
-          stores={filteredStores}
-          totalCount={pins.length}
-          activeId={activeId}
-          onSelect={(id: number) => {
-            setActiveId(id);
-            setView("detail");
-          }}
-          hasMore={hasMore}
-          loadingMore={loadingMore}
-          observerRef={lastElementRef}
-          isSearching={searchTerm.trim().length > 0}
-          userLocation={userLocation}
-          className={view === "detail" ? "hidden" : "flex"}
-        />
-
-        {view === "detail" && activeStore && (
-          <StoreDetailView
-            store={activeStore}
-            onBack={() => setView("list")}
-            userLocation={userLocation}
-            distance={
-              userLocation
-                ? getDistance(
-                    userLocation.lat,
-                    userLocation.lng,
-                    activeStore.latitude,
-                    activeStore.longitude,
-                  )
-                : null
-            }
-          />
-        )}
-      </aside>
-
       <div
-        className="absolute z-[1000] pointer-events-none inset-x-0 bottom-[calc(1.5rem+env(safe-area-inset-bottom))] flex justify-center  md:inset-x-auto md:left-6 md:w-[440px]"
+        className="
+          pointer-events-none absolute inset-x-0
+          bottom-[calc(0.75rem_+_env(safe-area-inset-bottom))]
+          z-[1010] flex justify-center
+          md:hidden
+        "
       >
         <button
-          onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+          type="button"
+          onClick={toggleDrawer}
+          aria-expanded={isDrawerOpen}
+          aria-controls="store-drawer"
           className="
-            pointer-events-auto
-            bg-gray-900/95 backdrop-blur-md
-            text-white
-            h-12 px-5
-            rounded-full
-            font-medium
-            shadow-[0_6px_20px_rgba(0,0,0,0.2)]
-            flex items-center justify-center gap-2
-            text-sm
-            active:scale-95
+            plp-btn-primary pointer-events-auto
+
+            flex h-11 cursor-pointer
+            items-center justify-center gap-2
+
+            rounded-full px-5
+            font-text text-[13px] font-medium
+
+            shadow-[0_4px_16px_rgba(61,11,25,0.2)]
+
             transition-all duration-200
-            md:hidden"
+            active:scale-95
+
+            focus-visible:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-plp-maroon/40
+
+            motion-reduce:transition-none
+          "
         >
           {isDrawerOpen ? (
             <>
-              <MapIcon size={17} />
-              <span>Map</span>
+              <MapIcon size={16} strokeWidth={1.8} />
+              <span>Show map</span>
             </>
           ) : (
             <>
-              <ListIcon size={17} />
-              <span>List</span>
+              <ListIcon size={16} strokeWidth={1.8} />
+              <span>Show list</span>
             </>
           )}
         </button>
       </div>
-
-      <button
-        onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-        className={`
-          hidden md:flex absolute top-1/2 -translate-y-1/2 z-[900]
-          bg-white shadow-xl border border-gray-200 p-2 rounded-r-xl
-          transition-all duration-300 hover:bg-gray-50
-          ${isDrawerOpen ? "left-[464px]" : "left-0"}
-        `}
-      >
-        {isDrawerOpen ? (
-          <ChevronLeft size={20} className="text-gray-600" />
-        ) : (
-          <ChevronRight size={20} className="text-gray-600" />
-        )}
-      </button>
     </div>
   );
 }

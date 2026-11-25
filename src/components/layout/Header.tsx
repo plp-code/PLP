@@ -8,14 +8,13 @@ import {
   Globe,
   Loader2,
   LogOut,
-  Mail,
   MapPin,
   X,
   LogIn,
 } from "lucide-react";
-import { Label } from "../ui/Typography";
+import { Label } from "@/components/ui/Typography";
 import { useAuthUser } from "@/context/AuthContext";
-import AuthAction from "../features/auth/AuthBtn";
+import AuthAction from "@/components/features/auth/AuthBtn";
 
 interface HeaderProps {
   isMenuOpen: boolean;
@@ -111,7 +110,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
           }}
         >
           <div className="border-t border-plp-maroon/15">
-            {navItems.map((item, index) => (
+            {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.to}

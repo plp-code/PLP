@@ -76,5 +76,5 @@ export function useResetPassword(token: string | null) {
     }
   };
 
-  return { state, hasPassword, isLoading, executePasswordReset, submitError};
+  return { state, hasPassword, isLoading, executePasswordReset, submitError };
 }

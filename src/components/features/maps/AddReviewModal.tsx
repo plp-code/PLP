@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useIsClient } from "@/hooks/useIsClient";
 import { createPortal } from "react-dom";
 import { Loader2, X, ChevronDown, Check } from "lucide-react";
 import { useSnackbar } from "@/context/SnackbarContext";
+import { reviewErrorMessage } from "@/hooks/useReviews";
 import { useGetClothingCategories } from "@/hooks/useClothingCategory";
 import type { NewReview } from "@/types";
 
@@ -14,13 +16,8 @@ interface Props {
   storeName?: string;
 }
 
-export function AddReviewModal({
-  open,
-  onClose,
-  onSubmit,
-  storeName,
-}: Props) {
-  const [mounted, setMounted] = useState(false);
+export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
+  const mounted = useIsClient();
   const [visible, setVisible] = useState(false);
 
   const { data: categoryOptions = [] } = useGetClothingCategories();
@@ -33,11 +30,9 @@ export function AddReviewModal({
   const [submitting, setSubmitting] = useState(false);
   const snackbar = useSnackbar();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
     if (open) {
       setCategories([]);
       setIsCategoryOpen(false);
@@ -45,15 +40,15 @@ export function AddReviewModal({
       setExperience("");
       setPrice("");
       setSubmitting(false);
-
-      const id = window.setTimeout(() => {
-        setVisible(true);
-      }, 10);
-
-      return () => window.clearTimeout(id);
+    } else {
+      setVisible(false);
     }
+  }
 
-    setVisible(false);
+  useEffect(() => {
+    if (!open) return;
+    const id = window.setTimeout(() => setVisible(true), 10);
+    return () => window.clearTimeout(id);
   }, [open]);
 
   useEffect(() => {
@@ -95,17 +90,18 @@ export function AddReviewModal({
     const parsedPrice = Number.parseFloat(price);
 
     try {
-      await onSubmit({ 
+      await onSubmit({
         category_slugs: categories.map((c) => c.trim()),
         item_purchased: item.trim(),
         experience: experience.trim(),
         price_paid:
           Number.isFinite(parsedPrice) && parsedPrice >= 0
-            ? Number(parsedPrice.toFixed(2))
+            ? Math.round(parsedPrice)
             : undefined,
       });
-    } catch {
-      snackbar.error("Couldn't post your review", "Please try again.");
+    } catch (err) {
+      const { title, subtitle } = reviewErrorMessage(err, "post");
+      snackbar.error(title, subtitle);
     } finally {
       setSubmitting(false);
     }
@@ -210,8 +206,8 @@ export function AddReviewModal({
                     <div className="flex flex-wrap gap-1.5">
                       {categories.slice(0, 3).map((slug) => {
                         const label =
-                          categoryOptions.find((cat) => cat.slug === slug)?.name ??
-                          slug;
+                          categoryOptions.find((cat) => cat.slug === slug)
+                            ?.name ?? slug;
 
                         return (
                           <span
@@ -352,12 +348,12 @@ export function AddReviewModal({
 
                 <input
                   type="number"
-                  inputMode="decimal"
+                  inputMode="numeric"
                   min="0"
-                  step="0.01"
+                  step="1"
                   value={price}
                   onChange={(event) => setPrice(event.target.value)}
-                  placeholder="0.00"
+                  placeholder="0"
                   className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-7 pr-3.5 font-prata text-[15px] text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-plp-maroon/30 focus:bg-white focus:ring-2 focus:ring-plp-maroon/10"
                 />
               </div>
