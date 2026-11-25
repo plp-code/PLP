@@ -1,4 +1,3 @@
-// Leaflet-free so it can be imported from any component (incl. SSR'd ones).
 export type MapType = "dot" | "trolley";
 export const DEFAULT_MAP_TYPE: MapType = "dot";
 

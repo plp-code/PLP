@@ -59,7 +59,6 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   const [MapComponent, setMapComponent] =
     useState<ComponentType<MapComponentProps> | null>(null);
 
-  /* Load the map on the client */
   useEffect(() => {
     let cancelled = false;
 
@@ -74,7 +73,6 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     };
   }, []);
 
-  /* Search and selected store */
   const isSearching = searchTerm.trim().length > 0;
 
   const activeStore = useMemo<MapStore | null>(
@@ -84,14 +82,12 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
 
   const showDetail = view === "detail" && activeStore !== null;
 
-  /* Infinite scrolling */
   const lastElementRef = useInfiniteScroll(loadMore, {
     hasMore,
     loading: loadingMore,
     disabled: isSearching || !isDrawerOpen || showDetail,
   });
 
-  /* Distance to selected store */
   const activeDistance = useMemo(() => {
     if (!userLocation || !activeStore) return null;
 
@@ -103,7 +99,6 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     );
   }, [userLocation, activeStore]);
 
-  /* Drawer handlers */
   const resetToList = () => {
     setView("list");
     setActiveId(null);
@@ -124,7 +119,6 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     setIsDrawerOpen(true);
   };
 
-  /* Filter handlers */
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
     openList();

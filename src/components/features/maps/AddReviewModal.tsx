@@ -30,7 +30,6 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const snackbar = useSnackbar();
 
-  // Reset the form whenever the modal opens/closes (during render, not in an effect).
   const [prevOpen, setPrevOpen] = useState(open);
   if (open !== prevOpen) {
     setPrevOpen(open);

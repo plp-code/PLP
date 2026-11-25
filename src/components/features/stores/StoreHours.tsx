@@ -13,8 +13,6 @@ interface StoreHoursProps {
 export function StoreHours({ timeData, week }: StoreHoursProps) {
   const [open, setOpen] = useState(false);
 
-  // When we have no hours for this store, show a static notice instead of the
-  // expandable day-by-day list.
   const hoursUnavailable =
     timeData.string === "Hours unavailable" || week.length === 0;
 

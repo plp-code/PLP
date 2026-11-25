@@ -37,7 +37,6 @@ export function StoreListView({
     <div
       className={`flex min-h-0 flex-1 flex-col overflow-y-auto bg-plp-parchment font-text text-plp-ink ${className}`}
     >
-      {/* Sticky header */}
       <header className="sticky top-0 z-10 shrink-0 border-b border-plp-secondary bg-plp-parchment/95 px-4 py-3.5 backdrop-blur-xl md:px-5">
         <div className="flex items-center justify-between gap-3">
           <h2 className="font-prata text-[17px] leading-relaxed text-plp-maroon">
@@ -59,7 +58,6 @@ export function StoreListView({
         )}
       </header>
 
-      {/* Store list */}
       <div className="flex flex-1 flex-col pb-[calc(5rem_+_env(safe-area-inset-bottom))] md:pb-0">
         <div className="divide-y divide-plp-secondary/60">
           {stores.map((store, index) => {
@@ -91,7 +89,6 @@ export function StoreListView({
                     : "bg-white hover:bg-plp-parchment/50 active:bg-plp-blush/30"
                 }`}
               >
-                {/* Selected indicator */}
                 <span
                   aria-hidden="true"
                   className={`absolute inset-y-0 left-0 w-[3px] bg-plp-maroon transition-opacity ${
@@ -99,7 +96,6 @@ export function StoreListView({
                   }`}
                 />
 
-                {/* Location number */}
                 <span
                   className={`w-5 shrink-0 self-start pt-1 text-center font-bodoni text-[13px] font-medium tabular-nums ${
                     isSelected ? "text-plp-maroon" : "text-plp-secondary-dark"
@@ -108,13 +104,11 @@ export function StoreListView({
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
-                {/* Store information */}
                 <div className="min-w-0 flex-1">
                   <h3 className="line-clamp-2 break-words font-bodoni text-[19px] font-bold leading-[1.2] tracking-[-0.01em] text-plp-maroon md:text-[20px]">
                     {store.name}
                   </h3>
 
-                  {/* Distance and price */}
                   {(distance !== null || priceLevel) && (
                     <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
                       {distance !== null && (
@@ -136,7 +130,6 @@ export function StoreListView({
                     </div>
                   )}
 
-                  {/* Hours and status */}
                   {hasHours && (
                     <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
                       <StoreStatusBadge
@@ -172,7 +165,6 @@ export function StoreListView({
           })}
         </div>
 
-        {/* Empty state */}
         {stores.length === 0 && !isSearching && !loadingMore && (
           <div className="flex flex-1 flex-col items-center justify-center px-6 py-14 text-center">
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-plp-blush text-plp-maroon">
@@ -190,7 +182,6 @@ export function StoreListView({
           </div>
         )}
 
-        {/* Infinite scroll */}
         {!isSearching && (
           <div
             ref={observerRef}

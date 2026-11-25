@@ -8,8 +8,6 @@ import { useResendVerification } from "@/hooks/useResendVerification";
 const DISMISS_KEY = "emailVerifyBannerDismissed";
 
 function readDismissed(): boolean {
-  // On the server treat as dismissed; the banner only renders once `user`
-  // has loaded client-side, so this never affects hydrated markup.
   if (typeof window === "undefined") return true;
   try {
     return sessionStorage.getItem(DISMISS_KEY) === "1";

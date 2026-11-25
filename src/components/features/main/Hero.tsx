@@ -26,7 +26,6 @@ export default function Hero() {
           </Label>
         </div>
 
-        {/* Mobile View */}
         <div className="w-full md:hidden">
           <div className="overflow-hidden rounded-lg border border-plp-navy bg-white">
             <Image
@@ -41,7 +40,6 @@ export default function Hero() {
           <ArtworkCredit />
         </div>
 
-        {/* Desktop View */}
         <div className="hidden w-full flex-col md:flex">
           <div className="overflow-hidden rounded-lg border border-plp-navy bg-white">
             <Image

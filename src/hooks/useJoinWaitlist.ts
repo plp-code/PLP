@@ -6,7 +6,6 @@ import { useAuthUser } from "@/context/AuthContext";
 import { useSnackbar } from "@/context/SnackbarContext";
 import type { MapItem } from "@/types";
 
-/** `message: null` means nothing to show inline (error snackbar or ignored call). */
 export type GuestWaitlistResult =
   { ok: true } | { ok: false; message: string | null };
 

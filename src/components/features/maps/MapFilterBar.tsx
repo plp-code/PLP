@@ -142,7 +142,6 @@ export function MapFilterBar({
         font-text
       "
     >
-      {/* Search bar */}
       <div
         className="
           flex h-10 w-full items-center gap-2
@@ -196,7 +195,6 @@ export function MapFilterBar({
         )}
       </div>
 
-      {/* Single-row filter controls */}
       <div
         className="
           flex w-full min-w-0 flex-nowrap
@@ -206,7 +204,6 @@ export function MapFilterBar({
           [&::-webkit-scrollbar]:hidden
         "
       >
-        {/* Nearest */}
         <button
           type="button"
           onClick={() => {
@@ -240,7 +237,6 @@ export function MapFilterBar({
           </span>
         </button>
 
-        {/* Open now */}
         <button
           type="button"
           onClick={() => {
@@ -264,7 +260,6 @@ export function MapFilterBar({
           <span className="hidden md:inline">Open now</span>
         </button>
 
-        {/* Price */}
         <button
           ref={priceButtonRef}
           type="button"
@@ -297,7 +292,6 @@ export function MapFilterBar({
           />
         </button>
 
-        {/* Categories */}
         <button
           ref={categoryButtonRef}
           type="button"
@@ -335,7 +329,6 @@ export function MapFilterBar({
         </button>
       </div>
 
-      {/* Price dropdown */}
       {dropdown === "price" && (
         <div
           id="price-filter-panel"
@@ -344,7 +337,6 @@ export function MapFilterBar({
             md:right-auto md:w-[300px]
           `}
         >
-          {/* Dropdown heading */}
           <div
             className="
               flex items-center justify-between
@@ -378,7 +370,6 @@ export function MapFilterBar({
               overscroll-contain p-1.5
             "
           >
-            {/* Clear price */}
             <button
               type="button"
               aria-pressed={!activePrice}
@@ -454,7 +445,6 @@ export function MapFilterBar({
         </div>
       )}
 
-      {/* Categories dropdown */}
       {dropdown === "categories" && (
         <div
           id="category-filter-panel"
@@ -463,7 +453,6 @@ export function MapFilterBar({
             md:left-auto md:w-[320px]
           `}
         >
-          {/* Dropdown heading */}
           <div
             className="
               flex items-center justify-between gap-2
@@ -489,7 +478,6 @@ export function MapFilterBar({
             </button>
           </div>
 
-          {/* Category options */}
           <div
             role="group"
             aria-label="Clothing categories"
@@ -549,7 +537,6 @@ export function MapFilterBar({
             })}
           </div>
 
-          {/* Category footer */}
           <div
             className="
               flex items-center justify-between gap-2

@@ -50,7 +50,6 @@ export const Snackbar = ({
     return () => window.clearTimeout(timeout);
   }, [onClose]);
 
-  // Reset derived state when `show` flips (done during render, not in an effect).
   const [prevShow, setPrevShow] = useState(show);
   if (show !== prevShow) {
     setPrevShow(show);

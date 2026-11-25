@@ -66,7 +66,6 @@ export function StoreDetailView({
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col overflow-y-auto bg-plp-parchment pb-[calc(6rem_+_env(safe-area-inset-bottom))] font-text text-plp-ink animate-in slide-in-from-right-4 duration-300 md:pb-0">
-      {/* Sticky navigation */}
       <div className="sticky top-0 z-20 shrink-0 border-b border-plp-secondary bg-plp-parchment/95 px-4 py-2 backdrop-blur-xl">
         <button
           type="button"
@@ -79,7 +78,6 @@ export function StoreDetailView({
         </button>
       </div>
 
-      {/* Store header */}
       <header className="shrink-0 border-b border-plp-secondary bg-white px-5 py-5 md:px-6">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-plp-clay">
@@ -98,7 +96,6 @@ export function StoreDetailView({
           {store.name}
         </h2>
 
-        {/* Distance and price */}
         {(distance !== null || priceLevel) && (
           <div className="mt-3 flex flex-wrap items-center gap-3">
             {distance !== null && (
@@ -116,7 +113,6 @@ export function StoreDetailView({
           </div>
         )}
 
-        {/* Directions */}
         <a
           href={gmapsUrl}
           target="_blank"
@@ -135,11 +131,9 @@ export function StoreDetailView({
         </a>
       </header>
 
-      {/* Store content */}
       <div className="flex w-full flex-col gap-6 px-5 py-5 md:px-6">
         <StoreHours timeData={timeData} week={week} />
 
-        {/* About */}
         {description && (
           <section className="flex flex-col gap-2.5">
             <h3 className="font-prata text-[17px] leading-relaxed text-plp-maroon">
@@ -175,7 +169,6 @@ export function StoreDetailView({
 
         <div className="h-px w-full bg-plp-secondary" />
 
-        {/* Reviews */}
         {isLoading ? (
           <section aria-busy="true" className="flex flex-col gap-3">
             <h3 className="font-prata text-[17px] text-plp-maroon">

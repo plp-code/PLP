@@ -8,12 +8,6 @@ export const reviewKeys = {
   mine: (storeId: number) => [...reviewKeys.all, storeId, "me"] as const,
 };
 
-/**
- * Maps review API failures to user-facing copy.
- * 401 -> session expired (api.ts already tried a refresh), 403 -> not allowed
- * (email-not-verified is handled globally), 409 -> duplicate review on post,
- * 404 -> nothing to delete.
- */
 export function reviewErrorMessage(
   err: unknown,
   action: "post" | "delete" | "load" = "post",
@@ -73,7 +67,6 @@ export function useGetReviews(
       return response;
     },
     enabled: Boolean(storeId) && (options?.enabled ?? true),
-    // 401/403 won't fix themselves on retry.
     retry: (count, err) =>
       !(err instanceof ApiError && [401, 403].includes(err.status)) &&
       count < 2,
@@ -89,14 +82,12 @@ function invalidateStoreReviews(
   queryClient.invalidateQueries({ queryKey: reviewKeys.mine(storeId) });
 }
 
-/** The caller's own review for a location, or null if they haven't posted one. */
 export function useMyReview(storeId: number, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: reviewKeys.mine(storeId),
     queryFn: async (): Promise<ReviewItem | null> => {
       try {
         const res = await api.get<ReviewItem | null>(`/reviews/${storeId}/me`);
-        // Empty body or null both mean "no review yet".
         return res && "id" in res ? res : null;
       } catch (err) {
         if (err instanceof ApiError && err.status === 404) return null;
@@ -130,14 +121,12 @@ export function useCreateReview() {
   });
 }
 
-/** Deletes the current user's own review for a location (DELETE /reviews/{location_id}, 204). */
 export function useDeleteReview() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ location_id }: { location_id: number }) =>
       api.delete<void>(`/reviews/${location_id}`),
-    // Also on 404 (already gone) so the UI matches the server.
     onSettled: (_, __, variables) =>
       invalidateStoreReviews(queryClient, variables.location_id),
   });

@@ -62,9 +62,6 @@ export function useInfiniteScroll(
     [connect],
   );
 
-  // Re-observe after each load/state change: a fresh observe() re-delivers the
-  // current intersection state, so a sentinel that is still visible (short
-  // list on a tall screen) keeps loading without needing a resize/scroll.
   useEffect(() => {
     connect();
   }, [connect, hasMore, loading, disabled]);

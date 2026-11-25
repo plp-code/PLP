@@ -76,16 +76,13 @@ export interface ReviewItem {
   created_at: string;
   updated_at: string;
   categories: ClothingCategory[];
-  /** Only ever true on the caller's own review (GET /reviews/{id}/me). */
   is_hidden?: boolean;
   user?: ReviewAuthor | null;
 }
 
-/** Public-safe author info; never contains email, id or full last name. */
 export interface ReviewAuthor {
   first_name?: string | null;
   last_initial?: string | null;
-  /** Tolerated in case the API still sends it; only the initial is ever displayed. */
   last_name?: string | null;
 }
 

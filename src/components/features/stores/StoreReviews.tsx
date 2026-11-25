@@ -35,7 +35,6 @@ export function StoreReviews({
 
   return (
     <section className="flex flex-col gap-4 font-text text-plp-ink">
-      {/* Section header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
           <h3 className="font-prata text-[17px] leading-relaxed text-plp-maroon">
@@ -105,7 +104,6 @@ export function StoreReviews({
                     : "border-plp-secondary hover:border-plp-clay/40"
                 }`}
               >
-                {/* Own review */}
                 {isOwnReview && (
                   <div className="mb-3 flex items-center justify-between gap-2">
                     <span className="rounded-md bg-plp-blush px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-plp-maroon">
@@ -127,7 +125,6 @@ export function StoreReviews({
                   </div>
                 )}
 
-                {/* Item and price */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <h4 className="break-words font-prata text-[15px] leading-relaxed text-plp-maroon">
@@ -161,14 +158,12 @@ export function StoreReviews({
                   )}
                 </div>
 
-                {/* Experience */}
                 {entry.experience && (
                   <p className="mt-3.5 whitespace-pre-wrap break-words font-text text-[13px] leading-[1.8] text-plp-clay">
                     &ldquo;{entry.experience}&rdquo;
                   </p>
                 )}
 
-                {/* Author and date */}
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
                   <div className="flex min-w-0 items-center gap-2">
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-plp-blush text-[11px] font-medium text-plp-maroon">
@@ -190,7 +185,6 @@ export function StoreReviews({
                   )}
                 </div>
 
-                {/* Moderation */}
                 {isOwnReview && entry.is_hidden && (
                   <div
                     role="status"
@@ -204,7 +198,6 @@ export function StoreReviews({
                   </div>
                 )}
 
-                {/* Delete confirmation */}
                 {isOwnReview && confirming && (
                   <div className="mt-4 rounded-lg border border-red-200 bg-red-50/50 p-3">
                     <p className="text-[13px] font-semibold text-plp-ink">
@@ -244,7 +237,6 @@ export function StoreReviews({
           })}
         </div>
       ) : (
-        /* Empty state */
         <div className="flex flex-col items-center rounded-xl border border-dashed border-plp-secondary-dark bg-white/50 px-5 py-8 text-center">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-plp-blush text-plp-maroon">
             <ShoppingBag size={21} strokeWidth={1.4} />
