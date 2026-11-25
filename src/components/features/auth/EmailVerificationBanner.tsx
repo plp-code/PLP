@@ -42,7 +42,6 @@ export function EmailVerificationBanner() {
     else dismissPassive();
   };
 
-  // The backend has no resend-verification endpoint, so this is instructions only.
   const message =
     "Verify your email to protect your account and secure your purchases. Use the link in your original verification email.";
 

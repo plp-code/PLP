@@ -15,8 +15,6 @@ export function useForgotPassword() {
       await api.post("/auth/forgot-password", { email });
       setIsSubmitted(true);
     } catch (err) {
-      // Anything but a rate limit still shows the generic success screen so
-      // the response never reveals whether an account exists.
       if (err instanceof ApiError && err.status === 429) {
         setError(friendlyError(err, ""));
       } else {

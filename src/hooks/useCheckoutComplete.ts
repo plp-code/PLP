@@ -68,9 +68,7 @@ export function useCheckoutComplete() {
           markSession();
           await queryClient.invalidateQueries({ queryKey: ["session"] });
           if (cancelled) return;
-          // checkout/status only mints cookies once per invoice. If the one-time
-          // response was lost, we are still logged out here, so don't send the
-          // user into a protected map page.
+
           if (!queryClient.getQueryData(["session"])) {
             setViewState("requires_login");
             return;

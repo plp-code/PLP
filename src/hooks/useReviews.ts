@@ -27,7 +27,6 @@ export function reviewErrorMessage(
             subtitle: "Confirm your email to share reviews.",
           }
         : {
-            // Backend rule: reviews.py _get_location_or_403 — only buyers of the map.
             title: "Not allowed",
             subtitle: "You can only review locations you've bought.",
           };
@@ -89,11 +88,6 @@ function invalidateStoreReviews(
   queryClient.invalidateQueries({ queryKey: reviewKeys.mine(storeId) });
 }
 
-/**
- * GET /reviews/{id}/me returns the review object, or a bare JSON `null` when the
- * caller has none (routes/reviews.py get_my_review, response_model ReviewMine | None).
- * There is no `{ review }` wrapper; 404 is tolerated as "none".
- */
 export async function fetchMyReview(
   storeId: number,
 ): Promise<ReviewItem | null> {

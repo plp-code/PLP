@@ -58,7 +58,6 @@ export function useMapCheckout() {
         err.status === 400 &&
         /not available for purchase/i.test(err.message)
       ) {
-        // routes/checkout.py:92 — map.status != LIVE.
         snackbar.error("This map isn't available to buy yet.");
       } else {
         snackbar.error(

@@ -20,8 +20,6 @@ export function useStoreReviews(storeId: number) {
   const pathname = usePathname();
   const { isAuthenticated } = useAuthUser();
 
-  // Review endpoints require a login; skip them for visitors so a 401 never
-  // surfaces (or triggers a pointless refresh attempt).
   const { data: reviews = [], isLoading } = useGetReviews(storeId, {
     enabled: isAuthenticated,
   });
@@ -48,7 +46,6 @@ export function useStoreReviews(storeId: number) {
       await removeReview({ location_id: storeId });
       snackbar.success("Review deleted");
     } catch (err) {
-      // 404 = already gone; the hook refreshed the queries, so just say so.
       if (err instanceof ApiError && err.status === 404) {
         snackbar.success("Review already removed");
         return;

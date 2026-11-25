@@ -5,8 +5,8 @@ import { getAllowedOrigins } from "@/lib/siteConfig";
  * Route handlers in src/app/api/v1/[...path]/route.ts are thin wrappers.
  */
 
-export const REQUEST_TIMEOUT_MS = 30_000; // tolerates backend cold starts
-export const MAX_BODY_BYTES = 1024 * 1024; // 1 MB
+export const REQUEST_TIMEOUT_MS = 30_000;
+export const MAX_BODY_BYTES = 1024 * 1024;
 
 const UNSAFE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 

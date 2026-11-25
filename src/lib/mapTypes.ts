@@ -1,8 +1,9 @@
-export type MapType = "dot" | "trolley";
+export type MapType = "dot" | "trolley" | "star";
 export const DEFAULT_MAP_TYPE: MapType = "dot";
 
 const MAP_TYPE_BY_SLUG: Record<string, MapType> = {
   "bay-area-ca": "trolley",
+  "los-angeles-ca": "star",
 };
 
 export function getMapType(slug: string): MapType {

@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { TROLLEY_SVG_INNER } from "./svgs";
+import { TROLLEY_SVG_INNER, HOLLYWOOD_SVG_INNER } from "./svgs";
 import type { MapType } from "./mapTypes";
 
 export interface PinIconConfig {
@@ -27,6 +27,13 @@ export const PIN_ICONS = {
   },
   trolley: {
     svgInner: TROLLEY_SVG_INNER,
+    viewBox: "0 0 511.991 511.991",
+    size: 32,
+    activeSize: 38,
+    anchor: "bottom",
+  },
+  star: {
+    svgInner: HOLLYWOOD_SVG_INNER,
     viewBox: "0 0 511.991 511.991",
     size: 32,
     activeSize: 38,

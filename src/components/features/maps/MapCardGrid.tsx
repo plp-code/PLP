@@ -10,7 +10,6 @@ interface Props {
 
 export function MapCardGrid({ map, onAction, isLoading }: Props) {
   const owned = map.is_purchased;
-  // create-session only accepts LIVE maps (routes/checkout.py:90).
   const comingSoon = !owned && map.status !== "live";
 
   return (
