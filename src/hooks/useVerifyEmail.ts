@@ -5,9 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { api, ApiError } from "@/lib/api";
 import { useSnackbar } from "@/context/SnackbarContext";
-import { buildLoginRedirect, getSafeReturnPath } from "@/lib/returnTo";
+import { getSafeReturnPath } from "@/lib/returnTo";
 
-type VerifyState = "checking" | "success" | "invalid" | "mismatch" | "error";
+type VerifyState =
+  "checking" | "success" | "invalid" | "mismatch" | "login_required" | "error";
 
 export function useVerifyEmail(token: string | null) {
   const [state, setState] = useState<VerifyState>(
@@ -33,11 +34,7 @@ export function useVerifyEmail(token: string | null) {
         router.replace(getSafeReturnPath(searchParams.get("returnTo")));
       } catch (err) {
         if (err instanceof ApiError && err.status === 401) {
-          router.replace(
-            buildLoginRedirect(
-              `/verify-email?token=${encodeURIComponent(token)}`,
-            ),
-          );
+          setState("login_required");
         } else if (err instanceof ApiError && err.status === 403) {
           setState("mismatch");
         } else if (err instanceof ApiError && err.status === 400) {

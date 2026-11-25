@@ -45,7 +45,6 @@ interface MapFilterBarProps {
   onPriceSelect: (value: string) => void;
 
   activeCategories: string[];
-  /** Called with the final selection when the user hits Done. */
   onCategoriesApply: (categories: string[]) => void;
 
   hasLocation: boolean;
@@ -79,7 +78,6 @@ export function MapFilterBar({
     ({ level }) => String(level) === activePrice,
   );
 
-  // Selections are drafted locally and only applied on Done.
   const [draftCategories, setDraftCategories] = useState(activeCategories);
 
   const categoryCount = draftCategories.length;
@@ -96,7 +94,6 @@ export function MapFilterBar({
   };
 
   const toggleDropdown = (value: Dropdown) => {
-    // Start each visit to the category panel from the applied selection.
     if (value === "categories" && dropdown !== "categories") {
       setDraftCategories(activeCategories);
     }

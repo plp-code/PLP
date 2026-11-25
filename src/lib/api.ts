@@ -3,7 +3,6 @@ import type { ApiValidationError } from "@/types/api";
 interface FetchOptions extends RequestInit {
   _retry?: boolean;
   skipRefresh?: boolean;
-  /** Called with the raw Response of the successful request (e.g. to read headers). */
   onResponse?: (response: Response) => void;
 }
 

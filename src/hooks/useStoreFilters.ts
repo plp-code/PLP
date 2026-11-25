@@ -8,8 +8,6 @@ export function useStoreFilters(
   pins: LocationPin[],
   userLocation: UserLocation | null,
 ) {
-  // Search and category filtering are applied by the server (see useMapData),
-  // so only the remaining client-side filters live here.
   const [activePrice, setActivePrice] = useState<string | null>(null);
   const [isOpenNow, setIsOpenNow] = useState(false);
 

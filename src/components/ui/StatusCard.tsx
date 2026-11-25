@@ -1,13 +1,15 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 
 interface StatusCardProps {
   title: string;
   message: string;
   icon: LucideIcon;
-  href: string;
-  cta: string;
+  href?: string;
+  cta?: string;
   secondary?: { href: string; label: string };
+  children?: ReactNode;
 }
 
 export function StatusCard({
@@ -17,6 +19,7 @@ export function StatusCard({
   href,
   cta,
   secondary,
+  children,
 }: StatusCardProps) {
   return (
     <div className="plp-window p-1 w-full">
@@ -30,12 +33,15 @@ export function StatusCard({
         <p className="text-plp-maroon/80 text-xs sm:text-sm leading-relaxed mb-6 text-balance break-words">
           {message}
         </p>
-        <Link
-          href={href}
-          className="plp-btn-primary flex items-center justify-center min-h-11 px-4 w-full font-bodoni font-bold text-sm capitalize tracking-tighter"
-        >
-          {cta}
-        </Link>
+        {children}
+        {href && cta && (
+          <Link
+            href={href}
+            className="plp-btn-primary flex items-center justify-center min-h-11 px-4 w-full font-bodoni font-bold text-sm capitalize tracking-tighter"
+          >
+            {cta}
+          </Link>
+        )}
         {secondary && (
           <Link
             href={secondary.href}

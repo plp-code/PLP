@@ -27,13 +27,14 @@ type MapStore = Location | LocationPin;
 export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
-  const debouncedSearch = useDebouncedValue(searchTerm, 300);
+  const debouncedSearch = useDebouncedValue(searchTerm, 250);
 
   const {
     pins: mapPins,
     stores,
     categoryFallback,
     loading,
+    listLoading,
     loadMore,
     hasMore,
     loadingMore,
@@ -304,7 +305,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
                   activeId={activeId}
                   onSelect={handleStoreSelect}
                   hasMore={hasMore}
-                  loadingMore={loadingMore}
+                  loadingMore={loadingMore || listLoading}
                   observerRef={lastElementRef}
                   categoryFallback={categoryFallback}
                   userLocation={userLocation}

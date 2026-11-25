@@ -53,7 +53,7 @@ export function StoreListView({
 
         {categoryFallback && (
           <p role="status" className="mt-1 text-[11px] text-plp-clay">
-            No locations match those categories yet.
+            No matches for those categories, showing all locations.
           </p>
         )}
 
