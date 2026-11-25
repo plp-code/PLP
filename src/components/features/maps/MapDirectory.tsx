@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { Map as MapIcon, AlertCircle, Info, X, Loader2 } from "lucide-react";
+import { Map as MapIcon, AlertCircle, Loader2 } from "lucide-react";
 
 import { useMapDirectory } from "@/hooks/useMapDirectory";
 import { useMapCheckout } from "@/hooks/useMapCheckout";
 import { useAuthUser } from "@/context/AuthContext";
+import { useSnackbar } from "@/context/SnackbarContext";
 import { useJoinWaitlist } from "@/hooks/useJoinWaitlist";
 
 import { MapCardGrid } from "./MapCardGrid";
@@ -36,9 +37,18 @@ export default function MapDirectory() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [guestNoticeDismissed, setGuestNoticeDismissed] = useState(false);
-
   const { isAuthenticated, isLoading: authLoading } = useAuthUser();
+  const snackbar = useSnackbar();
+
+  const guestNoticeShown = useRef(false);
+  useEffect(() => {
+    if (authLoading || isAuthenticated || guestNoticeShown.current) return;
+    guestNoticeShown.current = true;
+    snackbar.info(
+      "Browsing as Guest",
+      "Log in or create an account to make any purchases.",
+    );
+  }, [authLoading, isAuthenticated, snackbar]);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -84,9 +94,6 @@ export default function MapDirectory() {
     (map) => map.status === "waitlist" || map.status === "next",
   );
 
-  const showGuestNotice =
-    !authLoading && !isAuthenticated && !guestNoticeDismissed;
-
   const isUpdating = isFetching || isSearchPending;
 
   const hasFilters = searchQuery.trim().length > 0 || statusFilter !== "all";
@@ -123,59 +130,15 @@ export default function MapDirectory() {
       aria-labelledby="maps-directory-heading"
       className="
         mx-auto w-full max-w-7xl
-        px-4 py-5
+        px-3 py-3
         font-text text-plp-ink
-        sm:px-6 sm:py-6
-        lg:px-8 lg:py-8
+        sm:px-6 sm:py-5
+        lg:px-8 lg:py-6
       "
     >
       <h2 id="maps-directory-heading" className="sr-only">
         Explore secondhand shopping maps
       </h2>
-
-      {showGuestNotice && (
-        <div
-          className="
-            mb-4 flex items-start gap-2.5
-            rounded-lg border border-plp-maroon/10
-            bg-plp-blush/50
-            px-3 py-2.5
-            sm:mb-5 sm:items-center sm:px-4
-          "
-        >
-          <Info
-            size={15}
-            strokeWidth={1.8}
-            className="mt-0.5 shrink-0 text-plp-clay sm:mt-0"
-          />
-
-          <p className="min-w-0 flex-1 text-[12px] leading-relaxed text-plp-clay">
-            <span className="font-semibold text-plp-maroon">
-              Browsing as a guest.
-            </span>{" "}
-            Log in or create an account to purchase maps.
-          </p>
-
-          <button
-            type="button"
-            aria-label="Dismiss guest notice"
-            onClick={() => setGuestNoticeDismissed(true)}
-            className="
-              flex h-7 w-7 shrink-0
-              cursor-pointer items-center justify-center
-              rounded-md text-plp-clay
-              transition-colors
-              hover:bg-plp-maroon/5
-              hover:text-plp-maroon
-              focus-visible:outline-none
-              focus-visible:ring-2
-              focus-visible:ring-plp-maroon/30
-            "
-          >
-            <X size={14} strokeWidth={1.8} />
-          </button>
-        </div>
-      )}
 
       <DirectoryToolbar
         searchQuery={searchQuery}
@@ -189,10 +152,9 @@ export default function MapDirectory() {
 
       <div
         className="
-          mt-3 flex min-h-10
+          mt-2 flex min-h-6
           items-center justify-between gap-3
-          border-y border-plp-maroon/10
-          py-2.5 sm:mt-4
+          sm:mt-3
         "
       >
         <div
@@ -240,11 +202,11 @@ export default function MapDirectory() {
         )}
       </div>
 
-      <div aria-busy={loading || isUpdating} className="mt-4 min-h-64 sm:mt-6">
+      <div aria-busy={loading || isUpdating} className="mt-2 min-h-48 sm:mt-3">
         {loading ? (
           <div
             className="
-              flex min-h-64 flex-col
+              flex min-h-48 flex-col
               items-center justify-center px-4
             "
           >
@@ -255,8 +217,8 @@ export default function MapDirectory() {
             role="alert"
             className="
               mx-auto flex max-w-md flex-col
-              items-center px-5 py-12 text-center
-              sm:py-16
+              items-center px-4 py-8 text-center
+              sm:py-12
             "
           >
             <div
@@ -303,7 +265,7 @@ export default function MapDirectory() {
             </button>
           </div>
         ) : total === 0 ? (
-          <div className="py-4 sm:py-8">
+          <div className="py-3 sm:py-5">
             <EmptyState
               align="center"
               icon={<MapIcon size={28} strokeWidth={1.25} />}
@@ -345,8 +307,8 @@ export default function MapDirectory() {
             <div
               className={
                 viewMode === "grid"
-                  ? "flex flex-col gap-7 sm:gap-9"
-                  : "flex flex-col gap-7 sm:hidden"
+                  ? "flex flex-col gap-3 sm:gap-4"
+                  : "flex flex-col gap-3 sm:hidden"
               }
             >
               {liveMaps.length > 0 && (
@@ -405,11 +367,11 @@ export default function MapDirectory() {
                   aria-labelledby="upcoming-maps-heading"
                   className={
                     liveMaps.length > 0
-                      ? "border-t border-plp-maroon/10 pt-6 sm:pt-8"
+                      ? "border-t border-plp-maroon/10 pt-3 sm:pt-4"
                       : ""
                   }
                 >
-                  <div className="mb-4">
+                  <div className="mb-3 sm:mb-4">
                     <h3
                       id="upcoming-maps-heading"
                       className="
@@ -466,8 +428,8 @@ export default function MapDirectory() {
             {totalPages > 1 && (
               <div
                 className="
-                  mt-6 border-t border-plp-maroon/10
-                  pt-4 sm:mt-8 sm:pt-5
+                  mt-5 border-t border-plp-maroon/10
+                  pt-3 sm:mt-6 sm:pt-4
                 "
               >
                 <Pagination

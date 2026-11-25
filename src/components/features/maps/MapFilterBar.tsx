@@ -15,10 +15,10 @@ import {
 import type { ClothingCategory } from "@/types";
 
 const PRICE_LEVELS = [
-  { level: 1, label: "Unpaid Internship", range: "$0–20" },
-  { level: 2, label: "Entry-Level", range: "$10–35" },
-  { level: 3, label: "Promoted", range: "$15–45" },
-  { level: 4, label: "Corner Office", range: "$18–70" },
+  { level: 1, label: "Unpaid Internship", range: "$0-20" },
+  { level: 2, label: "Entry-Level", range: "$10-35" },
+  { level: 3, label: "Promoted", range: "$15-45" },
+  { level: 4, label: "Corner Office", range: "$18-70" },
 ];
 
 const FILTER_BASE =
@@ -467,6 +467,7 @@ export function MapFilterBar({
             <button
               type="button"
               aria-label="Close category filter"
+              disabled
               onClick={closeDropdown}
               className="
                 flex h-7 w-7 shrink-0 cursor-pointer
