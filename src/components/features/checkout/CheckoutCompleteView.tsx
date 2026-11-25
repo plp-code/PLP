@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Clock, LogIn } from "lucide-react";
+import { AlertTriangle, Clock, LogIn, Undo2 } from "lucide-react";
 import { useCheckoutComplete } from "@/hooks/useCheckoutComplete";
 import { Spinner } from "@/components/ui/Spinner";
 import { buildLoginRedirect } from "@/lib/returnTo";
@@ -30,6 +30,22 @@ export function CheckoutCompleteView() {
         }
         href={loginHref}
         cta="Log In"
+        secondary={{
+          href: `${loginHref}&method=magic-link`,
+          label: "or get a magic link",
+        }}
+      />
+    );
+  }
+
+  if (viewState === "refunded") {
+    return (
+      <StatusCard
+        title="Payment Refunded"
+        icon={Undo2}
+        message="This payment was refunded. Contact us if that's unexpected."
+        href="/maps"
+        cta="Browse Maps"
       />
     );
   }
@@ -39,7 +55,7 @@ export function CheckoutCompleteView() {
       <StatusCard
         title="Still Processing"
         icon={Clock}
-        message="This is taking longer than expected — check your email, we'll notify you when it's ready."
+        message="We're still confirming your payment. If you were charged, contact support and we'll sort it out."
         href="/maps"
         cta="Browse Maps"
       />

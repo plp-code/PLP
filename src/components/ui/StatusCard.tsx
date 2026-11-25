@@ -7,6 +7,7 @@ interface StatusCardProps {
   icon: LucideIcon;
   href: string;
   cta: string;
+  secondary?: { href: string; label: string };
 }
 
 export function StatusCard({
@@ -15,6 +16,7 @@ export function StatusCard({
   icon: Icon,
   href,
   cta,
+  secondary,
 }: StatusCardProps) {
   return (
     <div className="plp-window p-1 w-full">
@@ -34,6 +36,14 @@ export function StatusCard({
         >
           {cta}
         </Link>
+        {secondary && (
+          <Link
+            href={secondary.href}
+            className="mt-3 text-[11px] sm:text-xs font-bold text-plp-maroon/80 hover:text-plp-maroon hover:underline underline-offset-2"
+          >
+            {secondary.label}
+          </Link>
+        )}
       </div>
     </div>
   );

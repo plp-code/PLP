@@ -10,6 +10,8 @@ interface Props {
 
 export function MapCardGrid({ map, onAction, isLoading }: Props) {
   const owned = map.is_purchased;
+  // create-session only accepts LIVE maps (routes/checkout.py:90).
+  const comingSoon = !owned && map.status !== "live";
 
   return (
     <article className="group relative flex flex-col border border-plp-maroon/15 bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-plp-maroon/40 hover:shadow-[0_12px_32px_-16px_rgba(80,0,20,0.35)]">
@@ -36,7 +38,7 @@ export function MapCardGrid({ map, onAction, isLoading }: Props) {
         </p>
 
         <div className="mt-auto flex items-end justify-between gap-4 border-t border-plp-maroon/10 pt-4">
-          {!owned ? (
+          {!owned && !comingSoon ? (
             <div className="flex shrink-0 flex-col">
               <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-plp-maroon/40">
                 Price
@@ -52,7 +54,7 @@ export function MapCardGrid({ map, onAction, isLoading }: Props) {
           <button
             type="button"
             onClick={onAction}
-            disabled={isLoading}
+            disabled={isLoading || comingSoon}
             className={`group/btn flex min-w-32 cursor-pointer items-center justify-center gap-2 px-5 py-2.5 font-prata text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
               owned
                 ? "border border-plp-maroon text-plp-maroon hover:bg-plp-maroon hover:text-white"
@@ -61,6 +63,8 @@ export function MapCardGrid({ map, onAction, isLoading }: Props) {
           >
             {isLoading ? (
               <Loader2 size={14} className="animate-spin" />
+            ) : comingSoon ? (
+              "Coming soon"
             ) : (
               <>
                 {owned ? "View Map" : "Buy Map"}

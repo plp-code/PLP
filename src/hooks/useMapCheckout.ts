@@ -2,7 +2,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuthUser } from "@/context/AuthContext";
 import { useSnackbar } from "@/context/SnackbarContext";
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
+import { friendlyError } from "@/lib/errors";
 import { MapItem } from "@/types";
 import type { CheckoutSessionResponse } from "@/types/api";
 
@@ -38,6 +39,8 @@ export function useMapCheckout() {
       return;
     }
 
+    if (map.status !== "live") return;
+
     setCheckoutLoadingId(map.id);
 
     try {
@@ -49,8 +52,20 @@ export function useMapCheckout() {
         throw new Error("Unexpected checkout URL received");
       }
       window.location.href = response.checkout_url;
-    } catch {
-      snackbar.error("Couldn't start checkout", "Please try again.");
+    } catch (err) {
+      if (
+        err instanceof ApiError &&
+        err.status === 400 &&
+        /not available for purchase/i.test(err.message)
+      ) {
+        // routes/checkout.py:92 — map.status != LIVE.
+        snackbar.error("This map isn't available to buy yet.");
+      } else {
+        snackbar.error(
+          "Couldn't start checkout",
+          friendlyError(err, "Please try again."),
+        );
+      }
     } finally {
       setCheckoutLoadingId(null);
     }
