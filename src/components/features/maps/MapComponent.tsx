@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Location, LocationPin } from "@/types";
 import type { UserLocation } from "@/hooks/useGeolocation";
 import { getPinIcon } from "@/lib/mapIcons";
-import { DEFAULT_MAP_TYPE, type MapType } from "@/lib/mapTypes";
+import { DEFAULT_MAP_TYPE, getMapCenter, type MapType } from "@/lib/mapTypes";
 
 export interface MapComponentProps {
   stores: LocationPin[];
@@ -89,7 +89,7 @@ export default function MapComponent({
 
   return (
     <MapContainer
-      center={[37.7749, -122.4194]}
+      center={getMapCenter(mapType)}
       zoom={11}
       zoomControl={false}
       className="h-full w-full z-0"
