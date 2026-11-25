@@ -1,17 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { api, setTokenExpiry, markSession } from "@/lib/api";
+import { friendlyError } from "@/lib/errors";
 
-const POLL_INTERVAL_MS = 1200;
-const MAX_POLLS = 15;
+const POLL_INTERVAL_MS = 1500;
+const POLL_TIMEOUT_MS = 60_000;
+const RESEND_COOLDOWN_SECONDS = 60;
+
+type CheckoutStatus =
+  | "pending"
+  | "complete"
+  | "already_owned"
+  | "refunded"
+  | "duplicate"
+  | "expired"
+  | "failed";
 
 interface CheckoutStatusResponse {
-  status: string;
+  status: CheckoutStatus | string;
   map_slug?: string | null;
   requires_login?: boolean;
+  email_hint?: string | null;
   logged_in?: boolean;
 }
 
@@ -32,6 +44,7 @@ export function useCheckoutComplete() {
   const sessionId = searchParams.get("session_id");
 
   const [mapSlug, setMapSlug] = useState<string | null>(null);
+  const [emailHint, setEmailHint] = useState<string | null>(null);
   const [viewState, setViewState] = useState<CheckoutCompleteState>(
     sessionId ? "polling" : "missing",
   );
@@ -41,7 +54,7 @@ export function useCheckoutComplete() {
 
     let cancelled = false;
     let timeoutId: ReturnType<typeof setTimeout>;
-    let pollCount = 0;
+    const deadline = Date.now() + POLL_TIMEOUT_MS;
 
     const poll = async () => {
       if (cancelled) return;
@@ -52,50 +65,59 @@ export function useCheckoutComplete() {
         );
         if (cancelled) return;
 
-        if (data.status === "pending") {
-        } else if (data.status === "complete") {
-          if (!data.map_slug) {
-            setViewState("error");
-            return;
-          }
-          setMapSlug(data.map_slug);
+        switch (data.status) {
+          case "pending":
+            break;
 
-          if (data.requires_login) {
-            setViewState("requires_login");
-            return;
-          }
-          setTokenExpiry(30 * 60);
-          markSession();
-          await queryClient.invalidateQueries({ queryKey: ["session"] });
-          if (cancelled) return;
+          case "complete": {
+            if (!data.map_slug) {
+              setViewState("error");
+              return;
+            }
+            setMapSlug(data.map_slug);
 
-          if (!queryClient.getQueryData(["session"])) {
-            setViewState("requires_login");
-            return;
-          }
-          setViewState("success");
-          router.replace(`/maps/${data.map_slug}`);
-          return;
-        } else if (data.status === "already_owned") {
-          if (data.logged_in && data.map_slug) {
+            if (data.requires_login) {
+              setEmailHint(data.email_hint ?? null);
+              setViewState("requires_login");
+              return;
+            }
+
+            setTokenExpiry(30 * 60);
+            markSession();
+            await queryClient.invalidateQueries({ queryKey: ["session"] });
+            if (cancelled) return;
+
+            if (!queryClient.getQueryData(["session"])) {
+              setViewState("requires_login");
+              return;
+            }
             setViewState("success");
             router.replace(`/maps/${data.map_slug}`);
             return;
           }
-          setMapSlug(data.map_slug ?? null);
-          setViewState("already_owned");
-          return;
-        } else if (data.status === "refunded") {
-          setViewState("refunded");
-          return;
-        } else {
-          setViewState("error");
-          return;
+
+          case "already_owned":
+            if (data.logged_in && data.map_slug) {
+              setViewState("success");
+              router.replace(`/maps/${data.map_slug}`);
+              return;
+            }
+            setMapSlug(data.map_slug ?? null);
+            setViewState("already_owned");
+            return;
+
+          case "refunded":
+          case "duplicate":
+            setViewState("refunded");
+            return;
+
+          default:
+            setViewState("error");
+            return;
         }
       } catch {}
 
-      pollCount += 1;
-      if (pollCount >= MAX_POLLS) {
+      if (Date.now() >= deadline) {
         setViewState("timeout");
         return;
       }
@@ -110,5 +132,37 @@ export function useCheckoutComplete() {
     };
   }, [sessionId, router, queryClient]);
 
-  return { viewState, mapSlug };
+  return { viewState, mapSlug, emailHint, sessionId };
+}
+
+export function useResendClaim(sessionId: string | null) {
+  const [isSending, setIsSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setTimeout(() => setCooldown((s) => s - 1), 1000);
+    return () => clearTimeout(id);
+  }, [cooldown]);
+
+  const resend = useCallback(async () => {
+    if (!sessionId || isSending || cooldown > 0) return;
+    setIsSending(true);
+    setError(null);
+    try {
+      await api.post("/checkout/resend-claim", { session_id: sessionId });
+      setSent(true);
+    } catch (err) {
+      setError(
+        friendlyError(err, "Couldn't send a new link. Please try again."),
+      );
+    } finally {
+      setIsSending(false);
+      setCooldown(RESEND_COOLDOWN_SECONDS);
+    }
+  }, [sessionId, isSending, cooldown]);
+
+  return { resend, isSending, sent, error, cooldown };
 }

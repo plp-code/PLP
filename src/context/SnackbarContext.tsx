@@ -29,7 +29,7 @@ interface Preset {
   role: "status" | "alert";
 }
 
-const PRESETS: Record<Variant, Preset> = {
+export const SNACKBAR_PRESETS: Record<Variant, Preset> = {
   success: {
     icon: CheckCircle2,
     iconColor: "text-green-600",
@@ -124,7 +124,7 @@ function ActiveSnackbar({
   ) => void;
 }) {
   const { id, variant, title, subtitle } = message;
-  const preset = PRESETS[variant];
+  const preset = SNACKBAR_PRESETS[variant];
 
   const handleClose = useCallback(
     () => onDone((current) => (current?.id === id ? null : current)),

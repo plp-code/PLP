@@ -75,8 +75,7 @@ export default function AuthForm() {
               Check Your Email
             </h2>
             <p className="text-plp-maroon/80 text-[11px] sm:text-xs leading-relaxed mb-6">
-              We&apos;ve sent you a link to finish setting up your account. It
-              expires in 15 minutes.
+              Check your email to finish setting up your account.
             </p>
             <button
               type="button"

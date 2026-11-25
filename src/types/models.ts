@@ -4,6 +4,7 @@ export interface User {
   last_name: string | null;
   email: string;
   is_verified?: boolean;
+  has_password?: boolean;
 }
 
 export type MapStatus = "live" | "waitlist" | "dropped" | "next";

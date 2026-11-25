@@ -3,6 +3,7 @@ import type { ApiValidationError } from "@/types/api";
 interface FetchOptions extends RequestInit {
   _retry?: boolean;
   skipRefresh?: boolean;
+  onResponse?: (response: Response) => void;
 }
 
 export class ApiError extends Error {
@@ -128,8 +129,10 @@ async function fetcher<T>(
     ...options.headers,
   };
 
+  const { onResponse, ...fetchOptions } = options;
+
   const response = await fetch(url, {
-    ...options,
+    ...fetchOptions,
     headers,
     credentials: "include",
   });
@@ -182,12 +185,27 @@ async function fetcher<T>(
     throw apiError;
   }
 
+  onResponse?.(response);
+
   const text = await response.text();
   if (!text) return {} as T;
   return JSON.parse(text) as T;
 }
 
 export const api = {
+  /** GET that also returns the response headers. */
+  getWithHeaders: async <T = unknown>(url: string, options?: FetchOptions) => {
+    let headers = new Headers();
+    const data = await fetcher<T>(url, {
+      ...options,
+      method: "GET",
+      onResponse: (res) => {
+        headers = res.headers;
+      },
+    });
+    return { data, headers };
+  },
+
   get: <T = unknown>(url: string, options?: FetchOptions) =>
     fetcher<T>(url, { ...options, method: "GET" }),
 

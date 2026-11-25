@@ -36,6 +36,7 @@ export function EmailVerificationBanner() {
 
   if (!user || user.is_verified !== false) return null;
   if (!emailVerificationBlocked && dismissedPassive) return null;
+  if (!emailVerificationBlocked && user.has_password === false) return null;
 
   const handleDismiss = () => {
     if (emailVerificationBlocked) setEmailVerificationBlocked(false);

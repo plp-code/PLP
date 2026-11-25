@@ -11,6 +11,7 @@ import type { Location, LocationPin } from "@/types";
 import { useMapData } from "@/hooks/useMapData";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useStoreFilters } from "@/hooks/useStoreFilters";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useGetClothingCategories } from "@/hooks/useClothingCategory";
 
@@ -24,8 +25,23 @@ import type { MapComponentProps } from "@/components/features/maps/MapComponent"
 type MapStore = Location | LocationPin;
 
 export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
-  const { pins, stores, loading, loadMore, hasMore, loadingMore } =
-    useMapData(mapSlug);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategories, setActiveCategories] = useState<string[]>([]);
+  const debouncedSearch = useDebouncedValue(searchTerm, 250);
+
+  const {
+    pins: mapPins,
+    stores,
+    categoryFallback,
+    loading,
+    listLoading,
+    loadMore,
+    hasMore,
+    loadingMore,
+  } = useMapData(mapSlug, {
+    search: debouncedSearch,
+    categories: activeCategories,
+  });
 
   const mapTitle = mapSlug
     .split("-")
@@ -35,18 +51,13 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   const { userLocation, isLocating, locate, clearLocation } = useGeolocation();
 
   const {
-    searchTerm,
-    setSearchTerm,
     activePrice,
     setActivePrice,
-    activeCategories,
-    setActiveCategories,
     isOpenNow,
     setIsOpenNow,
     filteredStores,
-    mapPins,
     storeById,
-  } = useStoreFilters(stores, pins, userLocation);
+  } = useStoreFilters(stores, mapPins, userLocation);
 
   const { data: categories = [], isLoading } = useGetClothingCategories();
 
@@ -73,8 +84,6 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     };
   }, []);
 
-  const isSearching = searchTerm.trim().length > 0;
-
   const activeStore = useMemo<MapStore | null>(
     () => (activeId !== null ? (storeById.get(activeId) ?? null) : null),
     [storeById, activeId],
@@ -85,7 +94,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
   const lastElementRef = useInfiniteScroll(loadMore, {
     hasMore,
     loading: loadingMore,
-    disabled: isSearching || !isDrawerOpen || showDetail,
+    disabled: !isDrawerOpen || showDetail,
   });
 
   const activeDistance = useMemo(() => {
@@ -135,18 +144,8 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
     openList();
   };
 
-  const handleCategorySelect = (value: string) => {
-    setActiveCategories((prev) =>
-      prev.includes(value)
-        ? prev.filter((category) => category !== value)
-        : [...prev, value],
-    );
-
-    openList();
-  };
-
-  const handleClearCategories = () => {
-    setActiveCategories([]);
+  const handleCategoriesApply = (next: string[]) => {
+    setActiveCategories(next);
     openList();
   };
 
@@ -223,8 +222,7 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
             activePrice={activePrice}
             onPriceSelect={handlePriceSelect}
             activeCategories={activeCategories}
-            onCategorySelect={handleCategorySelect}
-            onClearCategories={handleClearCategories}
+            onCategoriesApply={handleCategoriesApply}
             hasLocation={!!userLocation}
             isLocating={isLocating}
             onLocateToggle={handleLocateToggle}
@@ -307,9 +305,9 @@ export default function StoreDashboard({ mapSlug }: { mapSlug: string }) {
                   activeId={activeId}
                   onSelect={handleStoreSelect}
                   hasMore={hasMore}
-                  loadingMore={loadingMore}
+                  loadingMore={loadingMore || listLoading}
                   observerRef={lastElementRef}
-                  isSearching={isSearching}
+                  categoryFallback={categoryFallback}
                   userLocation={userLocation}
                   className="min-h-0"
                 />
