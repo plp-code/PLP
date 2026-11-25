@@ -1,5 +1,9 @@
-import { ChevronRight, Loader2, Navigation, Clock } from "lucide-react";
+"use client";
+
+import { ChevronRight, Loader2, MapPin, SearchX } from "lucide-react";
+
 import { getTodayHours, formatPriceLevel, getDistance } from "@/lib/utils";
+
 import type { Location } from "@/types";
 import type { UserLocation } from "@/hooks/useGeolocation";
 import { StoreStatusBadge } from "./StoreStatusBadge";
@@ -30,132 +34,178 @@ export function StoreListView({
   className = "",
 }: StoreListViewProps) {
   return (
-    <div className={`flex-1 overflow-y-auto flex flex-col ${className}`}>
-      <div className="p-3 md:px-5 md:py-4 border-b border-gray-100 bg-white/95 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between shadow-sm">
-        <h2 className="font-bodoni text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.15em] text-gray-400">
-          {stores.length} of {totalCount}{" "}
-          {totalCount === 1 ? "Location" : "Locations"}
-        </h2>
+    <div
+      className={`flex min-h-0 flex-1 flex-col overflow-y-auto bg-plp-parchment font-text text-plp-ink ${className}`}
+    >
+      <header className="sticky top-0 z-10 shrink-0 border-b border-plp-secondary bg-plp-parchment/95 px-4 py-3.5 backdrop-blur-xl md:px-5">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-prata text-[17px] leading-relaxed text-plp-maroon">
+            Explore locations
+          </h2>
 
-        <span className="text-[10px] text-gray-400 font-sans tracking-tight">
-          Distances are straight-line
-        </span>
-      </div>
-      <div className="divide-y divide-gray-100/80 pb-[calc(5rem_+_env(safe-area-inset-bottom))] md:pb-0">
-        {stores.map((store, index) => {
-          const timeData = getTodayHours(store.hours);
-          const isSelected = store.id === activeId;
-          const priceLevel = formatPriceLevel(store.price_level);
+          <span className="shrink-0 text-[12px] tabular-nums text-plp-clay">
+            {stores.length < totalCount
+              ? `${stores.length} of ${totalCount}`
+              : totalCount}{" "}
+            {totalCount === 1 ? "location" : "locations"}
+          </span>
+        </div>
 
-          const distance = userLocation
-            ? getDistance(
-                userLocation.lat,
-                userLocation.lng,
-                store.latitude,
-                store.longitude,
-              )
-            : null;
+        {userLocation && (
+          <p className="mt-1 text-[11px] text-plp-clay">
+            Distances are approximate
+          </p>
+        )}
+      </header>
 
-          return (
-            <div
-              key={store.id}
-              onClick={() => onSelect(store.id)}
-              className={`group relative flex min-h-[100px] cursor-pointer items-center px-4 py-4 transition-colors duration-200 md:min-h-[108px] md:px-5 ${
-                isSelected
-                  ? "bg-blue-50/50"
-                  : "bg-white hover:bg-gray-50 active:bg-gray-100"
-              }`}
-            >
-              <div
-                className={`absolute bottom-0 left-0 top-0 w-1 origin-left bg-blue-600 transition-transform duration-200 ${
-                  isSelected ? "scale-x-100" : "scale-x-0"
-                }`}
-              />
+      <div className="flex flex-1 flex-col pb-[calc(5rem_+_env(safe-area-inset-bottom))] md:pb-0">
+        <div className="divide-y divide-plp-secondary/60">
+          {stores.map((store, index) => {
+            const timeData = getTodayHours(store.hours);
+            const isSelected = store.id === activeId;
+            const priceLevel = formatPriceLevel(store.price_level);
 
-              <span
-                className={`mr-3 w-5 shrink-0 text-center font-bodoni text-[12px] font-semibold tabular-nums transition-colors md:mr-4 md:text-[13px] ${
+            const hasHours =
+              !!timeData.string && timeData.string !== "Hours unavailable";
+
+            const distance = userLocation
+              ? getDistance(
+                  userLocation.lat,
+                  userLocation.lng,
+                  store.latitude,
+                  store.longitude,
+                )
+              : null;
+
+            return (
+              <button
+                key={store.id}
+                type="button"
+                onClick={() => onSelect(store.id)}
+                aria-current={isSelected ? "true" : undefined}
+                className={`group relative flex w-full cursor-pointer items-center gap-3 px-4 py-4 text-left transition-colors duration-200 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-plp-maroon/50 md:px-5 ${
                   isSelected
-                    ? "text-blue-600"
-                    : "text-gray-300 group-hover:text-gray-500"
+                    ? "bg-plp-blush/50"
+                    : "bg-white hover:bg-plp-parchment/50 active:bg-plp-blush/30"
                 }`}
               >
-                {index + 1}
-              </span>
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-y-0 left-0 w-[3px] bg-plp-maroon transition-opacity ${
+                    isSelected ? "opacity-100" : "opacity-0"
+                  }`}
+                />
 
-              <div className="min-w-0 flex-1">
-                <h3
-                  className={`line-clamp-2 font-bodoni text-[17px] font-bold capitalize leading-[1.2] tracking-[-0.01em] transition-colors md:text-[18px] ${
-                    isSelected
-                      ? "text-blue-800"
-                      : "text-gray-900 group-hover:text-blue-700"
+                <span
+                  className={`w-5 shrink-0 self-start pt-1 text-center font-bodoni text-[13px] font-medium tabular-nums ${
+                    isSelected ? "text-plp-maroon" : "text-plp-secondary-dark"
                   }`}
                 >
-                  {store.name}
-                </h3>
+                  {String(index + 1).padStart(2, "0")}
+                </span>
 
-                <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5">
-                  {distance !== null && (
-                    <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 font-prata text-[11px] font-medium text-blue-700">
-                      <Navigation
-                        size={10}
-                        strokeWidth={2}
-                        className="text-blue-500"
+                <div className="min-w-0 flex-1">
+                  <h3 className="line-clamp-2 break-words font-bodoni text-[19px] font-bold leading-[1.2] tracking-[-0.01em] text-plp-maroon md:text-[20px]">
+                    {store.name}
+                  </h3>
+
+                  {(distance !== null || priceLevel) && (
+                    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                      {distance !== null && (
+                        <span className="inline-flex items-center gap-1 text-[12px] tabular-nums text-plp-clay">
+                          <MapPin
+                            size={12}
+                            strokeWidth={1.75}
+                            className="shrink-0"
+                          />
+                          {distance.toFixed(1)} mi
+                        </span>
+                      )}
+
+                      {priceLevel && (
+                        <span className="rounded-md bg-plp-parchment px-2 py-1 text-[11px] font-medium leading-tight text-plp-clay">
+                          {priceLevel}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {hasHours && (
+                    <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <StoreStatusBadge
+                        isOpen={timeData.isOpen}
+                        isClosingSoon={timeData.isClosingSoon}
+                        compact
                       />
-                      ~ {distance.toFixed(1)} mi
-                    </span>
-                  )}
 
-                  {priceLevel && (
-                    <span className="inline-flex items-center rounded-md bg-emerald-50 px-2 py-1 font-prata text-[11px] font-semibold text-emerald-700">
-                      {priceLevel}
-                    </span>
-                  )}
+                      <span
+                        aria-hidden="true"
+                        className="h-0.5 w-0.5 rounded-full bg-plp-secondary-dark"
+                      />
 
-                  {timeData.string && (
-                    <span className="inline-flex items-center gap-1 font-prata text-[11px] text-gray-400">
-                      <Clock size={11} strokeWidth={1.8} />
-                      {timeData.string}
-                    </span>
+                      <span className="text-[11px] leading-relaxed text-plp-clay">
+                        {timeData.string}
+                      </span>
+                    </div>
                   )}
                 </div>
-              </div>
-
-              <div className="ml-3 flex shrink-0 flex-col items-end gap-2">
-                <StoreStatusBadge
-                  isOpen={timeData.isOpen}
-                  isClosingSoon={timeData.isClosingSoon}
-                  compact
-                />
 
                 <ChevronRight
-                  size={17}
-                  strokeWidth={1.8}
-                  className={`transition-all duration-200 ${
+                  size={18}
+                  strokeWidth={1.6}
+                  aria-hidden="true"
+                  className={`shrink-0 transition-all duration-200 ${
                     isSelected
-                      ? "translate-x-0.5 text-blue-500"
-                      : "text-gray-300 group-hover:translate-x-0.5 group-hover:text-gray-500"
+                      ? "translate-x-0.5 text-plp-maroon"
+                      : "text-plp-secondary-dark group-hover:translate-x-0.5 group-hover:text-plp-maroon"
                   }`}
                 />
-              </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {stores.length === 0 && !isSearching && !loadingMore && (
+          <div className="flex flex-1 flex-col items-center justify-center px-6 py-14 text-center">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-plp-blush text-plp-maroon">
+              <SearchX size={22} strokeWidth={1.4} />
             </div>
-          );
-        })}
+
+            <h3 className="font-prata text-[17px] text-plp-maroon">
+              No locations found
+            </h3>
+
+            <p className="mt-2 max-w-[250px] text-[13px] leading-relaxed text-plp-clay">
+              Try adjusting your search or filters to discover more secondhand
+              stores.
+            </p>
+          </div>
+        )}
 
         {!isSearching && (
           <div
             ref={observerRef}
-            className="py-10 flex flex-col items-center justify-center gap-2"
+            className="flex flex-col items-center justify-center px-4 py-7"
           >
             {loadingMore ? (
-              <Loader2 className="animate-spin text-blue-500 w-6 h-6" />
+              <div
+                role="status"
+                className="flex items-center gap-2 text-[12px] text-plp-clay"
+              >
+                <Loader2 size={16} className="animate-spin text-plp-maroon" />
+                Finding more locations...
+              </div>
             ) : (
-              !hasMore && (
-                <div className="flex items-center gap-2 text-gray-400">
-                  <div className="w-8 h-px bg-gray-200" />
-                  <span className="font-bodoni text-[12px] font-semibold uppercase tracking-[0.2em]">
-                    End of results
+              !hasMore &&
+              stores.length > 0 && (
+                <div className="flex items-center gap-3">
+                  <span className="h-px w-6 bg-plp-secondary" />
+
+                  <span className="text-[11px] text-plp-clay">
+                    You&apos;ve reached the end
                   </span>
-                  <div className="w-8 h-px bg-gray-200" />
+
+                  <span className="h-px w-6 bg-plp-secondary" />
                 </div>
               )
             )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { InPersonEvent } from "@/data/experiences";
+import type { InPersonEvent } from "@/types";
 import { Pagination } from "@/components/ui/Pagination";
 import { PlannedEventCard } from "./PlannedEventsCard";
 
@@ -13,7 +13,6 @@ export function PlannedEvents({ events }: { events: InPersonEvent[] }) {
   const totalPages = Math.max(1, Math.ceil(events.length / PAGE_SIZE));
   const current = Math.min(page, totalPages);
   const visible = events.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
-
 
   return (
     <>

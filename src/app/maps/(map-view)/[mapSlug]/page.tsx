@@ -9,10 +9,14 @@ import { Spinner } from "@/components/ui/Spinner";
 
 const StoreDashboard = dynamic(
   () => import("@/components/features/stores/StoreDashboard"),
-  { ssr: false }
+  { ssr: false },
 );
 
-export default function Page({ params }: { params: Promise<{ mapSlug: string }> }) {
+export default function Page({
+  params,
+}: {
+  params: Promise<{ mapSlug: string }>;
+}) {
   const { mapSlug } = use(params);
   const router = useRouter();
   const pathname = usePathname();
@@ -25,9 +29,7 @@ export default function Page({ params }: { params: Promise<{ mapSlug: string }> 
   }, [isLoading, pathname, router, user, isAuthBusy]);
 
   if (isLoading) {
-    return (
-      <Spinner text="Checking access" />
-    );
+    return <Spinner text="Checking access" />;
   }
 
   if (!user) {

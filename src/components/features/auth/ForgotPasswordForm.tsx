@@ -8,7 +8,8 @@ import { ForgotPasswordSuccess } from "./ForgotPasswordSuccess";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
-  const { requestPasswordReset, isLoading, isSubmitted } = useForgotPassword();
+  const { requestPasswordReset, isLoading, isSubmitted, error } =
+    useForgotPassword();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,8 +23,8 @@ export function ForgotPasswordForm() {
   return (
     <>
       <p className="text-plp-maroon/70 text-[11px] sm:text-xs font-bold leading-normal mb-4">
-        Enter your registered email address and we'll send you a link to reset
-        your password.
+        Enter your registered email address and we&apos;ll send you a link to
+        reset your password.
       </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -47,6 +48,12 @@ export function ForgotPasswordForm() {
             />
           </div>
         </div>
+
+        {error && (
+          <p role="alert" className="text-red-700 text-xs font-bold">
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"

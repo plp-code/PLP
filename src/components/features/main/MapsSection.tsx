@@ -109,14 +109,15 @@ export default function MapsSection() {
             <div className="mb-7 border-l-2 border-plp-maroon pl-4 md:mb-8 md:pl-6">
               <div className="max-w-[58ch] space-y-3 font-prata text-[13px] leading-6 text-plp-maroon/80 md:space-y-4 md:text-[15px] md:leading-7">
                 <p>
-                  Many thrift stores are a waste of an afternoon. Some aren&apos;t,
-                  and the difference isn&apos;t obvious from the door.
+                  Many thrift stores are a waste of an afternoon. Some
+                  aren&apos;t, and the difference isn&apos;t obvious from the
+                  door.
                 </p>
 
                 <p>
                   PLP Thrift Maps show you which stores are worth the trip, what
-                  you can expect to spend, and what you&apos;re likely to find when
-                  you get there. Every store is selected with professional
+                  you can expect to spend, and what you&apos;re likely to find
+                  when you get there. Every store is selected with professional
                   clothing in mind. Looking for a blazer? Filter for it and see
                   where women have been finding them.
                 </p>

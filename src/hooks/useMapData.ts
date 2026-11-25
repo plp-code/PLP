@@ -4,14 +4,14 @@ import { Location, LocationPin } from "@/types";
 
 const PAGE_SIZE = 25;
 
-export function useMapData(mapSlug: string) {  
+export function useMapData(mapSlug: string) {
   const pinsQuery = useQuery({
     queryKey: ["locations", "pins", mapSlug],
     queryFn: ({ signal }) =>
       api.get<LocationPin[]>(`/maps/${mapSlug}/locations/pins`, { signal }),
     enabled: !!mapSlug,
   });
-  
+
   const locationsQuery = useInfiniteQuery({
     queryKey: ["locations", "list", mapSlug],
     queryFn: ({ pageParam, signal }) =>

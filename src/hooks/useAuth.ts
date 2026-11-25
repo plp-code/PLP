@@ -7,6 +7,7 @@ import { useSnackbar } from "@/context/SnackbarContext";
 import { api, setTokenExpiry, markSession } from "@/lib/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { getSafeReturnPath } from "@/lib/returnTo";
+import { friendlyError } from "@/lib/errors";
 import type { User } from "@/types/models";
 
 export function useAuthActions(returnTo?: string | null) {
@@ -42,7 +43,10 @@ export function useAuthActions(returnTo?: string | null) {
       router.replace(targetPath);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Invalid email or password.",
+        friendlyError(
+          err,
+          err instanceof Error ? err.message : "Invalid email or password.",
+        ),
       );
     } finally {
       setIsLoading(false);
@@ -57,9 +61,13 @@ export function useAuthActions(returnTo?: string | null) {
 
     try {
       const payload = Object.fromEntries(formData.entries());
-      const res = await api.post<{ status?: string }>("/auth/register", payload, {
-        skipRefresh: true,
-      });
+      const res = await api.post<{ status?: string }>(
+        "/auth/register",
+        payload,
+        {
+          skipRefresh: true,
+        },
+      );
       if (res?.status === "check_email") {
         setCheckEmail(true);
         return;
@@ -70,9 +78,12 @@ export function useAuthActions(returnTo?: string | null) {
       router.replace(targetPath);
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Registration failed. Please check your inputs.",
+        friendlyError(
+          err,
+          err instanceof Error
+            ? err.message
+            : "Registration failed. Please check your inputs.",
+        ),
       );
     } finally {
       setIsLoading(false);

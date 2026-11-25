@@ -6,7 +6,8 @@ export function useGetClothingCategories() {
   return useQuery({
     queryKey: ["clothing-categories"] as const,
     queryFn: async () => {
-      const response = await api.get<ClothingCategory[]>(`/clothing-categories/`);
+      const response =
+        await api.get<ClothingCategory[]>(`/clothing-categories`);
       return response;
     },
     select: (data) => data ?? [],

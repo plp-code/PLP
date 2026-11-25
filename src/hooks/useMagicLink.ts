@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { friendlyError } from "@/lib/errors";
 
 export function useMagicLink() {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,9 +18,12 @@ export function useMagicLink() {
       setIsSubmitted(true);
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to send login link. Please try again.",
+        friendlyError(
+          err,
+          err instanceof Error
+            ? err.message
+            : "Failed to send login link. Please try again.",
+        ),
       );
     } finally {
       setIsLoading(false);

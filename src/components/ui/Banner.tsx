@@ -54,7 +54,10 @@ export default function Banner({
           ) : null}
 
           {title ? (
-            <TitleComponent id={titleId} className="font-bodoni text-[9vw] md:text-[5vw] lg:text-[3.5vw] leading-[0.9] tracking-tighter text-plp-parchment">
+            <TitleComponent
+              id={titleId}
+              className="font-bodoni text-[9vw] md:text-[5vw] lg:text-[3.5vw] leading-[0.9] tracking-tighter text-plp-parchment"
+            >
               {title}
             </TitleComponent>
           ) : null}

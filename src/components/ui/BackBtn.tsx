@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 
@@ -16,13 +17,13 @@ export default function BackButton() {
   };
 
   return (
-    <a
+    <Link
       href="/"
       onClick={handleBack}
       aria-label="Go back"
       className="cursor-pointer flex items-center justify-center w-9 h-9 bg-[#c0c0c0] shadow-[inset_1px_1px_#fff,inset_-1px_-1px_#808080] active:shadow-[inset_-1px_-1px_#fff,inset_1px_1px_#808080] text-plp-navy"
     >
       <ChevronLeft size={18} />
-    </a>
+    </Link>
   );
 }

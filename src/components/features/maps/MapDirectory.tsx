@@ -1,29 +1,41 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Map as MapIcon, AlertCircle } from "lucide-react";
+
+import { Map as MapIcon, AlertCircle, Loader2 } from "lucide-react";
+
 import { useMapDirectory } from "@/hooks/useMapDirectory";
 import { useMapCheckout } from "@/hooks/useMapCheckout";
 import { useAuthUser } from "@/context/AuthContext";
+import { useSnackbar } from "@/context/SnackbarContext";
+import { useJoinWaitlist } from "@/hooks/useJoinWaitlist";
+
 import { MapCardGrid } from "./MapCardGrid";
 import { MapListView } from "./MapListView";
 import { ComingSoonCard } from "./ComingSoonCard";
 import { DirectoryToolbar } from "./DirectoryToolbar";
+
 import type { WaitlistControls } from "./WaitlistInlineForm";
-import { useSnackbar } from "@/context/SnackbarContext";
+import type { MapStatus } from "@/types";
+
 import { Spinner } from "@/components/ui/Spinner";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Pagination } from "@/components/ui/Pagination";
-import { useJoinWaitlist } from "@/hooks/useJoinWaitlist";
-import { MapStatus } from "@/types";
+
+const PAGE_SIZE = 6;
+const SEARCH_DELAY = 300;
+
+type ViewMode = "grid" | "list";
+type StatusFilter = MapStatus | "all";
 
 export default function MapDirectory() {
-  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
-  const [statusFilter, setStatusFilter] = useState<MapStatus | "all">("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
 
-  const limit = viewMode === "grid" ? 6 : 5;
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { isAuthenticated, isLoading: authLoading } = useAuthUser();
   const snackbar = useSnackbar();
@@ -38,15 +50,27 @@ export default function MapDirectory() {
     );
   }, [authLoading, isAuthenticated, snackbar]);
 
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setDebouncedSearch(searchQuery.trim());
+      setCurrentPage(1);
+    }, SEARCH_DELAY);
+
+    return () => window.clearTimeout(timeout);
+  }, [searchQuery]);
+
+  const isSearchPending = searchQuery.trim() !== debouncedSearch;
+
   const { maps, total, totalPages, loading, isFetching, error } =
     useMapDirectory({
       page: currentPage,
-      limit,
-      search: searchQuery,
+      limit: PAGE_SIZE,
+      search: debouncedSearch,
       status: statusFilter,
     });
 
   const { handleMapAction, checkoutLoadingId } = useMapCheckout();
+
   const {
     joinWaitlist,
     submitGuestEmail,
@@ -64,112 +88,329 @@ export default function MapDirectory() {
     onSubmitEmail: submitGuestEmail,
   };
 
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
-    setCurrentPage(1);
-  };
+  const liveMaps = maps.filter((map) => map.status === "live");
 
-  const handleFilterChange = (filter: MapStatus | "all") => {
-    setStatusFilter(filter);
-    setCurrentPage(1);
-  };
-
-  const handleViewModeChange = (mode: "grid" | "list") => {
-    setViewMode(mode);
-    setCurrentPage(1);
-  }; 
-  const liveMaps = maps.filter((m) => m.status === "live");
   const upcomingMaps = maps.filter(
     (map) => map.status === "waitlist" || map.status === "next",
   );
 
-  if (error) {
-    return (
-      <div className="mx-auto flex max-w-md flex-col items-center px-5 py-16 text-center">
-        <AlertCircle
-          size={26}
-          strokeWidth={1.5}
-          className="text-plp-maroon/45"
-        />
+  const isUpdating = isFetching || isSearchPending;
 
-        <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.18em] text-plp-maroon/40">
-          Something went wrong
-        </p>
+  const hasFilters = searchQuery.trim().length > 0 || statusFilter !== "all";
 
-        <h2 className="mt-2 font-bodoni text-2xl tracking-[-0.02em] text-plp-maroon">
-          We couldn't load the maps.
-        </h2>
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+  };
 
-        <p className="mt-3 max-w-sm font-prata text-[13px] leading-6 text-plp-maroon/55">
-          {error}
-        </p>
-      </div>
-    );
-  }
+  const handleFilterChange = (filter: StatusFilter) => {
+    setStatusFilter(filter);
+    setCurrentPage(1);
+    collapseForm();
+  };
+
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    collapseForm();
+  };
+
+  const handleClearFilters = () => {
+    setSearchQuery("");
+    setDebouncedSearch("");
+    setStatusFilter("all");
+    setCurrentPage(1);
+    collapseForm();
+  };
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-5 py-6 sm:px-6 md:py-8 lg:px-8">
+    <section
+      aria-labelledby="maps-directory-heading"
+      className="
+        mx-auto w-full max-w-7xl
+        px-3 py-3
+        font-text text-plp-ink
+        sm:px-6 sm:py-5
+        lg:px-8 lg:py-6
+      "
+    >
+      <h2 id="maps-directory-heading" className="sr-only">
+        Explore secondhand shopping maps
+      </h2>
+
       <DirectoryToolbar
-        totalCount={total}
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
         viewMode={viewMode}
         onViewModeChange={handleViewModeChange}
         statusFilter={statusFilter}
         onFilterChange={handleFilterChange}
-        isFetching={isFetching}
+        isFetching={isUpdating}
       />
-      <div className="h-px bg-plp-maroon/10" />{" "}
-      <h2 id="maps-directory-heading" className="sr-only">
-        Available maps
-      </h2>
-      <div aria-live="polite" className="mt-4 sm:mt-6">
+
+      <div
+        className="
+          mt-2 flex min-h-6
+          items-center justify-between gap-3
+          sm:mt-3
+        "
+      >
+        <div
+          role="status"
+          className="
+            flex min-w-0 items-center gap-2
+            text-[12px] text-plp-clay
+            sm:text-[13px]
+          "
+        >
+          {isUpdating && (
+            <Loader2
+              size={13}
+              className="shrink-0 animate-spin text-plp-maroon"
+            />
+          )}
+
+          {loading || isUpdating ? (
+            <span>Finding maps...</span>
+          ) : error ? (
+            <span>Unable to load maps</span>
+          ) : (
+            <span>
+              <strong className="font-semibold text-plp-maroon">{total}</strong>{" "}
+              {total === 1 ? "map" : "maps"} found
+            </span>
+          )}
+        </div>
+
+        {hasFilters && (
+          <button
+            type="button"
+            onClick={handleClearFilters}
+            className="
+              shrink-0 cursor-pointer
+              text-[12px] font-medium
+              text-plp-clay
+              underline underline-offset-4
+              transition-colors
+              hover:text-plp-maroon
+            "
+          >
+            Clear filters
+          </button>
+        )}
+      </div>
+
+      <div aria-busy={loading || isUpdating} className="mt-2 min-h-48 sm:mt-3">
         {loading ? (
-          <div className="flex min-h-64 flex-col items-center justify-center px-4">
+          <div
+            className="
+              flex min-h-48 flex-col
+              items-center justify-center px-4
+            "
+          >
             <Spinner text="Finding maps..." />
           </div>
+        ) : error ? (
+          <div
+            role="alert"
+            className="
+              mx-auto flex max-w-md flex-col
+              items-center px-4 py-8 text-center
+              sm:py-12
+            "
+          >
+            <div
+              className="
+                flex h-12 w-12 items-center
+                justify-center rounded-full
+                bg-plp-blush text-plp-maroon
+              "
+            >
+              <AlertCircle size={23} strokeWidth={1.5} />
+            </div>
+
+            <h3
+              className="
+                mt-4 font-bodoni text-2xl font-semibold
+                tracking-[-0.02em] text-plp-maroon
+              "
+            >
+              We couldn&apos;t load the maps.
+            </h3>
+
+            <p
+              className="
+                mt-2 max-w-xs font-text
+                text-[13px] leading-relaxed text-plp-clay
+              "
+            >
+              Something went wrong while loading the directory. Please try
+              again.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="
+                plp-btn-primary mt-5
+                inline-flex h-10 cursor-pointer
+                items-center justify-center
+                rounded-lg px-5
+                font-text text-[13px] font-medium
+              "
+            >
+              Try again
+            </button>
+          </div>
         ) : total === 0 ? (
-          <EmptyState
-            align="center"
-            icon={<MapIcon size={28} strokeWidth={1.25} />}
-            eyebrow="No results"
-            message="No maps found."
-            description={
-              searchQuery
-                ? `Nothing matched “${searchQuery}.” Try another city or clear your search.`
-                : "There aren't any maps available under this filter yet."
-            }
-          />
+          <div className="py-3 sm:py-5">
+            <EmptyState
+              align="center"
+              icon={<MapIcon size={28} strokeWidth={1.25} />}
+              eyebrow="No results"
+              message="No maps found."
+              description={
+                debouncedSearch
+                  ? `Nothing matched “${debouncedSearch}.” Try another city or clear your search.`
+                  : "There aren't any maps available under this filter yet."
+              }
+            />
+
+            {hasFilters && (
+              <div className="mt-4 flex justify-center">
+                <button
+                  type="button"
+                  onClick={handleClearFilters}
+                  className="
+                    plp-btn-primary
+                    inline-flex h-10 cursor-pointer
+                    items-center justify-center
+                    rounded-lg px-5
+                    font-text text-[13px] font-medium
+                  "
+                >
+                  View all maps
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <div
-            className={`transition-opacity duration-200 ${
-              isFetching ? "pointer-events-none opacity-70" : "opacity-100"
-            }`}
+            className={`
+              transition-opacity duration-200
+              motion-reduce:transition-none
+              ${isUpdating ? "opacity-65" : "opacity-100"}
+            `}
           >
             <div
               className={
                 viewMode === "grid"
-                  ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5"
-                  : "grid grid-cols-1 gap-4 sm:hidden"
+                  ? "flex flex-col gap-3 sm:gap-4"
+                  : "flex flex-col gap-3 sm:hidden"
               }
             >
-              {liveMaps.map((map) => (
-                <MapCardGrid
-                  key={map.id}
-                  map={map}
-                  onAction={() => handleMapAction(map)}
-                  isLoading={checkoutLoadingId === map.id}
-                  isAuthenticated={isAuthenticated}
-                />
-              ))}
+              {liveMaps.length > 0 && (
+                <section aria-labelledby="live-maps-heading">
+                  <div
+                    className="
+                      mb-3 flex items-center
+                      justify-between gap-3
+                      sm:mb-4
+                    "
+                  >
+                    <h3
+                      id="live-maps-heading"
+                      className="
+                        font-bodoni text-xl font-semibold
+                        leading-tight text-plp-maroon
+                        sm:text-2xl
+                      "
+                    >
+                      Available maps
+                    </h3>
 
-              {upcomingMaps.map((map) => (
-                <ComingSoonCard
-                  key={`coming-soon-${map.slug}`}
-                  map={map}
-                  waitlist={waitlistControls}
-                />
-              ))}
+                    <span
+                      className="
+                        shrink-0 font-text text-[12px]
+                        tabular-nums text-plp-clay
+                      "
+                    >
+                      {liveMaps.length}{" "}
+                      {liveMaps.length === 1 ? "destination" : "destinations"}
+                    </span>
+                  </div>
+
+                  <div
+                    className="
+                      grid grid-cols-1 gap-3
+                      sm:gap-4 md:grid-cols-2
+                      xl:grid-cols-3
+                    "
+                  >
+                    {liveMaps.map((map) => (
+                      <MapCardGrid
+                        key={map.id}
+                        map={map}
+                        onAction={() => handleMapAction(map)}
+                        isLoading={checkoutLoadingId === map.id}
+                        isAuthenticated={isAuthenticated}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {upcomingMaps.length > 0 && (
+                <section
+                  aria-labelledby="upcoming-maps-heading"
+                  className={
+                    liveMaps.length > 0
+                      ? "border-t border-plp-maroon/10 pt-3 sm:pt-4"
+                      : ""
+                  }
+                >
+                  <div className="mb-3 sm:mb-4">
+                    <h3
+                      id="upcoming-maps-heading"
+                      className="
+                        font-bodoni text-xl font-semibold
+                        leading-tight text-plp-maroon
+                        sm:text-2xl
+                      "
+                    >
+                      Coming soon
+                    </h3>
+
+                    <p
+                      className="
+                        mt-1 font-text text-[12px]
+                        leading-relaxed text-plp-clay
+                        sm:text-[13px]
+                      "
+                    >
+                      Be the first to know when our next maps launch.
+                    </p>
+                  </div>
+
+                  <div
+                    className="
+                      grid grid-cols-1 gap-3
+                      sm:gap-4 md:grid-cols-2
+                      xl:grid-cols-3
+                    "
+                  >
+                    {upcomingMaps.map((map) => (
+                      <ComingSoonCard
+                        key={map.slug}
+                        map={map}
+                        waitlist={waitlistControls}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
             </div>
 
             {viewMode === "list" && (
@@ -184,16 +425,25 @@ export default function MapDirectory() {
               </div>
             )}
 
-            <Pagination
-              page={currentPage}
-              totalPages={totalPages}
-              total={total}
-              pageSize={limit}
-              onPageChange={setCurrentPage}
-            />
+            {totalPages > 1 && (
+              <div
+                className="
+                  mt-5 border-t border-plp-maroon/10
+                  pt-3 sm:mt-6 sm:pt-4
+                "
+              >
+                <Pagination
+                  page={currentPage}
+                  totalPages={totalPages}
+                  total={total}
+                  pageSize={PAGE_SIZE}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

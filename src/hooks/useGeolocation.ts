@@ -6,56 +6,64 @@ export interface UserLocation {
   lng: number;
 }
 
+const toLocation = (p: GeolocationPosition): UserLocation => ({
+  lat: p.coords.latitude,
+  lng: p.coords.longitude,
+});
+
+const OPTIONS: PositionOptions = { timeout: 10_000, maximumAge: 5 * 60_000 };
+
 export function useGeolocation() {
   const snackbar = useSnackbar();
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [isLocating, setIsLocating] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    if ("geolocation" in navigator && !userLocation && !dismissed) {
-      navigator.geolocation.getCurrentPosition(
-        (position) =>
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          }),
-        (error) => console.log("Auto-location failed:", error.message),
-      );
-    }
-  }, [userLocation, dismissed]);
+    if (!("geolocation" in navigator) || !navigator.permissions) return;
+    let cancelled = false;
+    navigator.permissions
+      .query({ name: "geolocation" })
+      .then((status) => {
+        if (cancelled || status.state !== "granted") return;
+        navigator.geolocation.getCurrentPosition(
+          (p) => {
+            if (!cancelled) setUserLocation(toLocation(p));
+          },
+          () => {},
+          OPTIONS,
+        );
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const locate = () => {
-    setDismissed(false);
     if (!("geolocation" in navigator)) {
       snackbar.error("Location isn't supported on this browser");
       return;
     }
-
     setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
+      (p) => {
+        setUserLocation(toLocation(p));
         setIsLocating(false);
       },
-      () => {
+      (err) => {
+        setIsLocating(false);
         snackbar.error(
           "Couldn't get your location",
-          "Allow location access in your browser settings and try again.",
+          err.code === err.PERMISSION_DENIED
+            ? "Allow location access in your browser settings and try again."
+            : "Check your connection and try again.",
         );
-        setIsLocating(false);
       },
-      { enableHighAccuracy: true },
+      OPTIONS,
     );
   };
 
-  const clearLocation = () => {
-    setUserLocation(null);
-    setDismissed(true);
-  };
+  const clearLocation = () => setUserLocation(null);
 
   return { userLocation, isLocating, locate, clearLocation };
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useIsClient } from "@/hooks/useIsClient";
 import { ArrowUpRight, CalendarDays, MapPin, Tag, X } from "lucide-react";
 
 const EVENT = {
@@ -32,17 +33,14 @@ function markDismissed() {
 }
 
 export default function EventAnnouncementModal() {
-  const [open, setOpen] = useState(false);
+  const isClient = useIsClient();
+  const [closed, setClosed] = useState(false);
+  const open =
+    isClient && !closed && new Date() < EVENT.endsAt && !hasBeenDismissed();
 
   const close = useCallback(() => {
     markDismissed();
-    setOpen(false);
-  }, []);
-
-  useEffect(() => {
-    if (new Date() < EVENT.endsAt && !hasBeenDismissed()) {
-      setOpen(true);
-    }
+    setClosed(true);
   }, []);
 
   useEffect(() => {

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Banner from "@/components/ui/Banner";
 import { Container } from "@/components/ui/Container";
 import { InPersonList } from "@/components/features/experiences/InPersonList";
-import { IN_PERSON_EVENTS } from "@/data/experiences";
 
 export const metadata: Metadata = {
   title: "In-Person Experiences | The Preloved Professional",
@@ -25,10 +24,8 @@ export default function InPersonExperiencesPage() {
         className="flex-1 pb-16 pt-10 md:pb-24 md:pt-14"
         contentClassName="flex w-full max-w-6xl flex-col"
       >
-        <InPersonList events={IN_PERSON_EVENTS} />
+        <InPersonList events={[]} />
       </Container>
     </div>
   );
 }
-
-

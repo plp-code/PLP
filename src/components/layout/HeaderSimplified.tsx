@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-import AuthAction from "../features/auth/AuthBtn";
+import AuthAction from "@/components/features/auth/AuthBtn";
 import BackButton from "@/components/ui/BackBtn";
 import { useAuthUser } from "@/context/AuthContext";
 

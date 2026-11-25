@@ -22,6 +22,7 @@ export function MapListView({
     <div className="flex flex-col gap-3">
       {maps.map((map) => {
         const owned = map.is_purchased;
+        const comingSoon = !owned && map.status !== "live";
 
         return (
           <div
@@ -59,7 +60,7 @@ export function MapListView({
             </div>
 
             <div className="flex shrink-0 items-center gap-4 mt-0.5">
-              {!owned && (
+              {!owned && !comingSoon && (
                 <span className="hidden sm:block text-lg font-black text-gray-900">
                   ${(map.price / 100).toFixed(2)}
                 </span>
@@ -67,7 +68,7 @@ export function MapListView({
 
               <button
                 onClick={() => onAction(map)}
-                disabled={loadingId === map.id}
+                disabled={loadingId === map.id || comingSoon}
                 className={`group/btn font-prata flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${
                   owned
                     ? "w-full bg-plp-maroon text-white hover:bg-red-800 hover:shadow-lg"
@@ -76,6 +77,8 @@ export function MapListView({
               >
                 {loadingId === map.id ? (
                   <Loader2 size={16} className="animate-spin" />
+                ) : comingSoon ? (
+                  "Coming soon"
                 ) : (
                   <>
                     {owned ? "View Map" : "Buy Map"}

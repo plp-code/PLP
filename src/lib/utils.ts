@@ -1,52 +1,86 @@
 import { LocationHours } from "@/types";
 
+const MINUTES_PER_DAY = 24 * 60;
+
+const parseToMinutes = (timeStr?: string | null): number | null => {
+  if (!timeStr) return null;
+  const parts = timeStr.trim().split(":");
+  const h = parseInt(parts[0], 10);
+  const m = parts.length > 1 ? parseInt(parts[1], 10) : 0;
+  if (Number.isNaN(h) || Number.isNaN(m)) return null;
+  return h * 60 + m;
+};
+
+const formatMinutes = (mins: number): string => {
+  const h24 = Math.floor(mins / 60) % 24;
+  const m = mins % 60;
+  const ampm = h24 >= 12 ? "pm" : "am";
+  const h = h24 % 12 === 0 ? 12 : h24 % 12;
+  return `${h}${m > 0 ? `:${m.toString().padStart(2, "0")}` : ""}${ampm}`;
+};
+
+const getSpan = (
+  entry?: LocationHours,
+): { open: number; close: number; overnight: boolean } | null => {
+  if (!entry || entry.is_closed) return null;
+  const open = parseToMinutes(entry.open_time);
+  const close = parseToMinutes(entry.close_time);
+  if (open === null || close === null) return null;
+  return close <= open
+    ? { open, close: close + MINUTES_PER_DAY, overnight: true }
+    : { open, close, overnight: false };
+};
+
 export const getTodayHours = (
   hours?: LocationHours[],
+  now: Date = new Date(),
 ): { isOpen: boolean; isClosingSoon: boolean; string: string } => {
   if (!hours || hours.length === 0) {
     return { isOpen: false, isClosingSoon: false, string: "Hours unavailable" };
   }
 
-  const apiDay = (new Date().getDay() + 6) % 7;
-  const today = hours.find((h) => h.day_of_week === apiDay);
+  const apiDay = (now.getDay() + 6) % 7;
+  const currentMins = now.getHours() * 60 + now.getMinutes();
 
-  if (!today || today.is_closed || !today.open_time || !today.close_time) {
+  const today = getSpan(hours.find((h) => h.day_of_week === apiDay));
+
+  const yesterday = getSpan(
+    hours.find((h) => h.day_of_week === (apiDay + 6) % 7),
+  );
+  const spillCloseMins =
+    yesterday?.overnight && currentMins < yesterday.close - MINUTES_PER_DAY
+      ? yesterday.close - MINUTES_PER_DAY
+      : null;
+
+  const closingSoon = (minutesUntilClose: number) =>
+    minutesUntilClose > 0 && minutesUntilClose <= 60;
+
+  if (!today) {
+    if (yesterday && spillCloseMins !== null) {
+      return {
+        isOpen: true,
+        isClosingSoon: closingSoon(spillCloseMins - currentMins),
+        string: `${formatMinutes(yesterday.open)} - ${formatMinutes(yesterday.close)}`,
+      };
+    }
     return { isOpen: false, isClosingSoon: false, string: "Closed Today" };
   }
 
-  const parseToMinutes = (timeStr: string) => {
-    const parts = timeStr.trim().split(":");
-    const h = parseInt(parts[0], 10);
-    const m = parts.length > 1 ? parseInt(parts[1], 10) : 0;
-    return h * 60 + m;
-  };
+  const string = `${formatMinutes(today.open)} - ${formatMinutes(today.close)}`;
 
-  const openMins = parseToMinutes(today.open_time);
-  let closeMins = parseToMinutes(today.close_time);
+  if (spillCloseMins !== null && currentMins < today.open) {
+    return {
+      isOpen: true,
+      isClosingSoon: closingSoon(spillCloseMins - currentMins),
+      string,
+    };
+  }
 
-  if (closeMins <= openMins) closeMins += 24 * 60;
-
-  const now = new Date();
-  const currentMins = now.getHours() * 60 + now.getMinutes();
-
-  const isOpen = currentMins >= openMins && currentMins < closeMins;
-  const minutesUntilClose = closeMins - currentMins;
-  const isClosingSoon =
-    isOpen && minutesUntilClose > 0 && minutesUntilClose <= 60;
-
-  const formatTime = (mins: number) => {
-    let h = Math.floor(mins / 60);
-    const m = mins % 60;
-    const ampm = h % 24 >= 12 ? "pm" : "am";
-    h = h % 12;
-    if (h === 0) h = 12;
-    return `${h}${m > 0 ? `:${m.toString().padStart(2, "0")}` : ""}${ampm}`;
-  };
-
+  const isOpen = currentMins >= today.open && currentMins < today.close;
   return {
     isOpen,
-    isClosingSoon,
-    string: `${formatTime(openMins)} - ${formatTime(closeMins)}`,
+    isClosingSoon: isOpen && closingSoon(today.close - currentMins),
+    string,
   };
 };
 
@@ -63,13 +97,8 @@ export const DAY_LABELS = [
 export const getCurrentApiDay = (): number => (new Date().getDay() + 6) % 7;
 
 const formatClock = (timeStr: string): string => {
-  const parts = timeStr.trim().split(":");
-  let h = parseInt(parts[0], 10);
-  const m = parts.length > 1 ? parseInt(parts[1], 10) : 0;
-  const ampm = h >= 12 ? "pm" : "am";
-  h = h % 12;
-  if (h === 0) h = 12;
-  return `${h}${m > 0 ? `:${m.toString().padStart(2, "0")}` : ""}${ampm}`;
+  const mins = parseToMinutes(timeStr);
+  return mins === null ? "" : formatMinutes(mins);
 };
 
 export const formatDayHours = (hour?: LocationHours): string => {
@@ -116,7 +145,7 @@ export function getDistance(
   lat2: number,
   lon2: number,
 ): number {
-  const R = 3958.8; 
+  const R = 3958.8;
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
   const a =
@@ -138,10 +167,8 @@ export function buildDirectionsUrl(
   },
   userLocation: { lat: number; lng: number } | null = null,
 ) {
-  const destinationQuery =
-    store.name || `${store.latitude},${store.longitude}`;
+  const destinationQuery = store.name || `${store.latitude},${store.longitude}`;
 
-  
   if (!userLocation) {
     const params = new URLSearchParams({
       api: "1",
@@ -155,7 +182,6 @@ export function buildDirectionsUrl(
     return `https://www.google.com/maps/search/?${params.toString()}`;
   }
 
-  
   const params = new URLSearchParams({
     api: "1",
     origin: `${userLocation.lat},${userLocation.lng}`,

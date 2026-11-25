@@ -1,11 +1,64 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api";
+import { api, ApiError, isEmailNotVerified } from "@/lib/api";
+import { friendlyError } from "@/lib/errors";
 import type { ReviewItem, CreateReviewPayload } from "@/types";
 
 export const reviewKeys = {
   all: ["reviews"] as const,
   byStore: (storeId: number) => [...reviewKeys.all, storeId] as const,
+  mine: (storeId: number) => [...reviewKeys.all, storeId, "me"] as const,
 };
+
+export function reviewErrorMessage(
+  err: unknown,
+  action: "post" | "delete" | "load" = "post",
+): { title: string; subtitle: string } {
+  if (err instanceof ApiError) {
+    if (err.status === 401) {
+      return {
+        title: "Please sign in again",
+        subtitle: "Your session expired.",
+      };
+    }
+    if (err.status === 403) {
+      return isEmailNotVerified(err)
+        ? {
+            title: "Verify your email first",
+            subtitle: "Confirm your email to share reviews.",
+          }
+        : {
+            title: "Not allowed",
+            subtitle: "You can only review locations you've bought.",
+          };
+    }
+    if (err.status === 409) {
+      return {
+        title: "Already reviewed",
+        subtitle: "You've already shared a review for this store.",
+      };
+    }
+    if (err.status === 404) {
+      return action === "delete"
+        ? {
+            title: "No review to delete",
+            subtitle: "You haven't reviewed this location.",
+          }
+        : {
+            title: "Location unavailable",
+            subtitle: "This location is no longer available.",
+          };
+    }
+  }
+  return {
+    title:
+      action === "delete"
+        ? "Couldn't delete your review"
+        : action === "load"
+          ? "Couldn't load reviews"
+          : "Couldn't post your review",
+    subtitle: friendlyError(err, "Please try again."),
+  };
+}
 
 export function useGetReviews(
   storeId: number,
@@ -20,10 +73,43 @@ export function useGetReviews(
       return response;
     },
     enabled: Boolean(storeId) && (options?.enabled ?? true),
+    retry: (count, err) =>
+      !(err instanceof ApiError && [401, 403].includes(err.status)) &&
+      count < 2,
     select: (data) => data?.reviews ?? [],
   });
 }
 
+function invalidateStoreReviews(
+  queryClient: ReturnType<typeof useQueryClient>,
+  storeId: number,
+) {
+  queryClient.invalidateQueries({ queryKey: reviewKeys.byStore(storeId) });
+  queryClient.invalidateQueries({ queryKey: reviewKeys.mine(storeId) });
+}
+
+export async function fetchMyReview(
+  storeId: number,
+): Promise<ReviewItem | null> {
+  try {
+    const res = await api.get<ReviewItem | null>(`/reviews/${storeId}/me`);
+    return res && typeof res === "object" && "id" in res ? res : null;
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) return null;
+    throw err;
+  }
+}
+
+export function useMyReview(storeId: number, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: reviewKeys.mine(storeId),
+    queryFn: () => fetchMyReview(storeId),
+    enabled: Boolean(storeId) && (options?.enabled ?? true),
+    retry: (count, err) =>
+      !(err instanceof ApiError && [401, 403].includes(err.status)) &&
+      count < 2,
+  });
+}
 
 export function useCreateReview() {
   const queryClient = useQueryClient();
@@ -31,13 +117,24 @@ export function useCreateReview() {
   return useMutation({
     mutationFn: async (payload: CreateReviewPayload) => {
       const { location_id, ...body } = payload;
-      const response = await api.post<ReviewItem>(`/reviews/${location_id}`, body);
+      const response = await api.post<ReviewItem>(
+        `/reviews/${location_id}`,
+        body,
+      );
       return response;
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: reviewKeys.byStore(variables.location_id),
-      });
-    },
+    onSuccess: (_, variables) =>
+      invalidateStoreReviews(queryClient, variables.location_id),
+  });
+}
+
+export function useDeleteReview() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ location_id }: { location_id: number }) =>
+      api.delete<void>(`/reviews/${location_id}`),
+    onSettled: (_, __, variables) =>
+      invalidateStoreReviews(queryClient, variables.location_id),
   });
 }
