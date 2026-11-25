@@ -116,7 +116,7 @@ export function getDistance(
   lat2: number,
   lon2: number,
 ): number {
-  const R = 3958.8; 
+  const R = 3958.8;
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
   const a =
@@ -138,10 +138,8 @@ export function buildDirectionsUrl(
   },
   userLocation: { lat: number; lng: number } | null = null,
 ) {
-  const destinationQuery =
-    store.name || `${store.latitude},${store.longitude}`;
+  const destinationQuery = store.name || `${store.latitude},${store.longitude}`;
 
-  
   if (!userLocation) {
     const params = new URLSearchParams({
       api: "1",
@@ -155,7 +153,6 @@ export function buildDirectionsUrl(
     return `https://www.google.com/maps/search/?${params.toString()}`;
   }
 
-  
   const params = new URLSearchParams({
     api: "1",
     origin: `${userLocation.lat},${userLocation.lng}`,

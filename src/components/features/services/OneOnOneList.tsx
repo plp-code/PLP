@@ -1,4 +1,4 @@
-import type { OneOnOneService } from "@/data/experiences";
+import type { OneOnOneService } from "@/types";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ServiceCard } from "./ServiceCard";
 import { CalendarIcon } from "lucide-react";

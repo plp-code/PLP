@@ -1,49 +1,44 @@
 interface StoreStatusBadgeProps {
   isOpen: boolean;
-  isClosingSoon: boolean;
+  isClosingSoon?: boolean;
   compact?: boolean;
 }
 
 export function StoreStatusBadge({
   isOpen,
-  isClosingSoon,
+  isClosingSoon = false,
   compact = false,
 }: StoreStatusBadgeProps) {
-  const label = !isOpen
-    ? "Closed"
+  const status = !isOpen
+    ? {
+        label: "Closed",
+        style: "bg-plp-secondary-light text-plp-clay",
+        dot: "bg-plp-secondary-dark",
+      }
     : isClosingSoon
-      ? "Closing Soon"
-      : "Open";
+      ? {
+          label: "Closing soon",
+          style: "bg-amber-50 text-amber-800",
+          dot: "bg-amber-500",
+        }
+      : {
+          label: "Open now",
+          style: "bg-plp-lime/30 text-plp-olive",
+          dot: "bg-plp-olive",
+        };
 
   return (
-    <div
-      className={`
-        inline-flex shrink-0 items-center whitespace-nowrap rounded-full border font-bodoni font-semibold uppercase tracking-[0.1em]
-        ${
-          compact
-            ? "gap-1.5 px-2.5 py-1 text-[10px]"
-            : "gap-1.5 px-3 py-1.5 text-[11px]"
-        }
-        ${
-          !isOpen
-            ? "border-gray-200 bg-gray-50 text-gray-500"
-            : isClosingSoon
-              ? "border-amber-200 bg-amber-50 text-amber-700"
-              : "border-emerald-200 bg-emerald-50 text-emerald-700"
-        }
-      `}
+    <span
+      className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md font-text font-medium ${status.style} ${
+        compact ? "px-2 py-1 text-[10px]" : "px-2.5 py-1.5 text-[11px]"
+      }`}
     >
       <span
-        className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-          !isOpen
-            ? "bg-gray-400"
-            : isClosingSoon
-              ? "bg-amber-500 shadow-[0_0_4px_rgba(245,158,11,0.45)]"
-              : "bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.45)]"
-        }`}
+        aria-hidden="true"
+        className={`h-1.5 w-1.5 shrink-0 rounded-full ${status.dot}`}
       />
 
-      {label}
-    </div>
+      {status.label}
+    </span>
   );
 }

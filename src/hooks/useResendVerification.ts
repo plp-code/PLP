@@ -17,7 +17,9 @@ export function useResendVerification() {
       setState("sent");
     } catch (err) {
       setState(
-        err instanceof ApiError && err.status === 429 ? "rate_limited" : "error",
+        err instanceof ApiError && err.status === 429
+          ? "rate_limited"
+          : "error",
       );
     }
   };

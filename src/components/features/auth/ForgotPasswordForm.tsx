@@ -22,8 +22,8 @@ export function ForgotPasswordForm() {
   return (
     <>
       <p className="text-plp-maroon/70 text-[11px] sm:text-xs font-bold leading-normal mb-4">
-        Enter your registered email address and we'll send you a link to reset
-        your password.
+        Enter your registered email address and we&apos;ll send you a link to
+        reset your password.
       </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">

@@ -10,7 +10,6 @@ import {
 import { MapStatus } from "@/types";
 
 interface DirectoryToolbarProps {
-  totalCount: number;
   searchQuery: string;
   onSearchChange: (value: string) => void;
   viewMode: "grid" | "list";
@@ -21,7 +20,6 @@ interface DirectoryToolbarProps {
 }
 
 export function DirectoryToolbar({
-  totalCount,
   searchQuery,
   onSearchChange,
   viewMode,

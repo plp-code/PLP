@@ -57,9 +57,13 @@ export function useAuthActions(returnTo?: string | null) {
 
     try {
       const payload = Object.fromEntries(formData.entries());
-      const res = await api.post<{ status?: string }>("/auth/register", payload, {
-        skipRefresh: true,
-      });
+      const res = await api.post<{ status?: string }>(
+        "/auth/register",
+        payload,
+        {
+          skipRefresh: true,
+        },
+      );
       if (res?.status === "check_email") {
         setCheckEmail(true);
         return;

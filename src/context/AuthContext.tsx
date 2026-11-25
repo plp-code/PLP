@@ -106,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     retry: false,
     staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false, 
+    refetchOnWindowFocus: false,
   });
 
   const checkSession = useCallback(async () => {
@@ -119,8 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await api.post("/auth/logout");
       snackbar.success("You've been logged out");
-    } catch (error) {
-      console.error("Logout failed", error);
+    } catch {
       snackbar.error(
         "Signed out on this device",
         "We couldn't reach the server.",

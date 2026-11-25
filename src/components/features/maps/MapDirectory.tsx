@@ -77,11 +77,20 @@ export default function MapDirectory() {
   const handleViewModeChange = (mode: "grid" | "list") => {
     setViewMode(mode);
     setCurrentPage(1);
-  }; 
-  const liveMaps = maps.filter((m) => m.status === "live");
-  const upcomingMaps = maps.filter(
-    (map) => map.status === "waitlist" || map.status === "next",
+  };
+
+  // const liveMaps = maps.filter((m) => m.status === "live");
+  // const upcomingMaps = maps.filter(
+  //   (map) => map.status === "waitlist" || map.status === "next",
+  // );
+
+  // TEMP: "next" maps are currently shown with the live cards (purchasable)
+  // instead of the "Coming Soon" cards. Revert to the commented version above
+  // when that changes.
+  const liveMaps = maps.filter(
+    (m) => m.status === "live" || m.status === "next",
   );
+  const upcomingMaps = maps.filter((m) => m.status === "waitlist");
 
   if (error) {
     return (
@@ -97,7 +106,7 @@ export default function MapDirectory() {
         </p>
 
         <h2 className="mt-2 font-bodoni text-2xl tracking-[-0.02em] text-plp-maroon">
-          We couldn't load the maps.
+          We couldn&apos;t load the maps.
         </h2>
 
         <p className="mt-3 max-w-sm font-prata text-[13px] leading-6 text-plp-maroon/55">
@@ -110,7 +119,6 @@ export default function MapDirectory() {
   return (
     <div className="mx-auto w-full max-w-7xl px-5 py-6 sm:px-6 md:py-8 lg:px-8">
       <DirectoryToolbar
-        totalCount={total}
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
         viewMode={viewMode}

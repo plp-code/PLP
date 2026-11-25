@@ -17,24 +17,23 @@ export function useMagicLoginVerify(token: string | null) {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    if (!token || firedRef.current) return;
+    firedRef.current = true;
 
-useEffect(() => {
-  if (!token || firedRef.current) return;
-  firedRef.current = true;
-
-  (async () => {
-    try {
-      await api.post("/auth/verify-magic-link", { token });
-      setTokenExpiry(30 * 60);
-      markSession();
-      await queryClient.invalidateQueries({ queryKey: ["session"] });
-      setState("success");
-      router.replace(getSafeReturnPath(searchParams.get("returnTo")));
-    } catch {
-      setState("error");
-    }
-  })();
-}, [token, router, queryClient, searchParams]);
+    (async () => {
+      try {
+        await api.post("/auth/verify-magic-link", { token });
+        setTokenExpiry(30 * 60);
+        markSession();
+        await queryClient.invalidateQueries({ queryKey: ["session"] });
+        setState("success");
+        router.replace(getSafeReturnPath(searchParams.get("returnTo")));
+      } catch {
+        setState("error");
+      }
+    })();
+  }, [token, router, queryClient, searchParams]);
 
   return { state };
 }

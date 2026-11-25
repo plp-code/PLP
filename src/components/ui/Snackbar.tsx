@@ -1,10 +1,7 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useIsClient } from "@/hooks/useIsClient";
 import { createPortal } from "react-dom";
 import { X, type LucideIcon } from "lucide-react";
 
@@ -35,14 +32,10 @@ export const Snackbar = ({
   position?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
   role?: "status" | "alert";
 }) => {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [progress, setProgress] = useState(100);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleClose = useCallback(() => {
     setIsClosing(true);
@@ -57,19 +50,22 @@ export const Snackbar = ({
     return () => window.clearTimeout(timeout);
   }, [onClose]);
 
-  useEffect(() => {
+  // Reset derived state when `show` flips (done during render, not in an effect).
+  const [prevShow, setPrevShow] = useState(show);
+  if (show !== prevShow) {
+    setPrevShow(show);
     if (show) {
       setProgress(100);
       setIsClosing(false);
-
-      const frame = requestAnimationFrame(() => {
-        setIsVisible(true);
-      });
-
-      return () => cancelAnimationFrame(frame);
+    } else {
+      setIsVisible(false);
     }
+  }
 
-    setIsVisible(false);
+  useEffect(() => {
+    if (!show) return;
+    const frame = requestAnimationFrame(() => setIsVisible(true));
+    return () => cancelAnimationFrame(frame);
   }, [show]);
 
   useEffect(() => {
@@ -141,20 +137,13 @@ export const Snackbar = ({
       >
         <div className="flex items-start justify-between gap-3 px-4 py-3 sm:px-5 sm:py-4">
           <div className="flex min-w-0 items-start gap-3">
-            <Icon
-              size={20}
-              className={`mt-0.5 shrink-0 ${iconColor}`}
-            />
+            <Icon size={20} className={`mt-0.5 shrink-0 ${iconColor}`} />
 
             <div className="min-w-0">
-              <p className="font-bold text-sm sm:text-base">
-                {title}
-              </p>
+              <p className="font-bold text-sm sm:text-base">{title}</p>
 
               {subtitle && (
-                <p className="mt-0.5 text-sm opacity-80">
-                  {subtitle}
-                </p>
+                <p className="mt-0.5 text-sm opacity-80">{subtitle}</p>
               )}
             </div>
           </div>
@@ -174,7 +163,7 @@ export const Snackbar = ({
             <div
               className={`h-full ${iconColor.replace(
                 "text-",
-                "bg-"
+                "bg-",
               )} transition-all ease-linear`}
               style={{
                 width: `${progress}%`,
@@ -185,6 +174,6 @@ export const Snackbar = ({
         )}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };

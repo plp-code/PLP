@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useSnackbar } from "@/context/SnackbarContext";
-import { useGetReviews, useCreateReview } from "@/hooks/useReviews";
+import { ApiError } from "@/lib/api";
+import {
+  useGetReviews,
+  useMyReview,
+  useCreateReview,
+  useDeleteReview,
+  reviewErrorMessage,
+} from "@/hooks/useReviews";
 import type { NewReview } from "@/types";
 
 export function useStoreReviews(storeId: number) {
@@ -8,7 +15,28 @@ export function useStoreReviews(storeId: number) {
   const snackbar = useSnackbar();
 
   const { data: reviews = [], isLoading } = useGetReviews(storeId);
-  const { mutateAsync: createReview, isPending: isSubmitting } = useCreateReview();
+  const { data: myReview = null } = useMyReview(storeId);
+  const { mutateAsync: createReview, isPending: isSubmitting } =
+    useCreateReview();
+
+  const { mutateAsync: removeReview, isPending: isDeleting } =
+    useDeleteReview();
+
+  const deleteMyReview = async () => {
+    if (!storeId) return;
+    try {
+      await removeReview({ location_id: storeId });
+      snackbar.success("Review deleted");
+    } catch (err) {
+      // 404 = already gone; the hook refreshed the queries, so just say so.
+      if (err instanceof ApiError && err.status === 404) {
+        snackbar.success("Review already removed");
+        return;
+      }
+      const { title, subtitle } = reviewErrorMessage(err, "delete");
+      snackbar.error(title, subtitle);
+    }
+  };
 
   const submitReview = async (form: NewReview) => {
     if (!storeId) return;
@@ -19,7 +47,6 @@ export function useStoreReviews(storeId: number) {
       experience: form.experience,
       price_paid: form.price_paid,
       category_slugs: form.category_slugs,
-
     });
 
     setReviewOpen(false);
@@ -28,10 +55,13 @@ export function useStoreReviews(storeId: number) {
 
   return {
     reviews,
+    myReview,
     isLoading,
     isSubmitting,
     reviewOpen,
     setReviewOpen,
     submitReview,
+    deleteMyReview,
+    isDeleting,
   };
 }

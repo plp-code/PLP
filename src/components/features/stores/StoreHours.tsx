@@ -12,8 +12,26 @@ interface StoreHoursProps {
 
 export function StoreHours({ timeData, week }: StoreHoursProps) {
   const [open, setOpen] = useState(false);
-  const today = week.find((day) => day.isToday);
 
+  // When we have no hours for this store, show a static notice instead of the
+  // expandable day-by-day list.
+  const hoursUnavailable =
+    timeData.string === "Hours unavailable" || week.length === 0;
+
+  if (hoursUnavailable) {
+    return (
+      <div className="rounded-xl border border-gray-200 bg-white px-4 py-3.5">
+        <span className="mb-1 block font-bodoni text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+          Hours
+        </span>
+        <span className="block font-prata text-[15px] leading-snug text-gray-600">
+          Hours unavailable — please call the store to confirm.
+        </span>
+      </div>
+    );
+  }
+
+  const today = week.find((day) => day.isToday);
   const todayHours = today?.string ?? timeData.string;
 
   const statusText = !timeData.isOpen

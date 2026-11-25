@@ -73,8 +73,8 @@ export default function AuthForm() {
               Check Your Email
             </h2>
             <p className="text-plp-maroon/80 text-[11px] sm:text-xs leading-relaxed mb-6">
-              We&apos;ve sent you a link to finish setting up your account.
-              It expires in 15 minutes.
+              We&apos;ve sent you a link to finish setting up your account. It
+              expires in 15 minutes.
             </p>
             <button
               type="button"
@@ -94,7 +94,7 @@ export default function AuthForm() {
               Check Your Inbox
             </h2>
             <p className="text-plp-maroon/80 text-[11px] sm:text-xs leading-relaxed mb-6">
-              If an account exists for that email, we've sent a login link.
+              If an account exists for that email, we&apos;ve sent a login link.
               It expires in 15 minutes.
             </p>
             <button

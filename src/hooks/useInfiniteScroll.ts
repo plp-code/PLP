@@ -1,4 +1,14 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
+
+function getScrollParent(node: HTMLElement | null): HTMLElement | null {
+  let el = node?.parentElement ?? null;
+  while (el) {
+    const { overflowY } = getComputedStyle(el);
+    if (/(auto|scroll|overlay)/.test(overflowY)) return el;
+    el = el.parentElement;
+  }
+  return null;
+}
 
 export function useInfiniteScroll(
   onLoadMore: () => void,
@@ -10,22 +20,56 @@ export function useInfiniteScroll(
 ) {
   const observer = useRef<IntersectionObserver | null>(null);
 
-  return useCallback(
+  const latest = useRef({ onLoadMore, hasMore, loading, disabled });
+  useEffect(() => {
+    latest.current = { onLoadMore, hasMore, loading, disabled };
+  });
+
+  const sentinel = useRef<HTMLDivElement | null>(null);
+
+  const connect = useCallback(() => {
+    observer.current?.disconnect();
+    observer.current = null;
+    const node = sentinel.current;
+    if (!node) return;
+
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        const { onLoadMore, hasMore, loading, disabled } = latest.current;
+        if (
+          entries.some((e) => e.isIntersecting) &&
+          hasMore &&
+          !loading &&
+          !disabled
+        ) {
+          onLoadMore();
+        }
+      },
+      {
+        root: getScrollParent(node),
+        rootMargin: "0px 0px 300px 0px",
+        threshold: 0,
+      },
+    );
+    observer.current.observe(node);
+  }, []);
+
+  const ref = useCallback(
     (node: HTMLDivElement | null) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && hasMore && !disabled) {
-            onLoadMore();
-          }
-        },
-        { threshold: 1.0 },
-      );
-
-      if (node) observer.current.observe(node);
+      sentinel.current = node;
+      connect();
     },
-    [loading, hasMore, disabled, onLoadMore],
+    [connect],
   );
+
+  // Re-observe after each load/state change: a fresh observe() re-delivers the
+  // current intersection state, so a sentinel that is still visible (short
+  // list on a tall screen) keeps loading without needing a resize/scroll.
+  useEffect(() => {
+    connect();
+  }, [connect, hasMore, loading, disabled]);
+
+  useEffect(() => () => observer.current?.disconnect(), []);
+
+  return ref;
 }

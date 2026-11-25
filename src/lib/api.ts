@@ -138,9 +138,7 @@ async function fetcher<T>(
   if (!response.ok) {
     const err: {
       detail?:
-        | string
-        | ApiValidationError[]
-        | { code?: string; message?: string };
+        string | ApiValidationError[] | { code?: string; message?: string };
     } = await response.json().catch(() => ({}));
 
     let message: string;

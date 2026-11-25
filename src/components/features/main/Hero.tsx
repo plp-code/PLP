@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Display, Label } from "../../ui/Typography";
+import { Display, Label } from "@/components/ui/Typography";
 
 import heroImage from "@/assets/hero_web_view.png";
 import heroImageMobile from "@/assets/hero_mobile_view.png";
@@ -9,14 +9,15 @@ export default function Hero() {
     <section
       id="home"
       aria-labelledby="home-heading"
-      className="relative w-full bg-plp-parchment px-4 pb-6 pt-4 sm:px-5 md:h-[calc(100dvh-94px)] md:py-6"
+      className="relative w-full bg-plp-parchment px-4 pb-6 pt-4 sm:px-5 md:py-6"
     >
-      <div className="mx-auto flex h-full w-full max-w-7xl flex-col items-center">
+      <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
         <div className="mb-5 flex shrink-0 flex-col items-center text-center md:mb-6">
           <Display
             as="h1"
             id="home-heading"
-            className="text-balance text-[clamp(3.75rem,8vw,6.75rem)] leading-[0.9] text-plp-maroon">
+            className="text-balance text-[clamp(3.75rem,8vw,6.75rem)] leading-[0.9] text-plp-maroon"
+          >
             The Preloved Professional
           </Display>
 
@@ -25,33 +26,31 @@ export default function Hero() {
           </Label>
         </div>
 
+        {/* Mobile View */}
         <div className="w-full md:hidden">
-          <div className="relative aspect-[4/4.6] w-full overflow-hidden rounded-lg border border-plp-navy bg-white">
+          <div className="overflow-hidden rounded-lg border border-plp-navy bg-white">
             <Image
               src={heroImageMobile}
               alt="Preloved professional clothing"
-              fill
               priority
-              className="object-cover"
               sizes="100vw"
+              className="block h-auto w-full"
             />
           </div>
 
           <ArtworkCredit />
         </div>
 
-        <div className="hidden min-h-0 w-full flex-1 flex-col md:flex">
-          <div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-plp-navy bg-white">
-            <div className="relative h-full min-h-0 w-full bg-stone-100">
-              <Image
-                src={heroImage}
-                alt="Preloved professional clothing"
-                fill
-                priority
-                className="object-cover"
-                sizes="(max-width: 1280px) 100vw, 1280px"
-              />
-            </div>
+        {/* Desktop View */}
+        <div className="hidden w-full flex-col md:flex">
+          <div className="overflow-hidden rounded-lg border border-plp-navy bg-white">
+            <Image
+              src={heroImage}
+              alt="Preloved professional clothing"
+              priority
+              sizes="(max-width: 1280px) 100vw, 1280px"
+              className="block h-auto w-full"
+            />
           </div>
 
           <ArtworkCredit />

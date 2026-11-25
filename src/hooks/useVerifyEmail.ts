@@ -25,7 +25,7 @@ export function useVerifyEmail(token: string | null) {
     firedAttempt.current = attempt;
 
     (async () => {
-      try { 
+      try {
         await api.post("/auth/verify-email", { token });
         await queryClient.invalidateQueries({ queryKey: ["session"] });
         setState("success");

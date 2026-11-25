@@ -1,13 +1,8 @@
-
 import { ArrowUpRight, CalendarClock } from "lucide-react";
 import Link from "next/link";
-import type { InPersonEvent } from "@/data/experiences";
+import type { InPersonEvent } from "@/types";
 
-export function PlannedEventCard({
-  event,
-}: {
-  event: InPersonEvent;
-}) {
+export function PlannedEventCard({ event }: { event: InPersonEvent }) {
   return (
     <article className="group flex h-full flex-col border border-plp-maroon/15 bg-plp-maroon/[0.025] p-6 transition-colors duration-200 hover:border-plp-maroon/35 md:p-7">
       <div className="mb-7 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-plp-maroon/50">

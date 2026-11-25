@@ -12,7 +12,9 @@ function isValidStripeUrl(url?: string): url is string {
   if (!url) return false;
   try {
     const parsed = new URL(url);
-    return parsed.protocol === "https:" && parsed.hostname === STRIPE_CHECKOUT_HOST;
+    return (
+      parsed.protocol === "https:" && parsed.hostname === STRIPE_CHECKOUT_HOST
+    );
   } catch {
     return false;
   }
@@ -47,8 +49,7 @@ export function useMapCheckout() {
         throw new Error("Unexpected checkout URL received");
       }
       window.location.href = response.checkout_url;
-    } catch (error) {
-      console.error("Checkout failed:", error);
+    } catch {
       snackbar.error("Couldn't start checkout", "Please try again.");
     } finally {
       setCheckoutLoadingId(null);
