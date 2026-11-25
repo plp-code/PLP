@@ -55,6 +55,7 @@ export function StoreDetailView({
     isSubmitting,
     reviewOpen,
     setReviewOpen,
+    openReview,
     submitReview,
   } = useStoreReviews(store.id);
 
@@ -189,7 +190,7 @@ export function StoreDetailView({
             myReview={myReview}
             disabled={isSubmitting}
             isDeleting={isDeleting}
-            onAdd={() => setReviewOpen(true)}
+            onAdd={openReview}
             onDelete={deleteMyReview}
           />
         )}

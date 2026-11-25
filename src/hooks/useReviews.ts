@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, ApiError, isEmailNotVerified } from "@/lib/api";
+import { friendlyError } from "@/lib/errors";
 import type { ReviewItem, CreateReviewPayload } from "@/types";
 
 export const reviewKeys = {
@@ -26,8 +27,9 @@ export function reviewErrorMessage(
             subtitle: "Confirm your email to share reviews.",
           }
         : {
+            // Backend rule: reviews.py _get_location_or_403 — only buyers of the map.
             title: "Not allowed",
-            subtitle: "You don't have permission to do that.",
+            subtitle: "You can only review locations you've bought.",
           };
     }
     if (err.status === 409) {
@@ -36,11 +38,16 @@ export function reviewErrorMessage(
         subtitle: "You've already shared a review for this store.",
       };
     }
-    if (err.status === 404 && action === "delete") {
-      return {
-        title: "No review to delete",
-        subtitle: "You haven't reviewed this location.",
-      };
+    if (err.status === 404) {
+      return action === "delete"
+        ? {
+            title: "No review to delete",
+            subtitle: "You haven't reviewed this location.",
+          }
+        : {
+            title: "Location unavailable",
+            subtitle: "This location is no longer available.",
+          };
     }
   }
   return {
@@ -50,7 +57,7 @@ export function reviewErrorMessage(
         : action === "load"
           ? "Couldn't load reviews"
           : "Couldn't post your review",
-    subtitle: "Please try again.",
+    subtitle: friendlyError(err, "Please try again."),
   };
 }
 
@@ -82,18 +89,27 @@ function invalidateStoreReviews(
   queryClient.invalidateQueries({ queryKey: reviewKeys.mine(storeId) });
 }
 
+/**
+ * GET /reviews/{id}/me returns the review object, or a bare JSON `null` when the
+ * caller has none (routes/reviews.py get_my_review, response_model ReviewMine | None).
+ * There is no `{ review }` wrapper; 404 is tolerated as "none".
+ */
+export async function fetchMyReview(
+  storeId: number,
+): Promise<ReviewItem | null> {
+  try {
+    const res = await api.get<ReviewItem | null>(`/reviews/${storeId}/me`);
+    return res && typeof res === "object" && "id" in res ? res : null;
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) return null;
+    throw err;
+  }
+}
+
 export function useMyReview(storeId: number, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: reviewKeys.mine(storeId),
-    queryFn: async (): Promise<ReviewItem | null> => {
-      try {
-        const res = await api.get<ReviewItem | null>(`/reviews/${storeId}/me`);
-        return res && "id" in res ? res : null;
-      } catch (err) {
-        if (err instanceof ApiError && err.status === 404) return null;
-        throw err;
-      }
-    },
+    queryFn: () => fetchMyReview(storeId),
     enabled: Boolean(storeId) && (options?.enabled ?? true),
     retry: (count, err) =>
       !(err instanceof ApiError && [401, 403].includes(err.status)) &&
@@ -113,11 +129,8 @@ export function useCreateReview() {
       );
       return response;
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: reviewKeys.byStore(variables.location_id),
-      });
-    },
+    onSuccess: (_, variables) =>
+      invalidateStoreReviews(queryClient, variables.location_id),
   });
 }
 

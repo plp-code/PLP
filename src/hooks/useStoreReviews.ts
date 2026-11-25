@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuthUser } from "@/context/AuthContext";
+import { buildLoginRedirect } from "@/lib/returnTo";
 import { useSnackbar } from "@/context/SnackbarContext";
 import { ApiError } from "@/lib/api";
 import {
@@ -13,9 +16,26 @@ import type { NewReview } from "@/types";
 export function useStoreReviews(storeId: number) {
   const [reviewOpen, setReviewOpen] = useState(false);
   const snackbar = useSnackbar();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { isAuthenticated } = useAuthUser();
 
-  const { data: reviews = [], isLoading } = useGetReviews(storeId);
-  const { data: myReview = null } = useMyReview(storeId);
+  // Review endpoints require a login; skip them for visitors so a 401 never
+  // surfaces (or triggers a pointless refresh attempt).
+  const { data: reviews = [], isLoading } = useGetReviews(storeId, {
+    enabled: isAuthenticated,
+  });
+  const { data: myReview = null } = useMyReview(storeId, {
+    enabled: isAuthenticated,
+  });
+
+  const openReview = () => {
+    if (!isAuthenticated) {
+      router.push(buildLoginRedirect(pathname + window.location.search));
+      return;
+    }
+    setReviewOpen(true);
+  };
   const { mutateAsync: createReview, isPending: isSubmitting } =
     useCreateReview();
 
@@ -60,6 +80,7 @@ export function useStoreReviews(storeId: number) {
     isSubmitting,
     reviewOpen,
     setReviewOpen,
+    openReview,
     submitReview,
     deleteMyReview,
     isDeleting,
