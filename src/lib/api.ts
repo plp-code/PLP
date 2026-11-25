@@ -153,7 +153,11 @@ async function fetcher<T>(
     } = await response.json().catch(() => ({}));
 
     let message: string;
-    if (typeof err.detail === "string") {
+    if (
+      typeof err.detail === "string" &&
+      err.detail.trim() &&
+      err.detail !== "None"
+    ) {
       message = err.detail;
     } else if (Array.isArray(err.detail)) {
       message = err.detail
@@ -162,7 +166,12 @@ async function fetcher<T>(
           return field ? `${field}: ${e.msg}` : e.msg;
         })
         .join(". ");
-    } else if (err.detail && typeof err.detail.message === "string") {
+    } else if (
+      err.detail &&
+      typeof err.detail === "object" &&
+      !Array.isArray(err.detail) &&
+      typeof err.detail.message === "string"
+    ) {
       message = err.detail.message;
     } else {
       message = `Request failed with status ${response.status}`;

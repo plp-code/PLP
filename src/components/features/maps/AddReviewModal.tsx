@@ -96,7 +96,7 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
         experience: experience.trim(),
         price_paid:
           Number.isFinite(parsedPrice) && parsedPrice >= 0
-            ? Math.round(parsedPrice * 100)
+            ? Math.round(parsedPrice)
             : undefined,
       });
     } catch (err) {
@@ -348,12 +348,12 @@ export function AddReviewModal({ open, onClose, onSubmit, storeName }: Props) {
 
                 <input
                   type="number"
-                  inputMode="decimal"
+                  inputMode="numeric"
                   min="0"
-                  step="0.01"
+                  step="1"
                   value={price}
                   onChange={(event) => setPrice(event.target.value)}
-                  placeholder="0.00"
+                  placeholder="0"
                   className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-7 pr-3.5 font-prata text-[15px] text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-plp-maroon/30 focus:bg-white focus:ring-2 focus:ring-plp-maroon/10"
                 />
               </div>

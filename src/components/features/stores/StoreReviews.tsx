@@ -148,7 +148,7 @@ export function StoreReviews({
                   {typeof entry.price_paid === "number" && (
                     <div className="flex shrink-0 flex-col items-end">
                       <span className="font-bodoni text-[23px] font-semibold leading-tight tabular-nums text-plp-maroon">
-                        ${(entry.price_paid / 100).toFixed(2)}
+                        ${Math.round(entry.price_paid)}
                       </span>
 
                       <span className="mt-1 text-[10px] text-plp-clay">
