@@ -33,15 +33,15 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers }];
   },
-  async redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/maps",
-        permanent: false,
-      },
-    ];
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/",
+  //       destination: "/maps",
+  //       permanent: false,
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;
